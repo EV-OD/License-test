@@ -230,27 +230,17 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
     return (
       <div className="w-full"> {/* Wrapper for main layout and mobile bottom indicator */}
         <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
-          {/* Desktop Left Sidebar Slot: Ad or QuestionStatusIndicator */}
+          {/* Desktop Left Sidebar Slot: Always QuestionStatusIndicator during exam */}
           <div className="hidden lg:block w-48 shrink-0">
-            {adClient && adSlotSide1 ? (
-              <GoogleAd
-                adClient={adClient}
-                adSlot={adSlotSide1}
-                adFormat="auto"
-                responsive={true}
-                className="min-h-[250px] w-full sticky top-20"
-              />
-            ) : (
-              <QuestionStatusIndicator
-                questions={examQuestions}
-                userAnswers={userAnswers}
-                currentQuestionIndex={currentQuestionIndex}
-                onQuestionSelect={handleSelectQuestionFromIndicator}
-                t={t}
-                layout="desktop"
-                className="sticky top-20" 
-              />
-            )}
+            <QuestionStatusIndicator
+              questions={examQuestions}
+              userAnswers={userAnswers}
+              currentQuestionIndex={currentQuestionIndex}
+              onQuestionSelect={handleSelectQuestionFromIndicator}
+              t={t}
+              layout="desktop"
+              className="sticky top-20" 
+            />
           </div>
 
           {/* Main Exam Content */}
@@ -374,3 +364,4 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
 
   return null; 
 }
+
