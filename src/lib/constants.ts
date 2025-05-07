@@ -1,19 +1,19 @@
 
 import type { NavItem, FeatureItem, Testimonial, ResourceLink } from '@/lib/types';
-import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin, ClipboardCheck, Home, FileText, Rss, Film, HelpCircle, Phone } from 'lucide-react';
+import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin, ClipboardCheck, Home, FileText, Rss, Film, HelpCircle, Phone, Car, Bike as MotorcycleIcon, Bike as ScooterIcon, Layers } from 'lucide-react';
 
 export const SITE_NAME = "Nepal License Prep";
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:9002';
-export const SITE_LOGO_URL = `${SITE_URL}${process.env.NEXT_PUBLIC_SITE_LOGO_URL || '/images/logo-placeholder.png'}`;
-export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`;
+export const SITE_LOGO_URL = `${SITE_URL}${process.env.NEXT_PUBLIC_SITE_LOGO_URL || '/icon-512.png'}`; // Updated to an existing icon
+export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`; // Ensure this image exists in public/images
 
 export const NAV_LINKS: NavItem[] = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/real-exam/Mixed", label: "Real Exam", icon: ClipboardCheck }, // Updated link
+  { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck }, // Updated link to category selection page
   { href: "/practice", label: "Practice Test", icon: FileText },
   { href: "/traffic-signs", label: "Traffic Signs", icon: TrafficCone },
-  { href: "/mock-exam", label: "Mock Exam", icon: Timer }, // This could also be changed to a dynamic route if needed
+  { href: "/mock-exam", label: "Mock Exam", icon: Timer }, 
   { href: "/blog", label: "Blog", icon: Rss },
   { href: "/tutorials", label: "Tutorials", icon: Film },
   { href: "/faq", label: "FAQs", icon: HelpCircle },
@@ -108,3 +108,11 @@ export const CONTACT_DETAILS = {
   address: "Kathmandu, Nepal",
   phone: "N/A" 
 };
+
+// Real Exam Categories for selection page
+export const REAL_EXAM_CATEGORIES = [
+  { id: 'A', name: 'Category A (Motorcycle)', icon: MotorcycleIcon, description: 'Practice for your motorcycle license.' },
+  { id: 'B', name: 'Category B (Car/Jeep/Van)', icon: Car, description: 'Practice for car, jeep, or van license.' },
+  { id: 'K', name: 'Category K (Scooter)', icon: ScooterIcon, description: 'Practice for your scooter license.' },
+  { id: 'Mixed', name: 'Mixed Exam', icon: Layers, description: 'Comprehensive test with questions from all categories.' },
+];

@@ -1,5 +1,5 @@
 
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon, Car, Bike, Layers, Home, FileText, TrafficCone, Timer, Rss, Film, HelpCircle, Mail, ListChecks, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, ClipboardCheck } from 'lucide-react'; // Added specific icons for clarity, though LucideIcon usually covers all.
 
 export type NavItem = {
   href: string;
@@ -83,4 +83,3 @@ export type MockExamResult = { // This type is used by MockExamClient and RealEx
   answers: { questionId: string; selectedOption: number | null; isCorrect: boolean }[];
   category: ExamCategoryType; 
 };
-```

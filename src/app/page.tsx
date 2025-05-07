@@ -62,7 +62,7 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link href="/real-exam/Mixed"> {/* Updated Link */}
+              <Link href="/real-exam"> {/* Updated Link to category selection page */}
                 <ClipboardCheck className="mr-2 h-5 w-5" /> 
                 Start Real Exam 
               </Link>
