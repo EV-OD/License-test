@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -8,6 +9,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Search, Tag } from 'lucide-react';
+import GoogleAd from '@/components/ads/GoogleAd'; // Added GoogleAd import
 
 interface TrafficSignsClientProps {
   allSigns: TrafficSign[];
@@ -42,6 +44,28 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
       return matchesSearch && matchesCategory;
     });
   }, [allSigns, searchTerm, categoryFilter, language]);
+
+  // Ad display logic
+  const renderAds = (position: 'bottom') => {
+    // IMPORTANT: Replace with your actual AdSense Client and Slot IDs
+    const adClient = "YOUR_ADSENSE_CLIENT_ID"; 
+    const adSlotBottom = "YOUR_AD_SLOT_ID_TRAFFIC_SIGNS_BOTTOM"; // Example: for bottom banners
+
+    if (position === 'bottom') {
+      return (
+        <div className="mt-8 w-full">
+          <GoogleAd
+            adClient={adClient}
+            adSlot={adSlotBottom}
+            adFormat="auto"
+            responsive={true}
+            className="min-h-[100px] w-full"
+          />
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="container py-8">
@@ -112,6 +136,7 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
           <p className="text-muted-foreground">{t('Try adjusting your search or filter criteria.', 'आफ्नो खोज वा फिल्टर मापदण्ड समायोजन गर्ने प्रयास गर्नुहोस्।')}</p>
         </div>
       )}
+      {renderAds('bottom')} {/* Added ad display at the bottom */}
     </div>
   );
 }
@@ -125,3 +150,4 @@ const TrafficCone = (props: React.SVGProps<SVGSVGElement>) => (
     <path d="M4 18h16"/>
   </svg>
 );
+
