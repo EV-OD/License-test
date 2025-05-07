@@ -110,13 +110,8 @@ export default function RootLayout({
         PWA meta tags are now part of the `metadata` object above.
       */}
       {showAds && (
-         <Script
-          id="adsense-script" // Added id for clarity
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5479646105292963"
+     crossOrigin="anonymous"></script>
       )}
       <body className="antialiased bg-background text-foreground">
         <LanguageProvider>
