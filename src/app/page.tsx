@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     images: [
       {
-        url: DEFAULT_OG_IMAGE_URL, // Specific OG image for homepage if different from default
+        url: DEFAULT_OG_IMAGE_URL, 
         width: 1200,
         height: 630,
         alt: `${SITE_NAME} - Homepage`,
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: `${SITE_NAME}: Car & Bike Driving License Practice Tests (Nepal)`,
     description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A, K) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, mock exams, traffic signs, and bilingual support.`,
-    images: [DEFAULT_OG_IMAGE_URL], // Specific Twitter image for homepage
+    images: [DEFAULT_OG_IMAGE_URL], 
   },
 };
 
@@ -62,7 +62,7 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link href="/real-exam"> 
+              <Link href="/real-exam/Mixed"> {/* Updated Link */}
                 <ClipboardCheck className="mr-2 h-5 w-5" /> 
                 Start Real Exam 
               </Link>

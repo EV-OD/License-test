@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import type { PracticeQuestion, MockExamResult } from '@/lib/types';
+import type { PracticeQuestion, MockExamResult, ExamCategoryType } from '@/lib/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import GoogleAd from '@/components/ads/GoogleAd';
@@ -11,20 +11,20 @@ import { ExamInProgressScreen } from './ExamInProgressScreen';
 import { ExamResultsScreen } from './ExamResultsScreen';
 
 const REAL_EXAM_QUESTIONS_COUNT = 25;
-const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60;
-const PASS_PERCENTAGE = 0.7;
-
-type ExamCategory = 'A' | 'B' | 'K' | 'Mixed';
+const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60; // 25 minutes
+const PASS_PERCENTAGE = 0.7; // 70% to pass
 
 interface RealExamClientProps {
   allQuestions: PracticeQuestion[];
+  initialCategory: ExamCategoryType;
 }
 
-export function RealExamClient({ allQuestions }: RealExamClientProps) {
+export function RealExamClient({ allQuestions, initialCategory }: RealExamClientProps) {
   const { t, language } = useLanguage();
   const { toast } = useToast();
 
-  const [examCategory, setExamCategory] = useState<ExamCategory>('Mixed');
+  // examCategory is now determined by the route and passed as initialCategory
+  const [examCategory] = useState<ExamCategoryType>(initialCategory);
   const [examQuestions, setExamQuestions] = useState<PracticeQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
@@ -43,25 +43,25 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   const adSlotBottomMobile = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_BOTTOM_MOBILE;
 
   useEffect(() => {
-    const storedResults = localStorage.getItem('realExamResults');
+    const storedResults = localStorage.getItem(`realExamResults_${examCategory}`);
     if (storedResults) {
       setPastResults(JSON.parse(storedResults));
     }
-  }, []);
+  }, [examCategory]);
 
   const saveResult = useCallback((result: MockExamResult) => {
-    const updatedResults = [result, ...pastResults].slice(0, 10);
+    const updatedResults = [result, ...pastResults].slice(0, 10); // Keep last 10 results for this category
     setPastResults(updatedResults);
-    localStorage.setItem('realExamResults', JSON.stringify(updatedResults));
-  }, [pastResults]);
+    localStorage.setItem(`realExamResults_${examCategory}`, JSON.stringify(updatedResults));
+  }, [pastResults, examCategory]);
 
   const finishExamCallback = useCallback(() => {
     setExamFinished(currentExamFinished => {
-      if (currentExamFinished) {
+      if (currentExamFinished) { // Prevent multiple calls
         return true;
       }
 
-      setExamStarted(false);
+      setExamStarted(false); // Stop the timer and exam flow
 
       let score = 0;
       const answerDetails = examQuestions.map((q, idx) => {
@@ -75,15 +75,16 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
         totalQuestions: examQuestions.length,
         date: new Date().toISOString(),
         answers: answerDetails,
-        category: examCategory,
+        category: examCategory, // Category is fixed
       };
       setExamResult(resultData);
       saveResult(resultData);
-      setShowResultsDialog(true);
-      return true;
+      setShowResultsDialog(true); // Trigger results display
+      return true; // Mark as finished
     });
   }, [examQuestions, userAnswers, examCategory, saveResult]);
 
+  // Using a ref for finishExam to ensure the useEffect for the timer always has the latest version
   const finishExamRef = useRef(finishExamCallback);
   useEffect(() => {
     finishExamRef.current = finishExamCallback;
@@ -96,17 +97,19 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
         setTimeLeft(prevTime => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            finishExamRef.current();
+            finishExamRef.current(); // Call the latest version of finishExam
             return 0;
           }
           return prevTime - 1;
         });
       }, 1000);
     } else if (timeLeft === 0 && examStarted && !examFinished) {
-      finishExamRef.current();
+        // This condition ensures finishExam is called if timeLeft hits 0 directly
+        finishExamRef.current();
     }
     return () => clearInterval(timer);
   }, [examStarted, examFinished, timeLeft]);
+
 
   const startExam = useCallback(() => {
     let questionsForExam: PracticeQuestion[];
@@ -139,7 +142,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     setExamFinished(false);
     setExamResult(null);
     setShowResultsDialog(false);
-  }, [allQuestions, examCategory, t, toast]);
+  }, [allQuestions, examCategory, t, toast]); // examCategory is stable as it comes from props
 
   const handleAnswerSelect = (optionIndex: number) => {
     const newAnswers = [...userAnswers];
@@ -224,16 +227,14 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   };
 
   const handleCloseResults = () => {
-    setExamFinished(false);
+    setExamFinished(false); // Reset to setup screen
     setExamResult(null);
-    // setShowResultsDialog(false); // Already handled by ExamResultsScreen if using its internal control for 'open'
+    // setShowResultsDialog(false); // Dialog state is managed by ExamResultsScreen
   };
 
   const handleRestartExam = () => {
-    // setExamFinished(false); // These will be reset by startExam
-    // setExamResult(null);
-    // setShowResultsDialog(false); 
-    startExam(); // Will use the current examCategory
+    // Reset states and start new exam with the same (initial) category
+    startExam();
   };
 
 
@@ -242,8 +243,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start">
         {renderAds('side-left')}
         <ExamSetupScreen
-          examCategory={examCategory}
-          setExamCategory={setExamCategory}
+          fixedCategory={examCategory} // Pass the fixed category
           onStartExam={startExam}
           pastResults={pastResults}
           showPastResultsDialog={showPastResultsDialog}
@@ -281,17 +281,18 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   if (examFinished && examResult) {
      return (
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start w-full">
+        {/* Ads can remain for results screen if desired */}
         {renderAds('side-left')}
          <ExamResultsScreen
             examResult={examResult}
             examQuestions={examQuestions}
             passPercentage={PASS_PERCENTAGE}
-            onClose={handleCloseResults}
-            onRestartExam={handleRestartExam}
+            onClose={handleCloseResults} // This will take user back to ExamSetupScreen for the same category
+            onRestartExam={handleRestartExam} // This will restart exam for the same category
             t={t}
             language={language}
-            showResultsDialog={showResultsDialog} // Pass state
-            setShowResultsDialog={setShowResultsDialog} // Pass setter
+            showResultsDialog={showResultsDialog}
+            setShowResultsDialog={setShowResultsDialog}
         />
         {renderAds('side-right')}
         {renderAds('bottom-mobile')}
@@ -299,5 +300,5 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     );
   }
 
-  return null;
+  return null; // Should not be reached if logic is correct
 }

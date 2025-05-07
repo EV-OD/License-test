@@ -2,22 +2,18 @@
 'use client';
 
 import type React from 'react';
-import type { MockExamResult } from '@/lib/types';
+import type { MockExamResult, ExamCategoryType } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from '@/components/ui/label';
+// Select components are removed as category is now fixed by the route
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { History, ClipboardCheckIcon } from 'lucide-react';
+import { History, ClipboardCheckIcon, Tag } from 'lucide-react';
 
 const REAL_EXAM_QUESTIONS_COUNT = 25;
 const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60;
 
-type ExamCategory = 'A' | 'B' | 'K' | 'Mixed';
-
 interface ExamSetupScreenProps {
-  examCategory: ExamCategory;
-  setExamCategory: (category: ExamCategory) => void;
+  fixedCategory: ExamCategoryType; // Category is now fixed and passed as a prop
   onStartExam: () => void;
   pastResults: MockExamResult[];
   showPastResultsDialog: boolean;
@@ -25,38 +21,49 @@ interface ExamSetupScreenProps {
   t: (enText: string, npText: string) => string;
 }
 
+function getCategoryDisplayName(category: ExamCategoryType, t: (enText: string, npText: string) => string): string {
+  switch (category) {
+    case 'A': return t('Category A (Motorcycle)', 'श्रेणी A (मोटरसाइकल)');
+    case 'B': return t('Category B (Car/Jeep/Van)', 'श्रेणी B (कार/जीप/भ्यान)');
+    case 'K': return t('Category K (Scooter)', 'श्रेणी K (स्कुटर)');
+    case 'Mixed': return t('Mixed (All Categories)', 'मिश्रित (सबै श्रेणीहरू)');
+    default: return category;
+  }
+}
+
+
 export function ExamSetupScreen({
-  examCategory,
-  setExamCategory,
+  fixedCategory,
   onStartExam,
   pastResults,
   showPastResultsDialog,
   setShowPastResultsDialog,
   t,
 }: ExamSetupScreenProps) {
+  const categoryDisplayName = getCategoryDisplayName(fixedCategory, t);
+
   return (
     <div className="flex-grow max-w-lg w-full">
       <Card className="w-full shadow-xl rounded-xl">
         <CardHeader>
+          {/* Title can remain generic or also include category if page title is very specific */}
           <CardTitle className="text-2xl">{t('Real Exam Setup', 'वास्तविक परीक्षा सेटअप')}</CardTitle>
-          <CardDescription>{t('Prepare for the official Likhit exam experience.', 'आधिकारिक लिखित परीक्षाको अनुभवको लागि तयारी गर्नुहोस्।')}</CardDescription>
+          <CardDescription>{t('Prepare for the official Likhit exam experience for:', 'यस श्रेणीको लागि आधिकारिक लिखित परीक्षाको अनुभवको लागि तयारी गर्नुहोस्:')} <span className="font-semibold text-primary">{categoryDisplayName}</span>.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div>
-            <Label htmlFor="examCategory">{t('Select Category (Optional)', 'श्रेणी चयन गर्नुहोस् (ऐच्छिक)')}</Label>
-            <Select value={examCategory} onValueChange={(value: ExamCategory) => setExamCategory(value)}>
-              <SelectTrigger id="examCategory" className="w-full mt-1">
-                <SelectValue placeholder={t('Select category', 'श्रेणी चयन गर्नुहोस्')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Mixed">{t('Mixed (All Categories - Recommended for Real Simulation)', 'मिश्रित (सबै श्रेणीहरू - वास्तविक सिमुलेशनको लागि सिफारिश गरिएको)')}</SelectItem>
-                <SelectItem value="A">{t('Category A (Motorcycle)', 'श्रेणी A (मोटरसाइकल)')}</SelectItem>
-                <SelectItem value="B">{t('Category B (Car/Jeep/Van)', 'श्रेणी B (कार/जीप/भ्यान)')}</SelectItem>
-                <SelectItem value="K">{t('Category K (Scooter)', 'श्रेणी K (स्कुटर)')}</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground mt-1">{t('Choosing "Mixed" provides the most realistic simulation.', '"मिश्रित" छनोट गर्दा सबैभन्दा यथार्थपरक सिमुलेशन प्रदान गर्दछ।')}</p>
+          {/* Category Selection is removed */}
+          {/* Displaying the fixed category */}
+          <div className="p-4 border rounded-md bg-muted/30">
+            <div className="flex items-center mb-2">
+              <Tag className="h-5 w-5 mr-2 text-primary" />
+              <h3 className="font-semibold text-lg">{t('Selected Category', 'चयन गरिएको श्रेणी')}</h3>
+            </div>
+            <p className="text-xl font-bold text-primary">{categoryDisplayName}</p>
+            {fixedCategory === 'Mixed' && (
+                <p className="text-xs text-muted-foreground mt-1">{t('This provides the most realistic simulation of the official exam.', 'यसले आधिकारिक परीक्षाको सबैभन्दा यथार्थपरक सिमुलेशन प्रदान गर्दछ।')}</p>
+            )}
           </div>
+
           <div className="p-4 border rounded-md bg-muted/50">
             <p className="font-semibold">{t('Exam Details:', 'परीक्षा विवरण:')}</p>
             <ul className="list-disc list-inside text-sm text-muted-foreground mt-2 space-y-1">
@@ -74,16 +81,16 @@ export function ExamSetupScreen({
           {pastResults.length > 0 && (
             <AlertDialog open={showPastResultsDialog} onOpenChange={setShowPastResultsDialog}>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="w-full rounded-lg"><History className="mr-2 h-4 w-4" />{t('View Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू हेर्नुहोस्')}</Button>
+                <Button variant="outline" className="w-full rounded-lg"><History className="mr-2 h-4 w-4" />{t('View Past Results for This Category', 'यस श्रेणीका विगतका नतिजाहरू हेर्नुहोस्')}</Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="max-h-[80vh] overflow-y-auto rounded-xl">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>{t('Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू')}</AlertDialogTitle>
+                  <AlertDialogTitle>{t('Past Exam Results for', 'विगतका परीक्षा नतिजाहरू:')} {categoryDisplayName}</AlertDialogTitle>
                 </AlertDialogHeader>
                 <div className="space-y-3 my-4">
                   {pastResults.map((res, idx) => (
                     <Card key={idx} className="p-3 rounded-md">
-                      <p>{t('Date:', 'मिति:')} {new Date(res.date).toLocaleDateString()} {res.category ? `(${t('Category', 'श्रेणी')}: ${res.category})` : ''}</p>
+                      <p>{t('Date:', 'मिति:')} {new Date(res.date).toLocaleDateString()} {res.category ? `(${t('Category', 'श्रेणी')}: ${getCategoryDisplayName(res.category, t)})` : ''}</p>
                       <p>{t('Score:', 'स्कोर:')} {res.score}/{res.totalQuestions}</p>
                     </Card>
                   ))}

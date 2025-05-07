@@ -21,7 +21,7 @@ interface ExamInProgressScreenProps {
   userAnswers: (number | null)[];
   onAnswerSelect: (optionIndex: number) => void;
   onNavigateQuestion: (direction: 'next' | 'prev') => void;
-  onConfirmFinishExam: () => void; // Renamed to be more specific
+  onConfirmFinishExam: () => void;
   t: (enText: string, npText: string) => string;
   language: 'en' | 'np';
 }
@@ -99,7 +99,7 @@ export function ExamInProgressScreen({
         </CardHeader>
         <CardContent>
           <RadioGroup
-            key={`${currentQuestion.id}-${currentQuestionIndex}`}
+            key={`${currentQuestion.id}-${currentQuestionIndex}`} // Ensures component re-renders when question changes
             value={userAnswers[currentQuestionIndex] !== null ? userAnswers[currentQuestionIndex]!.toString() : undefined}
             onValueChange={(value) => onAnswerSelect(parseInt(value))}
             className="space-y-3"

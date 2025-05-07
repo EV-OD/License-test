@@ -5,15 +5,15 @@ import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpe
 export const SITE_NAME = "Nepal License Prep";
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:9002';
-export const SITE_LOGO_URL = `${SITE_URL}${process.env.NEXT_PUBLIC_SITE_LOGO_URL || '/images/logo-placeholder.png'}`; // Assuming logo is relative to public or a full URL is provided
-export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`; // Example path, ensure this image exists
+export const SITE_LOGO_URL = `${SITE_URL}${process.env.NEXT_PUBLIC_SITE_LOGO_URL || '/images/logo-placeholder.png'}`;
+export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`;
 
 export const NAV_LINKS: NavItem[] = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck },
+  { href: "/real-exam/Mixed", label: "Real Exam", icon: ClipboardCheck }, // Updated link
   { href: "/practice", label: "Practice Test", icon: FileText },
   { href: "/traffic-signs", label: "Traffic Signs", icon: TrafficCone },
-  { href: "/mock-exam", label: "Mock Exam", icon: Timer },
+  { href: "/mock-exam", label: "Mock Exam", icon: Timer }, // This could also be changed to a dynamic route if needed
   { href: "/blog", label: "Blog", icon: Rss },
   { href: "/tutorials", label: "Tutorials", icon: Film },
   { href: "/faq", label: "FAQs", icon: HelpCircle },
@@ -106,5 +106,5 @@ export const APP_DOWNLOAD_LINKS = {
 export const CONTACT_DETAILS = {
   email: "support@nepallicenseprep.com",
   address: "Kathmandu, Nepal",
-  phone: "N/A" // Add phone if available
+  phone: "N/A" 
 };
