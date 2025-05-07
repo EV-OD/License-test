@@ -231,7 +231,7 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
       <div className="w-full"> {/* Wrapper for main layout and mobile bottom indicator */}
         <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
           {/* Desktop Left Sidebar Slot: Always QuestionStatusIndicator during exam */}
-          <div className="hidden lg:block w-48 shrink-0">
+          <div className="lg:block w-48 shrink-0">
             <QuestionStatusIndicator
               questions={examQuestions}
               userAnswers={userAnswers}
