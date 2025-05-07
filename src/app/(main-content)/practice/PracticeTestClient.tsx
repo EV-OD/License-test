@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -32,7 +33,7 @@ interface PracticeTestClientProps {
   allQuestions: PracticeQuestion[];
 }
 
-const QUESTIONS_PER_SET = 10; // Number of questions per practice set
+const QUESTIONS_PER_SET = 10; 
 
 export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   const { t, language } = useLanguage();
@@ -46,6 +47,11 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [incorrectAnswers, setIncorrectAnswers] = useState<PracticeQuestion[]>([]);
 
+  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const adSlotSide1 = process.env.NEXT_PUBLIC_AD_SLOT_PRACTICE_SIDE_1;
+  const adSlotSide2 = process.env.NEXT_PUBLIC_AD_SLOT_PRACTICE_SIDE_2;
+  const adSlotBottomMobile = process.env.NEXT_PUBLIC_AD_SLOT_PRACTICE_BOTTOM_MOBILE;
+
   const filteredQuestions = useMemo(() => {
     if (!allQuestions) return [];
     if (category === 'All') return allQuestions;
@@ -55,12 +61,11 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   const startNewSet = () => {
     if (!filteredQuestions || filteredQuestions.length === 0) {
       setCurrentSetQuestions([]);
-       // If no questions for the filter, still reset other states
       setCurrentQuestionIndex(0);
       setSelectedAnswer(null);
       setShowAnswer(false);
       setScore(0);
-      setQuizFinished(false); // Important to reset this
+      setQuizFinished(false); 
       setShowExplanation(false);
       setIncorrectAnswers([]);
       return;
@@ -69,7 +74,7 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     const shuffled = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, QUESTIONS_PER_SET);
     setCurrentSetQuestions(shuffled);
     setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
+    setSelectedAnswer(null); // Reset selected answer for the new set
     setShowAnswer(false);
     setScore(0);
     setQuizFinished(false);
@@ -78,11 +83,9 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   };
   
   useEffect(() => {
-    // Call startNewSet only when category changes or when allQuestions data itself changes.
-    // The dependency on filteredQuestions ensures it reruns if the source data for filtering changes.
     startNewSet();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, allQuestions]); // Intentionally not including filteredQuestions directly if startNewSet modifies its own dependencies too much
+  }, [category, allQuestions]); // Only re-run if category or allQuestions change
 
 
   const currentQuestion = currentSetQuestions && currentSetQuestions.length > 0 ? currentSetQuestions[currentQuestionIndex] : null;
@@ -98,9 +101,9 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   };
 
   const handleNextQuestion = () => {
-    setShowAnswer(false); // Reset answer visibility
-    setSelectedAnswer(null); // Reset selected answer
-    setShowExplanation(false); // Hide explanation
+    setShowAnswer(false); 
+    setSelectedAnswer(null); 
+    setShowExplanation(false); 
 
     if (currentQuestionIndex < currentSetQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
@@ -113,12 +116,31 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     if (!currentQuestion) return null;
     const content = language === 'en' ? option.en : option.np;
     const optionId = `option-practice-${currentQuestion.id}-${index}`;
+    
+    let optionStyle = "border-border hover:border-primary";
+    if (showAnswer) {
+      if (index === currentQuestion.correct_option_index) {
+        optionStyle = "border-accent bg-accent/10";
+      } else if (selectedAnswer === index) {
+        optionStyle = "border-destructive bg-destructive/10";
+      }
+    } else if (selectedAnswer === index) {
+       optionStyle = "border-primary bg-primary/10";
+    }
+
+
     return (
       <div key={optionId} className={cn(
-        "flex items-center space-x-3 p-3 rounded-lg border border-border hover:border-primary",
-        "has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-primary/10 transition-all"
+        "flex items-center space-x-3 p-3 rounded-lg border transition-all",
+        optionStyle
       )}>
-        <RadioGroupItem value={index.toString()} id={optionId} className="shrink-0" />
+        <RadioGroupItem 
+            value={index.toString()} 
+            id={optionId} 
+            className="shrink-0" 
+            disabled={showAnswer} 
+            checked={selectedAnswer === index}
+        />
         <Label htmlFor={optionId} className="flex-1 cursor-pointer text-base">
           <p>{content.text}</p>
           {content.image_url && (
@@ -136,38 +158,39 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     );
   };
 
-  // Ad display logic
   const renderAds = (position: 'side' | 'bottom') => {
-    const adClient = "YOUR_ADSENSE_CLIENT_ID"; 
-    const adSlotSide = "YOUR_AD_SLOT_ID_PRACTICE_SIDE"; 
-    const adSlotBottom = "YOUR_AD_SLOT_ID_PRACTICE_BOTTOM";
+    if (!adClient) return null;
 
     if (position === 'side') {
       return (
         <div className="hidden lg:block w-48 space-y-4 shrink-0">
-          <GoogleAd
-            adClient={adClient}
-            adSlot={adSlotSide}
-            adFormat="auto"
-            responsive={true}
-            className="min-h-[250px] w-full"
-          />
-           <GoogleAd
-            adClient={adClient}
-            adSlot={adSlotSide + "_2"} 
-            adFormat="auto"
-            responsive={true}
-            className="min-h-[250px] w-full"
-          />
+          {adSlotSide1 && (
+            <GoogleAd
+              adClient={adClient}
+              adSlot={adSlotSide1}
+              adFormat="auto"
+              responsive={true}
+              className="min-h-[250px] w-full"
+            />
+          )}
+           {adSlotSide2 && (
+             <GoogleAd
+              adClient={adClient}
+              adSlot={adSlotSide2} 
+              adFormat="auto"
+              responsive={true}
+              className="min-h-[250px] w-full"
+            />
+           )}
         </div>
       );
     }
-    if (position === 'bottom') {
+    if (position === 'bottom' && adSlotBottomMobile) {
       return (
         <div className="lg:hidden mt-8 w-full">
           <GoogleAd
             adClient={adClient}
-            adSlot={adSlotBottom}
+            adSlot={adSlotBottomMobile}
             adFormat="auto"
             responsive={true}
             className="min-h-[100px] w-full"
@@ -192,7 +215,7 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     )
   }
     
-  if (filteredQuestions.length === 0 && !quizFinished) { // Show this if no questions for the selected category
+  if (filteredQuestions.length === 0 && !quizFinished) { 
     return (
         <div className="container py-8 text-center">
             <h1 className="text-3xl font-bold mb-6">{t('Practice Test', 'अभ्यास परीक्षा')}</h1>
@@ -224,7 +247,6 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     );
   }
 
-  // This state occurs if filteredQuestions has items, but currentSetQuestions is empty (e.g., startNewSet hasn't completed)
   if (currentSetQuestions.length === 0 && filteredQuestions.length > 0 && !quizFinished) {
     return (
       <div className="container py-8 text-center">
@@ -243,9 +265,8 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
       <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
         {renderAds('side')}
         <div className="flex-grow max-w-2xl w-full">
-            <h1 className="text-3xl font-bold mb-2 text-center">{t('Practice Test', 'अभ्यास परीक्षा')}</h1>
-            <p className="text-muted-foreground text-center mb-6">{t('Test your knowledge for the Likhit exam.', 'लिखित परीक्षाको लागि आफ्नो ज्ञान परीक्षण गर्नुहोस्।')}</p>
-
+            {/* Header elements are moved to page.tsx for better structure */}
+            
             <div className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
               <Select value={category} onValueChange={(value: CategoryFilter) => setCategory(value)}>
                 <SelectTrigger className="w-full sm:w-[280px]">
@@ -288,10 +309,9 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                 </CardHeader>
                 <CardContent>
                   <RadioGroup
-                    key={`${currentQuestion.id}-${currentQuestionIndex}`} // Ensure RadioGroup re-renders correctly when question changes
-                    value={selectedAnswer?.toString()}
+                    key={`${currentQuestion.id}-${currentQuestionIndex}`}
+                    value={selectedAnswer !== null ? selectedAnswer.toString() : undefined}
                     onValueChange={(value) => setSelectedAnswer(parseInt(value))}
-                    disabled={showAnswer}
                     className="space-y-3"
                   >
                     {currentQuestion.options.map(renderOption)}
@@ -366,7 +386,7 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                       {score / currentSetQuestions.length >= 0.7 ? t('Great job! You passed.', 'राम्रो काम! तपाईं उत्तीर्ण हुनुभयो।') : t('Keep practicing! You can do better.', 'अभ्यास जारी राख्नुहोस्! तपाईं अझ राम्रो गर्न सक्नुहुन्छ।')}
                       </p>
                   )}
-                  {currentSetQuestions.length === 0 && ( // This case handles if somehow quiz finishes with no questions
+                  {currentSetQuestions.length === 0 && ( 
                       <p className="text-lg text-muted-foreground">{t('No questions were in this set to score.', 'यो सेटमा स्कोर गर्नका लागि कुनै प्रश्नहरू थिएनन्।')}</p>
                   )}
                   {incorrectAnswers.length > 0 && (

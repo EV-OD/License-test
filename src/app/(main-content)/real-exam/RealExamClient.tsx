@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import type { PracticeQuestion, QuestionOption, MockExamResult } from '@/lib/types'; // Reusing MockExamResult type
+import type { PracticeQuestion, QuestionOption, MockExamResult } from '@/lib/types'; 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -25,10 +25,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from '@/hooks/use-toast';
 import GoogleAd from '@/components/ads/GoogleAd';
+import { cn } from '@/lib/utils';
 
 const REAL_EXAM_QUESTIONS_COUNT = 25;
-const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60; // 25 minutes in seconds
-const PASS_PERCENTAGE = 0.7; // 70% to pass
+const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60; 
+const PASS_PERCENTAGE = 0.7; 
 
 type ExamCategory = 'A' | 'B' | 'K' | 'Mixed';
 
@@ -51,6 +52,13 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   const [showResultsDialog, setShowResultsDialog] = useState(false);
   const [showPastResultsDialog, setShowPastResultsDialog] = useState(false);
   const [pastResults, setPastResults] = useState<MockExamResult[]>([]);
+
+  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const adSlotSide1 = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_SIDE_1;
+  const adSlotSide2 = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_SIDE_2;
+  const adSlotSide3 = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_SIDE_3;
+  const adSlotBottomMobile = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_BOTTOM_MOBILE;
+
 
   useEffect(() => {
     const storedResults = localStorage.getItem('realExamResults');
@@ -149,7 +157,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
 
     setExamQuestions(questionsForExam);
     setCurrentQuestionIndex(0);
-    setUserAnswers(new Array(questionsForExam.length).fill(null));
+    setUserAnswers(new Array(questionsForExam.length).fill(null)); // Reset user answers
     setTimeLeft(REAL_EXAM_TIME_LIMIT_SECONDS);
     setExamStarted(true);
     setExamFinished(false);
@@ -171,8 +179,16 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     const content = language === 'en' ? option.en : option.np;
     const optionId = `option-real-exam-${currentQuestion.id}-${index}`;
     return (
-      <div key={optionId} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:border-primary has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-primary/10 transition-all">
-        <RadioGroupItem value={index.toString()} id={optionId} className="shrink-0" />
+      <div key={optionId} className={cn(
+        "flex items-center space-x-3 p-3 rounded-lg border transition-all",
+        userAnswers[currentQuestionIndex] === index ? "border-primary bg-primary/10" : "border-border hover:border-primary"
+      )}>
+        <RadioGroupItem 
+          value={index.toString()} 
+          id={optionId} 
+          className="shrink-0" 
+          checked={userAnswers[currentQuestionIndex] === index}
+        />
         <Label htmlFor={optionId} className="flex-1 cursor-pointer text-base">
           <p>{content.text}</p>
           {content.image_url && (
@@ -196,40 +212,53 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
-  // Ad display logic
-  const renderAds = (position: 'side' | 'bottom') => {
-    // IMPORTANT: Replace with your actual AdSense Client and Slot IDs
-    const adClient = "YOUR_ADSENSE_CLIENT_ID"; 
-    const adSlotSide = "YOUR_AD_SLOT_ID_SIDE"; // Example: for side banners
-    const adSlotBottom = "YOUR_AD_SLOT_ID_BOTTOM"; // Example: for bottom banners
+  const renderAds = (position: 'side-left' | 'side-right' | 'bottom-mobile') => {
+    if (!adClient) return null;
 
-    if (position === 'side') {
+    if (position === 'side-left' && adSlotSide1) {
       return (
-        <div className="hidden lg:block w-48 space-y-4 shrink-0"> {/* Adjust width as needed, added shrink-0 */}
+        <aside className="hidden lg:block w-48 space-y-6 shrink-0">
           <GoogleAd
             adClient={adClient}
-            adSlot={adSlotSide}
-            adFormat="auto" // Or specific format like 'vertical'
-            responsive={true}
-            className="min-h-[250px] w-full"
-          />
-           <GoogleAd // Second side ad
-            adClient={adClient}
-            adSlot={adSlotSide + "_2"} // Ensure unique slot or use same if design allows
+            adSlot={adSlotSide1}
             adFormat="auto"
             responsive={true}
-            className="min-h-[250px] w-full"
+            className="min-h-[250px] w-full sticky top-20"
           />
-        </div>
+        </aside>
       );
     }
-    if (position === 'bottom') {
+    if (position === 'side-right') {
       return (
-        <div className="lg:hidden mt-8 w-full"> {/* Ensured w-full for bottom ad */}
+        <aside className="hidden lg:block w-48 space-y-6 shrink-0">
+          {adSlotSide2 && (
+            <GoogleAd
+              adClient={adClient}
+              adSlot={adSlotSide2}
+              adFormat="auto"
+              responsive={true}
+              className="min-h-[250px] w-full sticky top-20"
+            />
+          )}
+          {adSlotSide3 && (
+            <GoogleAd
+              adClient={adClient}
+              adSlot={adSlotSide3}
+              adFormat="auto"
+              responsive={true}
+              className="min-h-[250px] w-full sticky top-[calc(20px+250px+24px)]" // Adjust top based on first ad and spacing
+            />
+          )}
+        </aside>
+      );
+    }
+    if (position === 'bottom-mobile' && adSlotBottomMobile) {
+      return (
+        <div className="lg:hidden mt-8 w-full">
           <GoogleAd
             adClient={adClient}
-            adSlot={adSlotBottom}
-            adFormat="auto" // Or specific format like 'horizontal'
+            adSlot={adSlotBottomMobile}
+            adFormat="auto"
             responsive={true}
             className="min-h-[100px] w-full"
           />
@@ -243,8 +272,8 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   if (!examStarted && !examFinished) {
     return (
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start">
-        {renderAds('side')}
-        <div className="flex-grow max-w-lg w-full"> {/* Added w-full */}
+        {renderAds('side-left')}
+        <div className="flex-grow max-w-lg w-full"> 
           <Card className="w-full shadow-xl rounded-xl">
             <CardHeader>
               <CardTitle className="text-2xl">{t('Real Exam Setup', 'वास्तविक परीक्षा सेटअप')}</CardTitle>
@@ -306,8 +335,8 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
             </CardFooter>
           </Card>
         </div>
-        {renderAds('side')}
-        {renderAds('bottom')}
+        {renderAds('side-right')}
+        {renderAds('bottom-mobile')}
       </div>
     );
   }
@@ -315,8 +344,8 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   if (examStarted && currentQuestion) {
     return (
       <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
-        {renderAds('side')}
-        <div className="flex-grow max-w-2xl w-full"> {/* Applied w-full here too */}
+        {renderAds('side-left')}
+        <div className="flex-grow max-w-2xl w-full"> 
           <Card className="w-full shadow-xl rounded-xl">
             <CardHeader>
               <div className="flex justify-between items-center">
@@ -344,8 +373,8 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
             </CardHeader>
             <CardContent>
               <RadioGroup
-                key={`${currentQuestion.id}-${currentQuestionIndex}`}
-                value={userAnswers[currentQuestionIndex]?.toString()}
+                key={`${currentQuestion.id}-${currentQuestionIndex}`} // Force re-render to clear selection
+                value={userAnswers[currentQuestionIndex] !== null ? userAnswers[currentQuestionIndex]!.toString() : undefined}
                 onValueChange={(value) => handleAnswerSelect(parseInt(value))}
                 className="space-y-3"
               >
@@ -387,8 +416,8 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
             </CardFooter>
           </Card>
         </div>
-        {renderAds('side')}
-        {renderAds('bottom')}
+        {renderAds('side-right')}
+        {renderAds('bottom-mobile')}
       </div>
     );
   }
@@ -397,8 +426,8 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     const passed = examResult.totalQuestions > 0 && (examResult.score / examResult.totalQuestions) >= PASS_PERCENTAGE;
     return (
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start w-full">
-        {renderAds('side')}
-        <div className="flex-grow w-full"> {/* Added w-full */}
+        {renderAds('side-left')}
+        <div className="flex-grow w-full"> 
             <AlertDialog open={showResultsDialog} onOpenChange={(open) => {
                 setShowResultsDialog(open);
                 if (!open) {
@@ -457,8 +486,8 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
               </AlertDialogContent>
             </AlertDialog>
         </div>
-        {renderAds('side')}
-        {renderAds('bottom')}
+        {renderAds('side-right')}
+        {renderAds('bottom-mobile')}
       </div>
     );
   }

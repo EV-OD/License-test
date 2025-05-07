@@ -8,8 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Search, Tag } from 'lucide-react';
-import GoogleAd from '@/components/ads/GoogleAd'; // Added GoogleAd import
+import { Search, Tag, TrafficCone as TrafficConeIconLucide } from 'lucide-react'; // Using Lucide's TrafficCone
+import GoogleAd from '@/components/ads/GoogleAd';
 
 interface TrafficSignsClientProps {
   allSigns: TrafficSign[];
@@ -23,6 +23,9 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
   const { t, language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<SignCategoryFilter>('All');
+
+  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const adSlotBottom = process.env.NEXT_PUBLIC_AD_SLOT_TRAFFIC_SIGNS_BOTTOM;
 
   const uniqueCategories = useMemo(() => {
     const categories = new Set<string>();
@@ -45,11 +48,8 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
     });
   }, [allSigns, searchTerm, categoryFilter, language]);
 
-  // Ad display logic
   const renderAds = (position: 'bottom') => {
-    // IMPORTANT: Replace with your actual AdSense Client and Slot IDs
-    const adClient = "YOUR_ADSENSE_CLIENT_ID"; 
-    const adSlotBottom = "YOUR_AD_SLOT_ID_TRAFFIC_SIGNS_BOTTOM"; // Example: for bottom banners
+    if (!adClient || !adSlotBottom) return null;
 
     if (position === 'bottom') {
       return (
@@ -131,23 +131,12 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
         </div>
       ) : (
         <div className="text-center py-12">
-          <TrafficCone className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
+          <TrafficConeIconLucide className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
           <p className="text-xl font-semibold">{t('No Traffic Signs Found', 'कुनै ट्राफिक संकेतहरू फेला परेनन्')}</p>
           <p className="text-muted-foreground">{t('Try adjusting your search or filter criteria.', 'आफ्नो खोज वा फिल्टर मापदण्ड समायोजन गर्ने प्रयास गर्नुहोस्।')}</p>
         </div>
       )}
-      {renderAds('bottom')} {/* Added ad display at the bottom */}
+      {renderAds('bottom')}
     </div>
   );
 }
-
-// Helper icon for TrafficCone if not available from lucide-react
-const TrafficCone = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M12 2l7.5 15H4.5L12 2z"/>
-    <path d="M8 10h8"/>
-    <path d="M6 14h12"/>
-    <path d="M4 18h16"/>
-  </svg>
-);
-

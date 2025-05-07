@@ -1,7 +1,7 @@
 
 import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
+// import { GeistMono } from 'geist/mono'; // Removed due to "Module not found" error
 import Script from 'next/script';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
@@ -47,21 +47,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const adSenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const isProduction = process.env.NODE_ENV === 'production';
+  const showAds = isProduction && adSenseClientId && adSenseClientId !== "ca-pub-0000000000000000" && adSenseClientId !== "YOUR_ADSENSE_CLIENT_ID";
+
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${GeistSans.variable} font-sans`} suppressHydrationWarning>
       <head>
-        {/* 
-          IMPORTANT: Replace YOUR_ADSENSE_CLIENT_ID with your actual Google AdSense Publisher ID.
-          Example: ca-pub-1234567890123456
-        */}
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR_ADSENSE_CLIENT_ID`}
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
+        {showAds && (
+           <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
-      <body className="antialiased font-sans bg-background text-foreground">
+      <body className="antialiased bg-background text-foreground">
         <LanguageProvider>
           <div className="flex flex-col min-h-screen">
             <Header />

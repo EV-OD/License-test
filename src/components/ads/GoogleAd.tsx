@@ -2,16 +2,17 @@
 'use client';
 
 import type { FC } from 'react';
-import React, { useEffect, useRef, useState } from 'react'; // Added React and useState import
+import React, { useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils'; 
 
 interface GoogleAdProps {
-  adClient: string; // e.g., "ca-pub-xxxxxxxxxxxxxxxx"
-  adSlot: string; // e.g., "yyyyyyyyyy"
-  adFormat?: string; // e.g., "auto", "rectangle", "vertical", "horizontal"
-  responsive?: boolean; // Corresponds to data-full-width-responsive
+  adClient: string; 
+  adSlot: string; 
+  adFormat?: string; 
+  responsive?: boolean; 
   className?: string;
   style?: React.CSSProperties;
-  layoutKey?: string; // For data-ad-layout-key, used with fluid ads
+  layoutKey?: string; 
 }
 
 declare global {
@@ -20,48 +21,57 @@ declare global {
   }
 }
 
+const PLACEHOLDER_CLIENT_ID_ENV = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
+// Standard placeholder values often seen in examples
+const GENERIC_PLACEHOLDER_CLIENT_ID = "ca-pub-0000000000000000";
+const GENERIC_PLACEHOLDER_SLOT_ID = "0000000000";
+
 const GoogleAd: FC<GoogleAdProps> = ({
   adClient,
   adSlot,
   adFormat = 'auto',
   responsive = true,
   className = '',
-  style = { display: 'block' },
+  style = { display: 'block', width: '100%' }, 
   layoutKey,
 }) => {
   const adRef = useRef<HTMLDivElement>(null);
-  const [isDevelopment, setIsDevelopment] = useState(process.env.NODE_ENV === 'development');
   const [adPushed, setAdPushed] = useState(false);
 
-  useEffect(() => {
-    // This effect should run only once per ad unit on mount or when key ad props change.
-    // Adding a `key` to the component instance is often the best way to re-trigger if absolutely necessary.
-    
-    // Do not push if it's a placeholder ID
-    if (adClient === 'YOUR_ADSENSE_CLIENT_ID' || adSlot === 'YOUR_AD_SLOT_ID') {
-      setIsDevelopment(true); // Force dev placeholder if IDs are not set
-      return;
-    } else {
-      setIsDevelopment(false);
-    }
+  const isEffectivelyPlaceholderId = 
+      !adClient || adClient === GENERIC_PLACEHOLDER_CLIENT_ID || adClient === "YOUR_ADSENSE_CLIENT_ID" ||
+      !adSlot || adSlot === GENERIC_PLACEHOLDER_SLOT_ID || adSlot === "YOUR_AD_SLOT_ID";
 
+  const shouldRenderAd = IS_PRODUCTION && !isEffectivelyPlaceholderId;
+
+  useEffect(() => {
+    if (!shouldRenderAd) {
+      return; 
+    }
+    
+    let pushAttempted = false;
     try {
       if (window.adsbygoogle && !adPushed) {
-        console.log('Pushing ad for slot:', adSlot);
+        console.log(`Attempting to push ad for slot: ${adSlot}, client: ${adClient}`);
         window.adsbygoogle.push({});
-        setAdPushed(true);
+        setAdPushed(true); 
+        pushAttempted = true;
       } else if (!window.adsbygoogle) {
-        console.warn('AdSense script not loaded yet for slot:', adSlot);
+        console.warn(`AdSense script (adsbygoogle) not loaded yet for slot: ${adSlot}.`);
+      } else if (adPushed) {
+        // console.log(`Ad already pushed for slot: ${adSlot}`);
       }
     } catch (e) {
       console.error('Error pushing AdSense ad for slot:', adSlot, e);
     }
-  // We only want to push the ad once per component instance unless forced by key change
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [adClient, adSlot, adPushed]); // adPushed ensures it only tries once successfully per mount logic
+    // If an ad push fails (e.g. ad slot not filled), AdSense might retry internally.
+    // We primarily prevent re-pushing from our side if already successful.
+  }, [adClient, adSlot, adFormat, responsive, layoutKey, adPushed, shouldRenderAd]);
 
-  if (adClient === 'YOUR_ADSENSE_CLIENT_ID' || adSlot === 'YOUR_AD_SLOT_ID') {
-    // Render a placeholder in development or if IDs are not set
+
+  if (!shouldRenderAd) {
     return (
       <div
         className={cn(
@@ -70,26 +80,23 @@ const GoogleAd: FC<GoogleAdProps> = ({
         )}
         style={style}
       >
-        <p className="text-sm">
-          Advertisement Placeholder
-          <br />
-          (Replace YOUR_ADSENSE_CLIENT_ID and YOUR_AD_SLOT_ID)
-          <br/>
-          Client: {adClient}, Slot: {adSlot}
-        </p>
+        <div className="text-sm">
+          <p className="font-semibold">Advertisement Placeholder</p>
+          {!IS_PRODUCTION && <p className="text-xs">(Ads disabled in development)</p>}
+          {isEffectivelyPlaceholderId && <p className="text-xs mt-1 text-destructive-foreground/70">(Using placeholder IDs. Configure in .env.local)</p>}
+          <p className="text-xs mt-1">Client: <span className="font-mono text-xs">{adClient || "N/A"}</span></p>
+          <p className="text-xs">Slot: <span className="font-mono text-xs">{adSlot || "N/A"}</span></p>
+        </div>
       </div>
     );
   }
   
-  // Unique key for each ad instance to help with re-renders if props change
-  // However, AdSense often works best if the component fully unmounts and remounts
-  // if fundamental ad properties like slot ID change.
-  const adKey = `${adClient}-${adSlot}-${adFormat}-${responsive}-${layoutKey || ''}`;
+  const adKey = `${adClient}-${adSlot}-${adFormat}-${responsive.toString()}-${layoutKey || 'no-layout'}-${Date.now()}`;
 
   return (
     <div ref={adRef} className={cn('google-ad-container', className)} style={{width: '100%'}}>
       <ins
-        key={adKey} // Force re-render if key attributes change - helps AdSense re-initialize
+        key={adKey} 
         className="adsbygoogle"
         style={style}
         data-ad-client={adClient}
@@ -102,9 +109,4 @@ const GoogleAd: FC<GoogleAdProps> = ({
   );
 };
 
-// Helper for cn if not already defined
-const cn = (...inputs: (string | undefined | null | false)[]) => inputs.filter(Boolean).join(' ');
-
-
 export default GoogleAd;
-

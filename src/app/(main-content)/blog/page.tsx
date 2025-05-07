@@ -1,53 +1,24 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { SITE_NAME, ADDITIONAL_RESOURCES } from '@/lib/constants';
+import { SITE_NAME } from '@/lib/constants';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Rss } from 'lucide-react';
 import Image from 'next/image';
-import GoogleAd from '@/components/ads/GoogleAd'; // Added import
+import GoogleAd from '@/components/ads/GoogleAd';
+import { getSortedPostsData, type BlogPost } from '@/lib/blog';
 
 export const metadata: Metadata = {
   title: `Blog | ${SITE_NAME}`,
   description: `Tips, guides, and updates related to Nepal's driving license tests and road safety.`,
 };
 
-// Placeholder blog posts
-const blogPosts = [
-  {
-    slug: "top-10-tips",
-    title: "Top 10 Tips to Pass the Likhit Exam",
-    date: "2024-07-28",
-    excerpt: "Master the Nepal driving license written test with these essential tips and strategies. From study techniques to exam day advice, we've got you covered.",
-    image: "https://picsum.photos/seed/blog1/600/400",
-    category: "Exam Preparation",
-    dataAiHint: "study books desk",
-  },
-  {
-    slug: "common-mistakes",
-    title: "Common Mistakes to Avoid in Your Driving Test",
-    date: "2024-07-20",
-    excerpt: "Learn about the frequent errors candidates make during the practical driving test in Nepal and how to steer clear of them for a successful outcome.",
-    image: "https://picsum.photos/seed/blog2/600/400",
-    category: "Driving Tips",
-    dataAiHint: "driving lesson car",
-  },
-  {
-    slug: "understanding-nepali-traffic-rules",
-    title: "Understanding Nepali Traffic Rules: A Comprehensive Guide",
-    date: "2024-07-15",
-    excerpt: "A deep dive into the essential traffic laws and regulations in Nepal that every driver must know. Stay safe and legal on the roads.",
-    image: "https://picsum.photos/seed/blog3/600/400",
-    category: "Traffic Rules",
-    dataAiHint: "traffic light city",
-  },
-];
-
-
 export default function BlogPage() {
-  const adClient = "YOUR_ADSENSE_CLIENT_ID";
-  const adSlotBottom = "YOUR_AD_SLOT_ID_BLOG_LIST_BOTTOM";
+  const blogPosts: BlogPost[] = getSortedPostsData();
+
+  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const adSlotBottom = process.env.NEXT_PUBLIC_AD_SLOT_BLOG_LIST_BOTTOM;
 
   return (
     <div className="container py-8 md:py-12">
@@ -71,7 +42,7 @@ export default function BlogPage() {
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover"
-                  data-ai-hint={post.dataAiHint} 
+                  data-ai-hint={post.dataAiHint || "blog image"} 
                 />
               </div>
             </Link>
@@ -96,7 +67,6 @@ export default function BlogPage() {
         ))}
       </div>
       
-      {/* Fallback for no posts */}
       {blogPosts.length === 0 && (
         <div className="text-center py-16">
           <Rss className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
@@ -106,16 +76,17 @@ export default function BlogPage() {
       )}
 
       {/* Ad Unit Section */}
-      <div className="mt-12 w-full">
-        <GoogleAd
-          adClient={adClient}
-          adSlot={adSlotBottom}
-          adFormat="auto"
-          responsive={true}
-          className="min-h-[100px] w-full"
-        />
-      </div>
+      {adClient && adSlotBottom && (
+        <div className="mt-12 w-full">
+          <GoogleAd
+            adClient={adClient}
+            adSlot={adSlotBottom}
+            adFormat="auto"
+            responsive={true}
+            className="min-h-[100px] w-full"
+          />
+        </div>
+      )}
     </div>
   );
 }
-
