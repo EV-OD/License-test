@@ -47,6 +47,7 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
   const [examFinished, setExamFinished] = useState(false);
   const [examResult, setExamResult] = useState<MockExamResult | null>(null);
   const [showResultsDialog, setShowResultsDialog] = useState(false);
+  const [showPastResultsDialog, setShowPastResultsDialog] = useState(false); // Added state for past results dialog
   const [pastResults, setPastResults] = useState<MockExamResult[]>([]);
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
        toast({
         title: t("Warning", "चेतावनी"),
         description: t(`Not enough questions for category ${examCategory}. Using ${questionsForExam.length} questions.`, `श्रेणी ${examCategory} को लागि पर्याप्त प्रश्नहरू छैनन्। ${questionsForExam.length} प्रश्नहरू प्रयोग गर्दै।`),
-        variant: "default", // or a warning variant if you have one
+        variant: "default", 
       });
     } else if (questionsForExam.length === 0) {
        toast({
@@ -107,7 +108,8 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [examStarted, examFinished, timeLeft]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [examStarted, examFinished, timeLeft]); // finishExam dependency might cause issues if not stable, but seems fine here
 
   const handleAnswerSelect = (optionIndex: number) => {
     const newAnswers = [...userAnswers];
@@ -115,9 +117,9 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
     setUserAnswers(newAnswers);
   };
 
-  const finishExam = () => {
+  const finishExam = useCallback(() => {
     setExamFinished(true);
-    setExamStarted(false); // Stop timer and further interactions
+    setExamStarted(false); 
     
     let score = 0;
     const answerDetails = examQuestions.map((q, idx) => {
@@ -131,20 +133,23 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
       totalQuestions: examQuestions.length,
       date: new Date().toISOString(),
       answers: answerDetails,
+      category: examCategory, // Store category with result
     };
     setExamResult(result);
     saveResult(result);
     setShowResultsDialog(true);
-  };
+  }, [examQuestions, userAnswers, examCategory, saveResult]); // Added dependencies
   
   const currentQuestion = examQuestions[currentQuestionIndex];
 
   const renderOption = (option: QuestionOption, index: number) => {
+    if (!currentQuestion) return null;
     const content = language === 'en' ? option.en : option.np;
+    const optionId = `option-exam-${currentQuestion.id}-${index}`;
     return (
-      <div key={index} className="flex items-start space-x-3">
-        <RadioGroupItem value={index.toString()} id={`option-exam-${index}`} className="mt-1" />
-        <Label htmlFor={`option-exam-${index}`} className="flex-1 cursor-pointer">
+      <div key={optionId} className="flex items-center space-x-3">
+        <RadioGroupItem value={index.toString()} id={optionId} />
+        <Label htmlFor={optionId} className="flex-1 cursor-pointer">
           <p>{content.text}</p>
           {content.image_url && (
             <Image
@@ -201,7 +206,7 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
           <CardFooter className="flex-col gap-4">
             <Button onClick={startExam} className="w-full">{t('Start Mock Exam', 'नमुना परीक्षा सुरु गर्नुहोस्')}</Button>
             {pastResults.length > 0 && (
-              <AlertDialog open={showPastResultsDialog} onOpenChange={setShowPastResultsDialog}>
+               <AlertDialog open={showPastResultsDialog} onOpenChange={setShowPastResultsDialog}>
                 <AlertDialogTrigger asChild>
                   <Button variant="outline" className="w-full"><History className="mr-2 h-4 w-4"/>{t('View Past Results', 'विगतका नतिजाहरू हेर्नुहोस्')}</Button>
                 </AlertDialogTrigger>
@@ -212,7 +217,7 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
                   <div className="space-y-3 my-4">
                     {pastResults.map((res, idx) => (
                       <Card key={idx} className="p-3">
-                        <p>{t('Date:', 'मिति:')} {new Date(res.date).toLocaleDateString()}</p>
+                        <p>{t('Date:', 'मिति:')} {new Date(res.date).toLocaleDateString()} {res.category ? `(${t('Category', 'श्रेणी')}: ${res.category})` : ''}</p>
                         <p>{t('Score:', 'स्कोर:')} {res.score}/{res.totalQuestions}</p>
                       </Card>
                     ))}
@@ -259,6 +264,7 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
           </CardHeader>
           <CardContent>
             <RadioGroup
+              key={currentQuestion.id} // Ensure RadioGroup resets when question changes
               value={userAnswers[currentQuestionIndex]?.toString()}
               onValueChange={(value) => handleAnswerSelect(parseInt(value))}
               className="space-y-4"
@@ -303,16 +309,14 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
     );
   }
   
-  // This state primarily handles the results dialog after finishing.
-  // If examFinished is true but examResult is not yet set (edge case), it can show a loading or redirect.
-  // For a cleaner flow, the results display is handled by the AlertDialog triggered by setShowResultsDialog.
   if (examFinished && examResult) {
     return (
       <AlertDialog open={showResultsDialog} onOpenChange={(open) => {
           setShowResultsDialog(open);
-          if (!open) { // When dialog closes, reset to initial state
+          if (!open) { 
             setExamFinished(false); 
             setExamResult(null);
+            // Optionally, reset to exam setup screen or a dashboard
           }
         }}>
         <AlertDialogContent className="max-h-[80vh] overflow-y-auto">
@@ -340,7 +344,7 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
                         {t('Your answer:', 'तपाईंको उत्तर:')} {ans.selectedOption !== null ? (language === 'en' ? q.options[ans.selectedOption].en.text : q.options[ans.selectedOption].np.text) : t('Not answered', 'उत्तर दिइएको छैन')}
                         {ans.isCorrect ? <CheckCircle className="inline ml-1 h-3 w-3" /> : <XCircle className="inline ml-1 h-3 w-3" />}
                       </p>
-                      {!ans.isCorrect && <p className="text-xs text-muted-foreground">{t('Correct answer:', 'सही उत्तर:')} {language === 'en' ? q.options[q.correct_option_index].en.text : q.options[q.correct_option_index].np.text}</p>}
+                      {!ans.isCorrect && ans.selectedOption !== null && <p className="text-xs text-muted-foreground">{t('Correct answer:', 'सही उत्तर:')} {language === 'en' ? q.options[q.correct_option_index].en.text : q.options[q.correct_option_index].np.text}</p>}
                     </Card>
                   );
                 })}
@@ -359,5 +363,5 @@ export function MockExamClient({ allQuestions }: MockExamClientProps) {
       </AlertDialog>
     );
   }
-  return null; // Fallback if no state matches, should ideally not be reached
+  return null; 
 }

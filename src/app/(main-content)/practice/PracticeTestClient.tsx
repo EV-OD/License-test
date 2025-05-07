@@ -45,13 +45,18 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   const [incorrectAnswers, setIncorrectAnswers] = useState<PracticeQuestion[]>([]);
 
   const filteredQuestions = useMemo(() => {
+    if (!allQuestions) return [];
     if (category === 'All') return allQuestions;
     return allQuestions.filter(q => q.category === category);
   }, [allQuestions, category]);
 
   const startNewSet = () => {
-    const shuffled = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, QUESTIONS_PER_SET);
-    setCurrentSetQuestions(shuffled);
+    if (!filteredQuestions || filteredQuestions.length === 0) {
+      setCurrentSetQuestions([]);
+    } else {
+      const shuffled = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, QUESTIONS_PER_SET);
+      setCurrentSetQuestions(shuffled);
+    }
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
     setShowAnswer(false);
@@ -63,7 +68,7 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   
   useEffect(startNewSet, [category, filteredQuestions]); // Restart set if category or base questions change
 
-  const currentQuestion = currentSetQuestions[currentQuestionIndex];
+  const currentQuestion = currentSetQuestions && currentSetQuestions.length > 0 ? currentSetQuestions[currentQuestionIndex] : null;
 
   const handleAnswerSubmit = () => {
     if (selectedAnswer === null || !currentQuestion) return;
@@ -87,11 +92,13 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   };
 
   const renderOption = (option: QuestionOption, index: number) => {
+    if (!currentQuestion) return null;
     const content = language === 'en' ? option.en : option.np;
+    const optionId = `option-practice-${currentQuestion.id}-${index}`;
     return (
-      <div key={index} className="flex items-start space-x-3">
-        <RadioGroupItem value={index.toString()} id={`option-${index}`} className="mt-1" />
-        <Label htmlFor={`option-${index}`} className="flex-1 cursor-pointer">
+      <div key={optionId} className="flex items-center space-x-3">
+        <RadioGroupItem value={index.toString()} id={optionId} />
+        <Label htmlFor={optionId} className="flex-1 cursor-pointer">
           <p>{content.text}</p>
           {content.image_url && (
             <Image
@@ -108,8 +115,22 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     );
   };
 
-  if (currentSetQuestions.length === 0 && filteredQuestions.length > 0) {
-    // Initial load or category change triggered a restart, but questions haven't been set yet
+  if (!allQuestions || allQuestions.length === 0) {
+    return (
+      <div className="container py-8 text-center">
+         <Alert variant="destructive">
+            <AlertTitle>{t('No Questions Loaded', 'कुनै प्रश्नहरू लोड भएनन्')}</AlertTitle>
+            <AlertDescription>
+                {t('There was an issue loading the practice questions. Please try refreshing the page.', 'अभ्यास प्रश्नहरू लोड गर्न समस्या भयो। कृपया पृष्ठ ताजा गर्ने प्रयास गर्नुहोस्।')}
+            </AlertDescription>
+        </Alert>
+      </div>
+    )
+  }
+  
+  if (currentSetQuestions.length === 0 && filteredQuestions.length > 0 && !quizFinished) {
+    // This case handles when questions are filtered but not yet set (e.g., during category change)
+    // or if filteredQuestions has items but currentSetQuestions became empty unexpectedly.
     return (
       <div className="container py-8 text-center">
         <p>{t('Loading questions...', 'प्रश्नहरू लोड हुँदैछ...')}</p>
@@ -117,7 +138,7 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     );
   }
   
-  if (filteredQuestions.length === 0) {
+  if (filteredQuestions.length === 0 && !quizFinished) {
     return (
         <div className="container py-8 text-center">
             <h1 className="text-3xl font-bold mb-6">{t('Practice Test', 'अभ्यास परीक्षा')}</h1>
@@ -193,6 +214,7 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
           </CardHeader>
           <CardContent>
             <RadioGroup
+              key={currentQuestion.id}
               value={selectedAnswer?.toString()}
               onValueChange={(value) => setSelectedAnswer(parseInt(value))}
               disabled={showAnswer}
@@ -226,7 +248,18 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
             )}
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button onClick={() => { if(currentQuestionIndex > 0) setCurrentQuestionIndex(i => i-1); setSelectedAnswer(null); setShowAnswer(false); }} variant="outline" disabled={currentQuestionIndex === 0 || showAnswer}>
+            <Button 
+              onClick={() => { 
+                if(currentQuestionIndex > 0) {
+                  setCurrentQuestionIndex(i => i-1); 
+                  setSelectedAnswer(null); 
+                  setShowAnswer(false);
+                  setShowExplanation(false);
+                }
+              }} 
+              variant="outline" 
+              disabled={currentQuestionIndex === 0 || showAnswer}
+            >
               <ChevronLeft className="mr-2 h-4 w-4" /> {t('Previous', 'अघिल्लो')}
             </Button>
             {showAnswer ? (
@@ -252,10 +285,15 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
             <p className="text-xl">
               {t('Your Score:', 'तपाईंको स्कोर:')} <span className="font-bold text-primary">{score} / {currentSetQuestions.length}</span>
             </p>
-            <Progress value={(score / currentSetQuestions.length) * 100} className="w-full" />
-            <p className={`text-lg font-semibold ${score / currentSetQuestions.length >= 0.7 ? 'text-accent' : 'text-destructive'}`}>
-              {score / currentSetQuestions.length >= 0.7 ? t('Great job! You passed.', 'राम्रो काम! तपाईं उत्तीर्ण हुनुभयो।') : t('Keep practicing! You can do better.', 'अभ्यास जारी राख्नुहोस्! तपाईं अझ राम्रो गर्न सक्नुहुन्छ।')}
-            </p>
+            {currentSetQuestions.length > 0 && <Progress value={(score / currentSetQuestions.length) * 100} className="w-full" />}
+            {currentSetQuestions.length > 0 && (
+                <p className={`text-lg font-semibold ${score / currentSetQuestions.length >= 0.7 ? 'text-accent' : 'text-destructive'}`}>
+                {score / currentSetQuestions.length >= 0.7 ? t('Great job! You passed.', 'राम्रो काम! तपाईं उत्तीर्ण हुनुभयो।') : t('Keep practicing! You can do better.', 'अभ्यास जारी राख्नुहोस्! तपाईं अझ राम्रो गर्न सक्नुहुन्छ।')}
+                </p>
+            )}
+            {currentSetQuestions.length === 0 && (
+                <p className="text-lg text-muted-foreground">{t('No questions were in this set to score.', 'यो सेटमा स्कोर गर्नका लागि कुनै प्रश्नहरू थिएनन्।')}</p>
+            )}
             {incorrectAnswers.length > 0 && (
                <AlertDialog>
                 <AlertDialogTrigger asChild>

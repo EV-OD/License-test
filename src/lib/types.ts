@@ -73,9 +73,12 @@ export type TrafficSign = {
 };
 
 // Mock Exam Types
+export type ExamCategoryType = 'A' | 'B' | 'K' | 'Mixed';
+
 export type MockExamResult = {
   score: number;
   totalQuestions: number;
   date: string; // ISO string
   answers: { questionId: string; selectedOption: number | null; isCorrect: boolean }[];
+  category: ExamCategoryType; 
 };
