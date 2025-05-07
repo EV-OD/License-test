@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import type { PracticeQuestion, QuestionOption, MockExamResult } from '@/lib/types'; // Reusing MockExamResult type
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from '@/hooks/use-toast';
 
-const REAL_EXAM_QUESTIONS_COUNT = 25; 
+const REAL_EXAM_QUESTIONS_COUNT = 25;
 const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60; // 25 minutes in seconds
 const PASS_PERCENTAGE = 0.7; // 70% to pass
 
@@ -52,18 +52,82 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   const [pastResults, setPastResults] = useState<MockExamResult[]>([]);
 
   useEffect(() => {
-    const storedResults = localStorage.getItem('realExamResults'); // Changed localStorage key
+    const storedResults = localStorage.getItem('realExamResults');
     if (storedResults) {
       setPastResults(JSON.parse(storedResults));
     }
   }, []);
 
   const saveResult = useCallback((result: MockExamResult) => {
-    const updatedResults = [result, ...pastResults].slice(0, 10); 
+    const updatedResults = [result, ...pastResults].slice(0, 10);
     setPastResults(updatedResults);
-    localStorage.setItem('realExamResults', JSON.stringify(updatedResults)); // Changed localStorage key
+    localStorage.setItem('realExamResults', JSON.stringify(updatedResults));
   }, [pastResults]);
-  
+
+  const finishExam = useCallback(() => {
+    setExamFinished(currentExamFinished => {
+      if (currentExamFinished) {
+        return true; // Already finished
+      }
+
+      setExamStarted(false);
+
+      let score = 0;
+      const answerDetails = examQuestions.map((q, idx) => {
+        const isCorrect = userAnswers[idx] === q.correct_option_index;
+        if (isCorrect) score++;
+        return { questionId: q.id, selectedOption: userAnswers[idx], isCorrect };
+      });
+
+      const resultData: MockExamResult = {
+        score,
+        totalQuestions: examQuestions.length,
+        date: new Date().toISOString(),
+        answers: answerDetails,
+        category: examCategory,
+      };
+      setExamResult(resultData);
+      saveResult(resultData);
+      setShowResultsDialog(true);
+      return true; // Set examFinished to true
+    });
+  }, [
+    examQuestions,
+    userAnswers,
+    examCategory,
+    saveResult,
+    setExamStarted, // setExamStarted is stable
+    setExamResult,   // setExamResult is stable
+    setShowResultsDialog, // setShowResultsDialog is stable
+    setExamFinished // setExamFinished is stable
+  ]);
+
+  const finishExamRef = useRef(finishExam);
+  useEffect(() => {
+    finishExamRef.current = finishExam;
+  }, [finishExam]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (examStarted && !examFinished && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(prevTime => {
+          if (prevTime <= 1) {
+            clearInterval(timer);
+            finishExamRef.current();
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    } else if (timeLeft === 0 && examStarted && !examFinished) {
+      // Fallback if re-render happens exactly when timeLeft is 0
+      finishExamRef.current();
+    }
+    return () => clearInterval(timer);
+  }, [examStarted, examFinished, timeLeft]);
+
+
   const startExam = useCallback(() => {
     let questionsForExam: PracticeQuestion[];
     if (examCategory === 'Mixed') {
@@ -76,7 +140,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
        toast({
         title: t("Warning", "चेतावनी"),
         description: t(`Not enough questions for category ${examCategory} for a full real exam simulation. Using ${questionsForExam.length} questions. Target is ${REAL_EXAM_QUESTIONS_COUNT}.`, `श्रेणी ${examCategory} को लागि पूर्ण वास्तविक परीक्षा सिमुलेशनको लागि पर्याप्त प्रश्नहरू छैनन्। ${questionsForExam.length} प्रश्नहरू प्रयोग गर्दै। लक्ष्य ${REAL_EXAM_QUESTIONS_COUNT} हो।`),
-        variant: "default", 
+        variant: "default",
       });
     } else if (questionsForExam.length === 0) {
        toast({
@@ -86,7 +150,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
       });
       return;
     }
-    
+
     setExamQuestions(questionsForExam);
     setCurrentQuestionIndex(0);
     setUserAnswers(new Array(questionsForExam.length).fill(null));
@@ -97,25 +161,6 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     setShowResultsDialog(false);
   }, [allQuestions, examCategory, t, toast]);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (examStarted && !examFinished && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft(prevTime => {
-          if (prevTime <= 1) {
-            clearInterval(timer);
-            finishExam(); 
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    } else if (timeLeft === 0 && examStarted && !examFinished) {
-        finishExam();
-    }
-    return () => clearInterval(timer);
-  }, [examStarted, examFinished, timeLeft, finishExam]);
-
 
   const handleAnswerSelect = (optionIndex: number) => {
     const newAnswers = [...userAnswers];
@@ -123,39 +168,14 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     setUserAnswers(newAnswers);
   };
 
-  const finishExam = useCallback(() => {
-    if (examFinished) return; // Prevent multiple calls
-
-    setExamFinished(true);
-    setExamStarted(false); 
-    
-    let score = 0;
-    const answerDetails = examQuestions.map((q, idx) => {
-      const isCorrect = userAnswers[idx] === q.correct_option_index;
-      if (isCorrect) score++;
-      return { questionId: q.id, selectedOption: userAnswers[idx], isCorrect };
-    });
-
-    const result: MockExamResult = {
-      score,
-      totalQuestions: examQuestions.length,
-      date: new Date().toISOString(),
-      answers: answerDetails,
-      category: examCategory,
-    };
-    setExamResult(result);
-    saveResult(result);
-    setShowResultsDialog(true);
-  }, [examQuestions, userAnswers, examCategory, saveResult, examFinished]); 
-  
   const currentQuestion = examQuestions[currentQuestionIndex];
 
   const renderOption = (option: QuestionOption, index: number) => {
     if (!currentQuestion) return null;
     const content = language === 'en' ? option.en : option.np;
-    const optionId = `option-real-exam-${currentQuestion.id}-${index}`; // Unique prefix
+    const optionId = `option-real-exam-${currentQuestion.id}-${index}`;
     return (
-      <div key={optionId} className="flex items-center space-x-3 p-2 rounded-md border border-transparent hover:border-primary has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-primary/10">
+      <div key={optionId} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:border-primary has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-primary/10 transition-all">
         <RadioGroupItem value={index.toString()} id={optionId} className="shrink-0" />
         <Label htmlFor={optionId} className="flex-1 cursor-pointer text-base">
           <p>{content.text}</p>
@@ -182,7 +202,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
 
   if (!examStarted && !examFinished) {
     return (
-        <Card className="max-w-lg mx-auto shadow-xl">
+        <Card className="max-w-lg mx-auto shadow-xl rounded-xl">
           <CardHeader>
             <CardTitle className="text-2xl">{t('Real Exam Setup', 'वास्तविक परीक्षा सेटअप')}</CardTitle>
             <CardDescription>{t('Prepare for the official Likhit exam experience.', 'आधिकारिक लिखित परीक्षाको अनुभवको लागि तयारी गर्नुहोस्।')}</CardDescription>
@@ -213,29 +233,29 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-4 pt-6">
-            <Button onClick={startExam} className="w-full text-lg py-6">
+            <Button onClick={startExam} className="w-full text-lg py-6 rounded-lg">
                 <ClipboardCheckIcon className="mr-2 h-5 w-5" />
                 {t('Start Real Exam', 'वास्तविक परीक्षा सुरु गर्नुहोस्')}
             </Button>
             {pastResults.length > 0 && (
                <AlertDialog open={showPastResultsDialog} onOpenChange={setShowPastResultsDialog}>
                 <AlertDialogTrigger asChild>
-                  <Button variant="outline" className="w-full"><History className="mr-2 h-4 w-4"/>{t('View Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू हेर्नुहोस्')}</Button>
+                  <Button variant="outline" className="w-full rounded-lg"><History className="mr-2 h-4 w-4"/>{t('View Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू हेर्नुहोस्')}</Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="max-h-[80vh] overflow-y-auto">
+                <AlertDialogContent className="max-h-[80vh] overflow-y-auto rounded-xl">
                   <AlertDialogHeader>
                     <AlertDialogTitle>{t('Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू')}</AlertDialogTitle>
                   </AlertDialogHeader>
                   <div className="space-y-3 my-4">
                     {pastResults.map((res, idx) => (
-                      <Card key={idx} className="p-3">
+                      <Card key={idx} className="p-3 rounded-md">
                         <p>{t('Date:', 'मिति:')} {new Date(res.date).toLocaleDateString()} {res.category ? `(${t('Category', 'श्रेणी')}: ${res.category})` : ''}</p>
                         <p>{t('Score:', 'स्कोर:')} {res.score}/{res.totalQuestions}</p>
                       </Card>
                     ))}
                   </div>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>{t('Close', 'बन्द गर्नुहोस्')}</AlertDialogCancel>
+                    <AlertDialogCancel className="rounded-md">{t('Close', 'बन्द गर्नुहोस्')}</AlertDialogCancel>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -248,7 +268,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   if (examStarted && currentQuestion) {
     return (
       <div className="container py-8">
-        <Card className="max-w-2xl mx-auto shadow-xl">
+        <Card className="max-w-2xl mx-auto shadow-xl rounded-xl">
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle>{t(`Question ${currentQuestionIndex + 1} of ${examQuestions.length}`, `प्रश्न ${currentQuestionIndex + 1} / ${examQuestions.length}`)}</CardTitle>
@@ -256,7 +276,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
                 <Timer className="mr-2 h-5 w-5" /> {formatTime(timeLeft)}
               </div>
             </div>
-            <Progress value={((currentQuestionIndex + 1) / examQuestions.length) * 100} className="mt-2" />
+            <Progress value={((currentQuestionIndex + 1) / examQuestions.length) * 100} className="mt-2 h-2.5" />
             <CardDescription className="pt-6 text-xl font-semibold leading-relaxed">
               {language === 'en' ? currentQuestion.question_en : currentQuestion.question_np}
             </CardDescription>
@@ -275,7 +295,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
           </CardHeader>
           <CardContent>
             <RadioGroup
-              key={`${currentQuestion.id}-${currentQuestionIndex}`} // Force re-render to clear selection
+              key={`${currentQuestion.id}-${currentQuestionIndex}`}
               value={userAnswers[currentQuestionIndex]?.toString()}
               onValueChange={(value) => handleAnswerSelect(parseInt(value))}
               className="space-y-3"
@@ -284,23 +304,24 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
             </RadioGroup>
           </CardContent>
           <CardFooter className="flex justify-between pt-6">
-            <Button 
-              onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))} 
-              variant="outline" 
+            <Button
+              onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+              variant="outline"
               disabled={currentQuestionIndex === 0}
+              className="rounded-lg"
             >
               <ChevronLeft className="mr-2 h-4 w-4" /> {t('Previous', 'अघिल्लो')}
             </Button>
             {currentQuestionIndex < examQuestions.length - 1 ? (
-              <Button onClick={() => setCurrentQuestionIndex(prev => prev + 1)}>
+              <Button onClick={() => setCurrentQuestionIndex(prev => prev + 1)} className="rounded-lg">
                 {t('Next', 'अर्को')} <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             ) : (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="destructive">{t('Finish Exam', 'परीक्षा समाप्त गर्नुहोस्')}</Button>
+                  <Button variant="destructive" className="rounded-lg">{t('Finish Exam', 'परीक्षा समाप्त गर्नुहोस्')}</Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className="rounded-xl">
                   <AlertDialogHeader>
                     <AlertDialogTitle>{t('Confirm Finish', 'समाप्त गर्न निश्चित गर्नुहोस्')}</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -308,8 +329,8 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>{t('Cancel', 'रद्द गर्नुहोस्')}</AlertDialogCancel>
-                    <AlertDialogAction onClick={finishExam}>{t('Finish', 'समाप्त गर्नुहोस्')}</AlertDialogAction>
+                    <AlertDialogCancel className="rounded-md">{t('Cancel', 'रद्द गर्नुहोस्')}</AlertDialogCancel>
+                    <AlertDialogAction onClick={finishExamRef.current} className="rounded-md">{t('Finish', 'समाप्त गर्नुहोस्')}</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -319,19 +340,19 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
       </div>
     );
   }
-  
+
   if (examFinished && examResult) {
     const passed = examResult.totalQuestions > 0 && (examResult.score / examResult.totalQuestions) >= PASS_PERCENTAGE;
     return (
       <AlertDialog open={showResultsDialog} onOpenChange={(open) => {
           setShowResultsDialog(open);
-          if (!open) { 
-            setExamFinished(false); 
+          if (!open) {
+            setExamFinished(false);
             setExamResult(null);
             // Reset to exam setup screen
           }
         }}>
-        <AlertDialogContent className="max-h-[90vh] max-w-lg w-full overflow-y-auto">
+        <AlertDialogContent className="max-h-[90vh] max-w-lg w-full overflow-y-auto rounded-xl">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-2xl text-center">{t('Real Exam Results', 'वास्तविक परीक्षाको नतिजा')}</AlertDialogTitle>
           </AlertDialogHeader>
@@ -339,12 +360,12 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
             <p className="text-3xl font-bold">
               {t('Your Score:', 'तपाईंको स्कोर:')} <span className={`${passed ? 'text-accent' : 'text-destructive'}`}>{examResult.score} / {examResult.totalQuestions}</span>
             </p>
-            {examResult.totalQuestions > 0 && <Progress value={(examResult.score / examResult.totalQuestions) * 100} className="w-full h-3" />}
+            {examResult.totalQuestions > 0 && <Progress value={(examResult.score / examResult.totalQuestions) * 100} className="w-full h-3 rounded-full" />}
              <p className={`text-xl font-semibold ${passed ? 'text-accent' : 'text-destructive'}`}>
               {passed ? t('Congratulations! You Passed!', 'बधाई छ! तपाईं उत्तीर्ण हुनुभयो!') : t('Unfortunately, You Did Not Pass. Keep Practicing!', 'दुर्भाग्यवश, तपाईं उत्तीर्ण हुनुभएन। अभ्यास जारी राख्नुहोस्!')}
             </p>
             <p className="text-sm text-muted-foreground">{t(`(Passing score is ${PASS_PERCENTAGE*100}%)`, `(उत्तीर्ण अंक ${PASS_PERCENTAGE*100}%)`)}</p>
-            
+
             <details className="mt-6 text-left">
               <summary className="cursor-pointer font-medium text-primary hover:underline text-center">{t('View Answer Details', 'उत्तर विवरण हेर्नुहोस्')}</summary>
               <div className="mt-4 space-y-3 max-h-72 overflow-y-auto border p-4 rounded-md bg-muted/30">
@@ -352,7 +373,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
                   const ans = examResult.answers.find(a => a.questionId === q.id);
                   if (!ans) return null;
                   return (
-                    <Card key={idx} className={`p-3 ${ans.isCorrect ? 'border-accent bg-accent/5' : 'border-destructive bg-destructive/5'}`}>
+                    <Card key={idx} className={`p-3 rounded-md ${ans.isCorrect ? 'border-accent bg-accent/5' : 'border-destructive bg-destructive/5'}`}>
                       <p className="font-semibold text-sm mb-1">{idx+1}. {language === 'en' ? q.question_en : q.question_np}</p>
                       {(language === 'en' ? q.image_url_en : q.image_url_np) && (
                         <Image src={language === 'en' ? q.image_url_en! : q.image_url_np!} alt="Question image" width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
@@ -373,9 +394,9 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
           </div>
           <AlertDialogFooter className="flex-col sm:flex-row gap-2 pt-4">
              <AlertDialogCancel asChild>
-                <Button variant="outline" className="w-full sm:w-auto" onClick={() => { setExamFinished(false); setExamResult(null); }}>{t('Close', 'बन्द गर्नुहोस्')}</Button>
+                <Button variant="outline" className="w-full sm:w-auto rounded-md" onClick={() => { setExamFinished(false); setExamResult(null); }}>{t('Close', 'बन्द गर्नुहोस्')}</Button>
              </AlertDialogCancel>
-             <Button onClick={() => { setExamFinished(false); setExamResult(null); startExam(); }} className="w-full sm:w-auto">
+             <Button onClick={() => { setExamFinished(false); setExamResult(null); startExam(); }} className="w-full sm:w-auto rounded-md">
                <RotateCcw className="mr-2 h-4 w-4" /> {t('Take New Real Exam', 'नयाँ वास्तविक परीक्षा दिनुहोस्')}
             </Button>
           </AlertDialogFooter>
@@ -383,5 +404,5 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
       </AlertDialog>
     );
   }
-  return null; 
+  return null;
 }
