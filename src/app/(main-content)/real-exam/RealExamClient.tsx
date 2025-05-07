@@ -9,6 +9,8 @@ import GoogleAd from '@/components/ads/GoogleAd';
 import { ExamSetupScreen } from './ExamSetupScreen';
 import { ExamInProgressScreen } from './ExamInProgressScreen';
 import { ExamResultsScreen } from './ExamResultsScreen';
+import { QuestionStatusIndicator } from '@/components/shared/QuestionStatusIndicator';
+
 
 const REAL_EXAM_QUESTIONS_COUNT = 25;
 const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60; // 25 minutes
@@ -23,7 +25,6 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
   const { t, language } = useLanguage();
   const { toast } = useToast();
 
-  // examCategory is now determined by the route and passed as initialCategory
   const [examCategory] = useState<ExamCategoryType>(initialCategory);
   const [examQuestions, setExamQuestions] = useState<PracticeQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -50,18 +51,18 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
   }, [examCategory]);
 
   const saveResult = useCallback((result: MockExamResult) => {
-    const updatedResults = [result, ...pastResults].slice(0, 10); // Keep last 10 results for this category
+    const updatedResults = [result, ...pastResults].slice(0, 10); 
     setPastResults(updatedResults);
     localStorage.setItem(`realExamResults_${examCategory}`, JSON.stringify(updatedResults));
   }, [pastResults, examCategory]);
 
   const finishExamCallback = useCallback(() => {
     setExamFinished(currentExamFinished => {
-      if (currentExamFinished) { // Prevent multiple calls
+      if (currentExamFinished) { 
         return true;
       }
 
-      setExamStarted(false); // Stop the timer and exam flow
+      setExamStarted(false); 
 
       let score = 0;
       const answerDetails = examQuestions.map((q, idx) => {
@@ -75,16 +76,15 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
         totalQuestions: examQuestions.length,
         date: new Date().toISOString(),
         answers: answerDetails,
-        category: examCategory, // Category is fixed
+        category: examCategory, 
       };
       setExamResult(resultData);
       saveResult(resultData);
-      setShowResultsDialog(true); // Trigger results display
-      return true; // Mark as finished
+      setShowResultsDialog(true); 
+      return true; 
     });
   }, [examQuestions, userAnswers, examCategory, saveResult]);
 
-  // Using a ref for finishExam to ensure the useEffect for the timer always has the latest version
   const finishExamRef = useRef(finishExamCallback);
   useEffect(() => {
     finishExamRef.current = finishExamCallback;
@@ -97,14 +97,13 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
         setTimeLeft(prevTime => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            finishExamRef.current(); // Call the latest version of finishExam
+            finishExamRef.current(); 
             return 0;
           }
           return prevTime - 1;
         });
       }, 1000);
     } else if (timeLeft === 0 && examStarted && !examFinished) {
-        // This condition ensures finishExam is called if timeLeft hits 0 directly
         finishExamRef.current();
     }
     return () => clearInterval(timer);
@@ -142,7 +141,7 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
     setExamFinished(false);
     setExamResult(null);
     setShowResultsDialog(false);
-  }, [allQuestions, examCategory, t, toast]); // examCategory is stable as it comes from props
+  }, [allQuestions, examCategory, t, toast]); 
 
   const handleAnswerSelect = (optionIndex: number) => {
     const newAnswers = [...userAnswers];
@@ -157,6 +156,12 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
       setCurrentQuestionIndex(prev => Math.max(0, prev - 1));
     }
   };
+
+  const handleSelectQuestionFromIndicator = (index: number) => {
+    if (index >= 0 && index < examQuestions.length) {
+      setCurrentQuestionIndex(index);
+    }
+  };
   
   const handleConfirmFinishExam = () => {
     finishExamRef.current();
@@ -169,71 +174,15 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
-
-  const renderAds = (position: 'side-left' | 'side-right' | 'bottom-mobile') => {
-    if (!adClient) return null;
-
-    if (position === 'side-left' && adSlotSide1) {
-      return (
-        <aside className="hidden lg:block w-48 space-y-6 shrink-0">
-          <GoogleAd
-            adClient={adClient}
-            adSlot={adSlotSide1}
-            adFormat="auto"
-            responsive={true}
-            className="min-h-[250px] w-full sticky top-20"
-          />
-        </aside>
-      );
-    }
-    if (position === 'side-right') {
-      return (
-        <aside className="hidden lg:block w-48 space-y-6 shrink-0">
-          {adSlotSide2 && (
-            <GoogleAd
-              adClient={adClient}
-              adSlot={adSlotSide2}
-              adFormat="auto"
-              responsive={true}
-              className="min-h-[250px] w-full sticky top-20"
-            />
-          )}
-          {adSlotSide3 && (
-            <GoogleAd
-              adClient={adClient}
-              adSlot={adSlotSide3}
-              adFormat="auto"
-              responsive={true}
-              className="min-h-[250px] w-full sticky top-[calc(20px+250px+24px)]"
-            />
-          )}
-        </aside>
-      );
-    }
-    if (position === 'bottom-mobile' && adSlotBottomMobile) {
-      return (
-        <div className="lg:hidden mt-8 w-full">
-          <GoogleAd
-            adClient={adClient}
-            adSlot={adSlotBottomMobile}
-            adFormat="auto"
-            responsive={true}
-            className="min-h-[100px] w-full"
-          />
-        </div>
-      );
-    }
-    return null;
-  };
-
+  
   const handleCloseResults = () => {
-    setExamFinished(false); // Reset to setup screen
+    setExamFinished(false); 
     setExamResult(null);
-    // setShowResultsDialog(false); // Dialog state is managed by ExamResultsScreen
+    setShowResultsDialog(false); 
   };
 
   const handleRestartExam = () => {
-    // Reset states and start new exam with the same (initial) category
+    setShowResultsDialog(false);
     startExam();
   };
 
@@ -241,39 +190,128 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
   if (!examStarted && !examFinished) {
     return (
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start">
-        {renderAds('side-left')}
+        {adClient && adSlotSide1 && (
+            <aside className="hidden lg:block w-48 space-y-6 shrink-0 sticky top-20">
+                <GoogleAd adClient={adClient} adSlot={adSlotSide1} adFormat="auto" responsive={true} className="min-h-[250px] w-full"/>
+            </aside>
+        )}
+        {! (adClient && adSlotSide1) && <div className="hidden lg:block w-48 shrink-0"></div> }
+
         <ExamSetupScreen
-          fixedCategory={examCategory} // Pass the fixed category
+          fixedCategory={examCategory}
           onStartExam={startExam}
           pastResults={pastResults}
           showPastResultsDialog={showPastResultsDialog}
           setShowPastResultsDialog={setShowPastResultsDialog}
           t={t}
         />
-        {renderAds('side-right')}
-        {renderAds('bottom-mobile')}
+        
+        <aside className="hidden lg:block w-48 space-y-6 shrink-0 sticky top-20">
+          {adClient && adSlotSide2 && (
+            <GoogleAd adClient={adClient} adSlot={adSlotSide2} adFormat="auto" responsive={true} className="min-h-[250px] w-full"/>
+          )}
+           {adClient && adSlotSide3 && (
+            <GoogleAd adClient={adClient} adSlot={adSlotSide3} adFormat="auto" responsive={true} className="min-h-[250px] w-full mt-6"/>
+          )}
+        </aside>
+        {! (adClient && (adSlotSide2 || adSlotSide3)) && <div className="hidden lg:block w-48 shrink-0"></div> }
+
+
+        {adClient && adSlotBottomMobile && (
+          <div className="lg:hidden mt-8 w-full">
+            <GoogleAd adClient={adClient} adSlot={adSlotBottomMobile} adFormat="auto" responsive={true} className="min-h-[100px] w-full"/>
+          </div>
+        )}
       </div>
     );
   }
 
   if (examStarted && currentQuestion && !examFinished) {
     return (
-      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
-        {renderAds('side-left')}
-        <ExamInProgressScreen
-          currentQuestion={currentQuestion}
-          currentQuestionIndex={currentQuestionIndex}
-          examQuestionsLength={examQuestions.length}
-          timeLeftFormatted={formatTime(timeLeft)}
-          userAnswers={userAnswers}
-          onAnswerSelect={handleAnswerSelect}
-          onNavigateQuestion={handleNavigateQuestion}
-          onConfirmFinishExam={handleConfirmFinishExam}
-          t={t}
-          language={language}
-        />
-        {renderAds('side-right')}
-        {renderAds('bottom-mobile')}
+      <div className="w-full"> {/* Wrapper for main layout and mobile bottom indicator */}
+        <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
+          {/* Desktop Left Sidebar Slot: Ad or QuestionStatusIndicator */}
+          <div className="hidden lg:block w-48 shrink-0">
+            {adClient && adSlotSide1 ? (
+              <GoogleAd
+                adClient={adClient}
+                adSlot={adSlotSide1}
+                adFormat="auto"
+                responsive={true}
+                className="min-h-[250px] w-full sticky top-20"
+              />
+            ) : (
+              <QuestionStatusIndicator
+                questions={examQuestions}
+                userAnswers={userAnswers}
+                currentQuestionIndex={currentQuestionIndex}
+                onQuestionSelect={handleSelectQuestionFromIndicator}
+                t={t}
+                layout="desktop"
+                className="sticky top-20" 
+              />
+            )}
+          </div>
+
+          {/* Main Exam Content */}
+          <ExamInProgressScreen
+            currentQuestion={currentQuestion}
+            currentQuestionIndex={currentQuestionIndex}
+            examQuestionsLength={examQuestions.length}
+            timeLeftFormatted={formatTime(timeLeft)}
+            userAnswers={userAnswers}
+            onAnswerSelect={handleAnswerSelect}
+            onNavigateQuestion={handleNavigateQuestion}
+            onConfirmFinishExam={handleConfirmFinishExam}
+            t={t}
+            language={language}
+          />
+
+          {/* Desktop Right Sidebar Slot (existing ad logic) */}
+          <aside className="hidden lg:block w-48 space-y-6 shrink-0">
+            {adClient && adSlotSide2 && (
+              <GoogleAd
+                adClient={adClient}
+                adSlot={adSlotSide2}
+                adFormat="auto"
+                responsive={true}
+                className="min-h-[250px] w-full sticky top-20"
+              />
+            )}
+            {adClient && adSlotSide3 && (
+              <GoogleAd
+                adClient={adClient}
+                adSlot={adSlotSide3}
+                adFormat="auto"
+                responsive={true}
+                className="min-h-[250px] w-full sticky top-[calc(20px+250px+24px)]"
+              />
+            )}
+             {!adClient && <div className="min-h-[250px] w-full sticky top-20"/>} {/* Placeholder if no ads */}
+          </aside>
+        </div>
+
+        {/* Mobile Bottom Slot: Ad or QuestionStatusIndicator */}
+        <div className="lg:hidden mt-8 w-full">
+          {adClient && adSlotBottomMobile ? (
+            <GoogleAd
+              adClient={adClient}
+              adSlot={adSlotBottomMobile}
+              adFormat="auto"
+              responsive={true}
+              className="min-h-[100px] w-full"
+            />
+          ) : (
+            <QuestionStatusIndicator
+              questions={examQuestions}
+              userAnswers={userAnswers}
+              currentQuestionIndex={currentQuestionIndex}
+              onQuestionSelect={handleSelectQuestionFromIndicator}
+              t={t}
+              layout="mobile"
+            />
+          )}
+        </div>
       </div>
     );
   }
@@ -281,24 +319,58 @@ export function RealExamClient({ allQuestions, initialCategory }: RealExamClient
   if (examFinished && examResult) {
      return (
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start w-full">
-        {/* Ads can remain for results screen if desired */}
-        {renderAds('side-left')}
+         {/* Ads can remain for results screen. Left ad placeholder or indicator if no ad. */}
+        <div className="hidden lg:block w-48 shrink-0 space-y-6">
+            {adClient && adSlotSide1 ? (
+                <GoogleAd adClient={adClient} adSlot={adSlotSide1} adFormat="auto" responsive={true} className="min-h-[250px] w-full sticky top-20"/>
+            ) : examQuestions.length > 0 ? ( // Show indicator if exam was taken
+                 <QuestionStatusIndicator
+                    questions={examQuestions}
+                    userAnswers={userAnswers} // these are the final answers
+                    currentQuestionIndex={-1} // No current question on results screen
+                    onQuestionSelect={() => {}} // Non-interactive on results
+                    t={t}
+                    layout="desktop"
+                    className="sticky top-20 opacity-70" // Dimmed
+                />
+            ) : <div className="w-48 shrink-0" /> /* Empty placeholder if no ad and no questions */}
+        </div>
          <ExamResultsScreen
             examResult={examResult}
             examQuestions={examQuestions}
             passPercentage={PASS_PERCENTAGE}
-            onClose={handleCloseResults} // This will take user back to ExamSetupScreen for the same category
-            onRestartExam={handleRestartExam} // This will restart exam for the same category
+            onClose={handleCloseResults} 
+            onRestartExam={handleRestartExam} 
             t={t}
             language={language}
             showResultsDialog={showResultsDialog}
             setShowResultsDialog={setShowResultsDialog}
         />
-        {renderAds('side-right')}
-        {renderAds('bottom-mobile')}
+        <aside className="hidden lg:block w-48 space-y-6 shrink-0">
+            {adClient && adSlotSide2 && (<GoogleAd adClient={adClient} adSlot={adSlotSide2} adFormat="auto" responsive={true} className="min-h-[250px] w-full sticky top-20"/>)}
+            {adClient && adSlotSide3 && (<GoogleAd adClient={adClient} adSlot={adSlotSide3} adFormat="auto" responsive={true} className="min-h-[250px] w-full sticky top-[calc(20px+250px+24px)]"/>)}
+            {!adClient && <div className="w-48 shrink-0"/>} {/* Placeholder if no ads */}
+        </aside>
+
+        {/* Mobile bottom ad/indicator on results screen */}
+        <div className="lg:hidden mt-8 w-full">
+          {adClient && adSlotBottomMobile ? (
+            <GoogleAd adClient={adClient} adSlot={adSlotBottomMobile} adFormat="auto" responsive={true} className="min-h-[100px] w-full"/>
+          ) : examQuestions.length > 0 ? (
+            <QuestionStatusIndicator
+                questions={examQuestions}
+                userAnswers={userAnswers}
+                currentQuestionIndex={-1}
+                onQuestionSelect={() => {}}
+                t={t}
+                layout="mobile"
+                className="opacity-70" // Dimmed
+            />
+          ): null}
+        </div>
       </div>
     );
   }
 
-  return null; // Should not be reached if logic is correct
+  return null; 
 }

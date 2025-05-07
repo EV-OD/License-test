@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -14,7 +15,12 @@ const ScrollArea = React.forwardRef<
     className={cn("relative overflow-hidden", className)}
     {...props}
   >
-    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+    <ScrollAreaPrimitive.Viewport 
+      className="h-full w-full rounded-[inherit]"
+      // Allow passing additional props like style to Viewport if necessary
+      // For example, if you need to set a specific height or overflow behavior directly
+      {...(props as React.HTMLAttributes<HTMLDivElement>)} // Cast to allow HTMLDivElement props
+    >
       {children}
     </ScrollAreaPrimitive.Viewport>
     <ScrollBar />
