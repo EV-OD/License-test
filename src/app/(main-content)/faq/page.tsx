@@ -1,7 +1,11 @@
+
 import { Metadata } from 'next';
 import { SITE_NAME } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HelpCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+
 
 export const metadata: Metadata = {
   title: `FAQ | ${SITE_NAME}`,

@@ -1,7 +1,8 @@
+
 'use client'; // Making it a client component for form handling
 
 import { useState } from 'react';
-import { Metadata } from 'next';
+// import { Metadata } from 'next'; // Metadata needs to be exported from server component for static export
 import { SITE_NAME, CONTACT_DETAILS } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +13,7 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from '@/contexts/LanguageContext';
 
-// export const metadata: Metadata = { // Metadata needs to be exported from server component
+// export const metadata: Metadata = { 
 //   title: `Contact Us | ${SITE_NAME}`,
 //   description: `Get in touch with the ${SITE_NAME} team. We're here to help with your questions and feedback.`,
 // };
@@ -27,7 +28,7 @@ export default function ContactPage() {
     subject: '',
     message: '',
   });
-  const [isSubmitting, setIsSubmitting(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

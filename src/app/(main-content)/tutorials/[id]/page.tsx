@@ -1,8 +1,9 @@
+
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_NAME } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ThumbsUp, MessageSquare, Clock } from 'lucide-react';
+import { ArrowLeft, ThumbsUp, MessageSquare, Clock, ArrowRight } from 'lucide-react'; // Added ArrowRight
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -160,7 +161,7 @@ export default function TutorialPage({ params }: { params: { id: string } }) {
                 <Link key={related.id} href={`/tutorials/${related.id}`} className="block group">
                   <div className="flex items-start gap-3">
                     <div className="relative w-28 h-16 rounded overflow-hidden shrink-0">
-                       <Image src={related.thumbnailUrl} alt={related.title} fill className="object-cover" data-ai-hint={related.dataAiHint} />
+                       <Image src={related.thumbnailUrl} alt={related.title} fill className="object-cover" data-ai-hint={related.dataAiHint || "video thumbnail"} />
                     </div>
                     <div>
                       <h4 className="text-sm font-semibold group-hover:text-primary transition-colors leading-tight">{related.title}</h4>

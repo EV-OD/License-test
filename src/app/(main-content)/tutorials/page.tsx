@@ -1,3 +1,4 @@
+
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_NAME } from '@/lib/constants';
@@ -8,7 +9,7 @@ import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: `Video Tutorials | ${SITE_NAME}`,
-  description: `Watch video tutorials to understand Nepal's traffic signs, driving rules, and exam procedures.`,
+  description: `Watch video tutorials on ${SITE_NAME} to understand Nepal's traffic signs, driving rules, and exam procedures.`,
 };
 
 // Placeholder video tutorials data

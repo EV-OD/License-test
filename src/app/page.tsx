@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -181,7 +182,7 @@ export default function HomePage() {
             <div className="lg:w-1/2 flex justify-center">
               <Image 
                 src="https://picsum.photos/seed/appmockup/400/500" 
-                alt="LicensePrep Nepal Mobile App Mockup" 
+                alt={`${SITE_NAME} Mobile App Mockup`}
                 width={300} 
                 height={375}
                 className="rounded-lg shadow-2xl object-cover"

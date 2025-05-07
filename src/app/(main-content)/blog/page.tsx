@@ -1,3 +1,4 @@
+
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_NAME, ADDITIONAL_RESOURCES } from '@/lib/constants';

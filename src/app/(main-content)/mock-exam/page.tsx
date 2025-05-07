@@ -1,11 +1,12 @@
+
 import { MockExamClient } from './MockExamClient';
-import { practiceQuestions } from '@/data/practice-questions'; // Use practice questions for mock exam for now
+import { practiceQuestions } from '@/data/practice-questions'; 
 import { Metadata } from 'next';
 import { SITE_NAME } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: `Mock Exam | ${SITE_NAME}`,
-  description: `Take timed mock exams simulating real Nepal driving license (Likhit) test conditions. Track your progress and get detailed results.`,
+  description: `Take timed mock exams simulating real Nepal driving license (Likhit) test conditions. Track your progress and get detailed results on ${SITE_NAME}.`,
 };
 
 export default async function MockExamPage() {

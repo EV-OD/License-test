@@ -1,7 +1,8 @@
+
 import type { NavItem, FeatureItem, Testimonial, ResourceLink } from '@/lib/types';
 import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin } from 'lucide-react';
 
-export const SITE_NAME = "LicensePrep Nepal";
+export const SITE_NAME = "Nepal License Prep";
 
 export const NAV_LINKS: NavItem[] = [
   { href: "/", label: "Home" },
@@ -88,7 +89,7 @@ export const ADDITIONAL_RESOURCES: ResourceLink[] = [
     icon: HelpCircleIcon,
     title: "Driving License Process FAQs",
     description: "Answers to common questions about obtaining your license.",
-    href: "/faq/license-process",
+    href: "/faq/license-process", // Assuming this FAQ slug might exist or be created later
   },
 ];
 
@@ -98,6 +99,6 @@ export const APP_DOWNLOAD_LINKS = {
 };
 
 export const CONTACT_DETAILS = {
-  email: "support@licenseprepnepal.com",
+  email: "support@nepallicenseprep.com", // Updated email domain to reflect new name
   address: "Kathmandu, Nepal",
 };

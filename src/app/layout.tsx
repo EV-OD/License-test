@@ -1,7 +1,7 @@
 
 import type { Metadata } from 'next';
-import { GeistSans } from 'geist/font/sans'; // Corrected import
-import { GeistMono } from 'geist/font/mono'; // Corrected import
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${SITE_NAME}: Car & Bike Practice Exams`,
     description: "Prepare for Nepal's car and bike driving license tests with free online practice questions, mock exams, traffic signs, and bilingual support.",
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000', // Replace with actual site URL
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000', 
     siteName: SITE_NAME,
     // images: [ // Add a default OG image later
     //   {
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     //     height: 630,
     //   },
     // ],
-    locale: 'en_US', // Can be dynamic with ne_NP based on context later if needed
+    locale: 'en_US', 
     type: 'website',
   },
   twitter: {
@@ -38,12 +38,6 @@ export const metadata: Metadata = {
     description: "Prepare for Nepal's car and bike driving license tests with free online practice questions, mock exams, traffic signs, and bilingual support.",
     // images: ['/twitter-image.png'], // Replace with actual image path
   },
-  // viewport: 'width=device-width, initial-scale=1', // Next.js handles this by default
-  // icons: { // Favicon can be added later
-  //   icon: '/favicon.ico',
-  //   shortcut: '/favicon-16x16.png',
-  //   apple: '/apple-touch-icon.png',
-  // },
 };
 
 
@@ -54,11 +48,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
-      <body className="antialiased font-sans">
+      <body className="antialiased font-sans bg-background text-foreground">
         <LanguageProvider>
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow w-full">{children}</main> {/* Removed container and mx-auto for individual page control */}
             <Footer />
           </div>
           <Toaster />
@@ -67,4 +61,3 @@ export default function RootLayout({
     </html>
   );
 }
-

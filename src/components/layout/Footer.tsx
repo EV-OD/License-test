@@ -1,5 +1,6 @@
+
 import Link from 'next/link';
-import { Car, Apple, ExternalLink } from 'lucide-react'; // Using ExternalLink as placeholder for Google Play
+import { Car, Apple, ExternalLink } from 'lucide-react'; 
 import { SITE_NAME, APP_DOWNLOAD_LINKS, NAV_LINKS } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 
