@@ -8,7 +8,8 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { SITE_NAME, SITE_URL, DEFAULT_OG_IMAGE_URL } from '@/lib/constants';
+import { SITE_NAME, SITE_URL, DEFAULT_OG_IMAGE_URL, SITE_LOGO_URL } from '@/lib/constants';
+import MobileBackButtonHandler from '@/components/shared/MobileBackButtonHandler'; // Added import
 
 const siteUrl = SITE_URL;
 
@@ -33,13 +34,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     images: [
       {
-        url: DEFAULT_OG_IMAGE_URL, // Replace with your actual default OG image URL
+        url: DEFAULT_OG_IMAGE_URL,
         width: 1200,
         height: 630,
         alt: `${SITE_NAME} - Driving License Preparation`,
       },
     ],
-    locale: 'en_US', // Default locale
+    locale: 'en_US', 
     type: 'website',
   },
   twitter: {
@@ -49,10 +50,10 @@ export const metadata: Metadata = {
         template: `%s | ${SITE_NAME}`,
     },
     description: `Ace your Nepal driving license (Likhit) test for car & bike (Category A, B, K) with ${SITE_NAME}. Free online practice questions, realistic mock exams, traffic sign tutorials, and bilingual support (English/Nepali). Start preparing today!`,
-    images: [DEFAULT_OG_IMAGE_URL], // Replace with your actual default Twitter image URL
-    creator: `@${SITE_NAME.replace(/\s+/g, '')}`, // Example: @NepalLicensePrep
+    images: [DEFAULT_OG_IMAGE_URL], 
+    // creator: `@YourTwitterHandle`, // Optional: Add your Twitter handle
   },
-  robots: { // Optional: control search engine crawling
+  robots: { 
     index: true,
     follow: true,
     googleBot: {
@@ -69,6 +70,20 @@ export const metadata: Metadata = {
   //     'ne-NP': `${siteUrl}/np`,
   //   },
   // },
+  // Add manifest for PWA capabilities, which can also be used by Capacitor
+  manifest: `${siteUrl}/manifest.json`, 
+  // Add icons for favicons and app icons
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' }, // Example SVG icon
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', type: 'image/png' }, // Example Apple touch icon
+    ],
+  },
 };
 
 
@@ -92,6 +107,18 @@ export default function RootLayout({
             crossOrigin="anonymous"
           />
         )}
+        {/* Basic PWA meta tags, can be expanded in manifest.json */}
+        <meta name="application-name" content={SITE_NAME} />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="msapplication-TileColor" content="#2B5797" /> {/* Example color */}
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content="#ffffff" /> {/* Example theme color */}
+
       </head>
       <body className="antialiased bg-background text-foreground">
         <LanguageProvider>
@@ -101,6 +128,7 @@ export default function RootLayout({
             <Footer />
           </div>
           <Toaster />
+          <MobileBackButtonHandler />
         </LanguageProvider>
       </body>
     </html>

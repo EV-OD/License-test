@@ -8,60 +8,49 @@
 # Testing
 /coverage
 
-# Next.js build files
+# Next.js
 /.next/
 /out/
+build
 
 # Production
 /build
 
-# Compiled output
-/dist
-/lib
-
-# Staticfied build
-/build_static
-
-# Netlify
-.netlify
-
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# Environment variables
-.env*.local
-!.env.example
-
-# macOS
+# Misc
 .DS_Store
-
-# IDE specific files
-.idea
-.vscode/*
-!.vscode/settings.json # Allow sharing of workspace settings if desired
-*.sublime-project
-*.sublime-workspace
-
-# Logs
-logs
-*.log
+*.pem
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.iml
 
-# Debugging
-*.pid
-*.seed
-*.pid.lock
+# Firebase
+.firebase
+firebase-debug.log
+database-debug.log
 
-# Misc
-.temp
-.cache
-temp/
-tmp/
+# Capacitor
+/android/
+/ios/
+/node_modules/.capacitor/
+capacitor.config.json
+capacitor.config.ts
+# If you have generated native project files in a custom location
+# /my-custom-android-project/
+# /my-custom-ios-project/
+
+# Genkit
+.genkit/cache/
+.genkit/log/
+*.trace.json
