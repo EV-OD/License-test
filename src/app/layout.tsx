@@ -1,6 +1,7 @@
+
 import type { Metadata } from 'next';
-import { GeistSans } from 'geist/sans';
-import { GeistMono } from 'geist/mono';
+import { GeistSans } from 'geist/font/sans'; // Corrected import
+import { GeistMono } from 'geist/font/mono'; // Corrected import
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -66,3 +67,4 @@ export default function RootLayout({
     </html>
   );
 }
+
