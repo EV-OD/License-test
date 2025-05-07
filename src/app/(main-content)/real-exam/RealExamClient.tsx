@@ -205,7 +205,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
 
     if (position === 'side') {
       return (
-        <div className="hidden lg:block w-48 space-y-4"> {/* Adjust width as needed */}
+        <div className="hidden lg:block w-48 space-y-4 shrink-0"> {/* Adjust width as needed, added shrink-0 */}
           <GoogleAd
             adClient={adClient}
             adSlot={adSlotSide}
@@ -225,7 +225,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     }
     if (position === 'bottom') {
       return (
-        <div className="lg:hidden mt-8">
+        <div className="lg:hidden mt-8 w-full"> {/* Ensured w-full for bottom ad */}
           <GoogleAd
             adClient={adClient}
             adSlot={adSlotBottom}
@@ -244,7 +244,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     return (
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start">
         {renderAds('side')}
-        <div className="flex-grow max-w-lg">
+        <div className="flex-grow max-w-lg w-full"> {/* Added w-full */}
           <Card className="w-full shadow-xl rounded-xl">
             <CardHeader>
               <CardTitle className="text-2xl">{t('Real Exam Setup', 'वास्तविक परीक्षा सेटअप')}</CardTitle>
@@ -313,78 +313,82 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   }
 
   if (examStarted && currentQuestion) {
-    // No ads during the exam to avoid distraction
     return (
-      <div className="container py-8">
-        <Card className="max-w-2xl mx-auto shadow-xl rounded-xl">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>{t(`Question ${currentQuestionIndex + 1} of ${examQuestions.length}`, `प्रश्न ${currentQuestionIndex + 1} / ${examQuestions.length}`)}</CardTitle>
-              <div className="flex items-center text-lg font-semibold text-destructive">
-                <Timer className="mr-2 h-5 w-5" /> {formatTime(timeLeft)}
+      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
+        {renderAds('side')}
+        <div className="flex-grow max-w-2xl w-full"> {/* Applied w-full here too */}
+          <Card className="w-full shadow-xl rounded-xl">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle>{t(`Question ${currentQuestionIndex + 1} of ${examQuestions.length}`, `प्रश्न ${currentQuestionIndex + 1} / ${examQuestions.length}`)}</CardTitle>
+                <div className="flex items-center text-lg font-semibold text-destructive">
+                  <Timer className="mr-2 h-5 w-5" /> {formatTime(timeLeft)}
+                </div>
               </div>
-            </div>
-            <Progress value={((currentQuestionIndex + 1) / examQuestions.length) * 100} className="mt-2 h-2.5" />
-            <CardDescription className="pt-6 text-xl font-semibold leading-relaxed">
-              {language === 'en' ? currentQuestion.question_en : currentQuestion.question_np}
-            </CardDescription>
-            {(language === 'en' ? currentQuestion.image_url_en : currentQuestion.image_url_np) && (
-               <div className="mt-4 flex justify-center">
-                <Image
-                  src={language === 'en' ? currentQuestion.image_url_en! : currentQuestion.image_url_np!}
-                  alt={t('Question related image', 'प्रश्न सम्बन्धित छवि')}
-                  width={300}
-                  height={150}
-                  className="rounded-md object-contain border"
-                  data-ai-hint="traffic scenario"
-                />
-              </div>
-            )}
-          </CardHeader>
-          <CardContent>
-            <RadioGroup
-              key={`${currentQuestion.id}-${currentQuestionIndex}`}
-              value={userAnswers[currentQuestionIndex]?.toString()}
-              onValueChange={(value) => handleAnswerSelect(parseInt(value))}
-              className="space-y-3"
-            >
-              {currentQuestion.options.map(renderOption)}
-            </RadioGroup>
-          </CardContent>
-          <CardFooter className="flex justify-between pt-6">
-            <Button
-              onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
-              variant="outline"
-              disabled={currentQuestionIndex === 0}
-              className="rounded-lg"
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" /> {t('Previous', 'अघिल्लो')}
-            </Button>
-            {currentQuestionIndex < examQuestions.length - 1 ? (
-              <Button onClick={() => setCurrentQuestionIndex(prev => prev + 1)} className="rounded-lg">
-                {t('Next', 'अर्को')} <ChevronRight className="ml-2 h-4 w-4" />
+              <Progress value={((currentQuestionIndex + 1) / examQuestions.length) * 100} className="mt-2 h-2.5" />
+              <CardDescription className="pt-6 text-xl font-semibold leading-relaxed">
+                {language === 'en' ? currentQuestion.question_en : currentQuestion.question_np}
+              </CardDescription>
+              {(language === 'en' ? currentQuestion.image_url_en : currentQuestion.image_url_np) && (
+                 <div className="mt-4 flex justify-center">
+                  <Image
+                    src={language === 'en' ? currentQuestion.image_url_en! : currentQuestion.image_url_np!}
+                    alt={t('Question related image', 'प्रश्न सम्बन्धित छवि')}
+                    width={300}
+                    height={150}
+                    className="rounded-md object-contain border"
+                    data-ai-hint="traffic scenario"
+                  />
+                </div>
+              )}
+            </CardHeader>
+            <CardContent>
+              <RadioGroup
+                key={`${currentQuestion.id}-${currentQuestionIndex}`}
+                value={userAnswers[currentQuestionIndex]?.toString()}
+                onValueChange={(value) => handleAnswerSelect(parseInt(value))}
+                className="space-y-3"
+              >
+                {currentQuestion.options.map(renderOption)}
+              </RadioGroup>
+            </CardContent>
+            <CardFooter className="flex justify-between pt-6">
+              <Button
+                onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+                variant="outline"
+                disabled={currentQuestionIndex === 0}
+                className="rounded-lg"
+              >
+                <ChevronLeft className="mr-2 h-4 w-4" /> {t('Previous', 'अघिल्लो')}
               </Button>
-            ) : (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive" className="rounded-lg">{t('Finish Exam', 'परीक्षा समाप्त गर्नुहोस्')}</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="rounded-xl">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>{t('Confirm Finish', 'समाप्त गर्न निश्चित गर्नुहोस्')}</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      {t('Are you sure you want to finish the exam? Unanswered questions will be marked incorrect.', 'के तपाईं परीक्षा समाप्त गर्न निश्चित हुनुहुन्छ? अनुत्तरित प्रश्नहरू गलत चिन्ह लगाइनेछन्।')}
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="rounded-md">{t('Cancel', 'रद्द गर्नुहोस्')}</AlertDialogCancel>
-                    <AlertDialogAction onClick={finishExamRef.current} className="rounded-md">{t('Finish', 'समाप्त गर्नुहोस्')}</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
-          </CardFooter>
-        </Card>
+              {currentQuestionIndex < examQuestions.length - 1 ? (
+                <Button onClick={() => setCurrentQuestionIndex(prev => prev + 1)} className="rounded-lg">
+                  {t('Next', 'अर्को')} <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              ) : (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" className="rounded-lg">{t('Finish Exam', 'परीक्षा समाप्त गर्नुहोस्')}</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="rounded-xl">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{t('Confirm Finish', 'समाप्त गर्न निश्चित गर्नुहोस्')}</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {t('Are you sure you want to finish the exam? Unanswered questions will be marked incorrect.', 'के तपाईं परीक्षा समाप्त गर्न निश्चित हुनुहुन्छ? अनुत्तरित प्रश्नहरू गलत चिन्ह लगाइनेछन्।')}
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="rounded-md">{t('Cancel', 'रद्द गर्नुहोस्')}</AlertDialogCancel>
+                      <AlertDialogAction onClick={finishExamRef.current} className="rounded-md">{t('Finish', 'समाप्त गर्नुहोस्')}</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+            </CardFooter>
+          </Card>
+        </div>
+        {renderAds('side')}
+        {renderAds('bottom')}
       </div>
     );
   }
@@ -392,9 +396,9 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   if (examFinished && examResult) {
     const passed = examResult.totalQuestions > 0 && (examResult.score / examResult.totalQuestions) >= PASS_PERCENTAGE;
     return (
-      <div className="flex flex-col lg:flex-row gap-4 justify-center items-start">
+      <div className="flex flex-col lg:flex-row gap-4 justify-center items-start w-full">
         {renderAds('side')}
-        <div className="flex-grow">
+        <div className="flex-grow w-full"> {/* Added w-full */}
             <AlertDialog open={showResultsDialog} onOpenChange={(open) => {
                 setShowResultsDialog(open);
                 if (!open) {
