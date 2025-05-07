@@ -99,7 +99,7 @@ export default function RootLayout({
 }>) {
   const adSenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
   const isProduction = process.env.NODE_ENV === 'production';
-  const showAds = isProduction && adSenseClientId && adSenseClientId !== "ca-pub-0000000000000000" && adSenseClientId !== "YOUR_ADSENSE_CLIENT_ID";
+  const showAds = isProduction && adSenseClientId && adSenseClientId !== "ca-pub-5479646105292963" && adSenseClientId !== "4745196708";
 
   return (
     <html lang="en" className={`${GeistSans.variable} font-sans`} suppressHydrationWarning>
