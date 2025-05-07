@@ -1,0 +1,63 @@
+
+[
+  {
+    "id": "ts001",
+    "name_en": "Stop",
+    "name_np": "रोक्नुहोस्",
+    "image_url": "https://picsum.photos/seed/stop_sign/200/200",
+    "description_en": "Drivers must bring their vehicle to a complete stop and ensure the way is clear before proceeding.",
+    "description_np": "चालकहरूले आफ्नो सवारी साधनलाई पूर्ण रूपमा रोक्नुपर्छ र अगाडि बढ्नु अघि बाटो खाली छ भनी सुनिश्चित गर्नुपर्छ।",
+    "category_en": "Mandatory",
+    "category_np": "अनिवार्य"
+  },
+  {
+    "id": "ts002",
+    "name_en": "No Entry",
+    "name_np": "प्रवेश निषेध",
+    "image_url": "https://picsum.photos/seed/no_entry_sign/200/200",
+    "description_en": "Vehicles are not allowed to enter this road or area.",
+    "description_np": "यो सडक वा क्षेत्रमा सवारी साधनहरूलाई प्रवेश गर्न अनुमति छैन।",
+    "category_en": "Prohibitory",
+    "category_np": "निषेधात्मक संकेतहरू"
+  },
+  {
+    "id": "ts003",
+    "name_en": "Pedestrian Crossing",
+    "name_np": "पैदल यात्री क्रसिङ",
+    "image_url": "https://picsum.photos/seed/ped_crossing_sign/200/200",
+    "description_en": "Indicates a designated point where pedestrians can cross the road. Drivers should be prepared to stop.",
+    "description_np": "पैदलयात्रीहरूले सडक पार गर्न सक्ने निर्दिष्ट स्थानलाई संकेत गर्दछ। चालकहरू रोक्न तयार हुनुपर्छ।",
+    "category_en": "Warning",
+    "category_np": "चेतावनी"
+  },
+  {
+    "id": "ts004",
+    "name_en": "Speed Limit 50 km/h",
+    "name_np": "गति सीमा ५० कि.मि./घण्टा",
+    "image_url": "https://picsum.photos/seed/speed_limit_50/200/200",
+    "description_en": "The maximum speed allowed on this road is 50 kilometers per hour.",
+    "description_np": "यो सडकमा अधिकतम अनुमति प्राप्त गति ५० किलोमिटर प्रति घण्टा हो।",
+    "category_en": "Mandatory",
+    "category_np": "अनिवार्य"
+  },
+  {
+    "id": "ts005",
+    "name_en": "Hospital Ahead",
+    "name_np": "अगाडि अस्पताल",
+    "image_url": "https://picsum.photos/seed/hospital_sign/200/200",
+    "description_en": "Indicates that there is a hospital nearby. Drivers should avoid making unnecessary noise.",
+    "description_np": "नजिकै अस्पताल छ भनी संकेत गर्दछ। चालकहरूले अनावश्यक आवाज गर्नबाट जोगिनु पर्छ।",
+    "category_en": "Informative",
+    "category_np": "जानकारीमूलक"
+  },
+  {
+    "id": "ts006",
+    "name_en": "Give Way / Yield",
+    "name_np": "बाटो दिनुहोस्",
+    "image_url": "https://picsum.photos/seed/give_way_sign/200/200",
+    "description_en": "Slow down and give way to traffic on the major road or roundabout.",
+    "description_np": "गति कम गर्नुहोस् र प्रमुख सडक वा चोकमा रहेका सवारी साधनहरूलाई बाटो दिनुहोस्।",
+    "category_en": "Priority",
+    "category_np": " प्राथमिकता संकेतहरू"
+  }
+]
