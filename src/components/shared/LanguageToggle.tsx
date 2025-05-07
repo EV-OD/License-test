@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -8,9 +9,15 @@ export function LanguageToggle() {
   const { language, toggleLanguage, t } = useLanguage();
 
   return (
-    <Button variant="ghost" size="icon" onClick={toggleLanguage} aria-label={t('Switch Language', 'भाषा बदल्नुहोस्')}>
-      <Languages className="h-5 w-5" />
-      <span className="ml-2 text-sm font-medium">{language === 'en' ? 'नेपाली' : 'English'}</span>
+    <Button 
+      variant="ghost" 
+      size="default" // Changed from "icon" to allow text and icon to fit naturally
+      onClick={toggleLanguage} 
+      aria-label={t('Switch Language', 'भाषा बदल्नुहोस्')}
+    >
+      <Languages /> {/* Button component will style the SVG size (typically h-4 w-4) */}
+      <span>{language === 'en' ? 'नेपाली' : 'English'}</span> {/* Button will provide text styling and spacing */}
     </Button>
   );
 }
+
