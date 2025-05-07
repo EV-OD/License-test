@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, CalendarDays, Tag } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import MarkdownContent from '@/components/shared/MarkdownContent'; // Added import
 
 // Placeholder blog posts data - in a real app, this would come from a CMS or markdown files
 const blogPostsData = [
@@ -19,39 +20,39 @@ const blogPostsData = [
     dataAiHint: "study books notes",
     category: "Exam Preparation",
     content: `
-      <p>Passing the Likhit (written) exam is the first crucial step towards getting your driving license in Nepal. While it might seem daunting, with the right preparation, you can ace it on your first try. Here are our top 10 tips:</p>
-      
-      <h3 class="text-xl font-semibold mt-6 mb-2">1. Understand the Syllabus Thoroughly</h3>
-      <p>Familiarize yourself with all the topics covered in the exam. This usually includes traffic rules, road signs, vehicle mechanics, and first aid. Knowing what to expect is half the battle.</p>
+Passing the Likhit (written) exam is the first crucial step towards getting your driving license in Nepal. While it might seem daunting, with the right preparation, you can ace it on your first try. Here are our top 10 tips:
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">2. Study the Official Materials</h3>
-      <p>The Department of Transport Management (DoTM) often provides official handbooks or materials. These are your primary source of information. Make sure to study them carefully.</p>
+### 1. Understand the Syllabus Thoroughly
+Familiarize yourself with all the topics covered in the exam. This usually includes traffic rules, road signs, vehicle mechanics, and first aid. Knowing what to expect is half the battle.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">3. Master Traffic Signs</h3>
-      <p>Traffic signs are a significant portion of the exam. Use our <a href="/traffic-signs" class="text-primary hover:underline">interactive traffic sign tutorials</a> to learn them visually and by meaning. Don't just memorize; understand their purpose.</p>
-      
-      <h3 class="text-xl font-semibold mt-6 mb-2">4. Take Regular Practice Tests</h3>
-      <p>Consistent practice is key. Utilize platforms like ours that offer <a href="/practice" class="text-primary hover:underline">practice questions</a> and <a href="/mock-exam" class="text-primary hover:underline">mock exams</a>. This helps you get used to the question format and time constraints.</p>
+### 2. Study the Official Materials
+The Department of Transport Management (DoTM) often provides official handbooks or materials. These are your primary source of information. Make sure to study them carefully.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">5. Analyze Your Mistakes</h3>
-      <p>When you get a question wrong in a practice test, don't just move on. Understand why you made the mistake. This is crucial for learning and improvement.</p>
+### 3. Master Traffic Signs
+Traffic signs are a significant portion of the exam. Use our [interactive traffic sign tutorials](/traffic-signs) to learn them visually and by meaning. Don't just memorize; understand their purpose.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">6. Time Management</h3>
-      <p>During mock exams, practice managing your time effectively. Don't spend too long on a single question. If you're unsure, mark it and come back later if time permits.</p>
+### 4. Take Regular Practice Tests
+Consistent practice is key. Utilize platforms like ours that offer [practice questions](/practice) and [mock exams](/mock-exam). This helps you get used to the question format and time constraints.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">7. Stay Updated</h3>
-      <p>Traffic rules and regulations can sometimes be updated. Ensure you are aware of any recent changes. Our platform strives to keep content current.</p>
+### 5. Analyze Your Mistakes
+When you get a question wrong in a practice test, don't just move on. Understand why you made the mistake. This is crucial for learning and improvement.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">8. Group Study (Optional)</h3>
-      <p>Discussing difficult topics with friends or fellow applicants can provide new perspectives and help solidify your understanding.</p>
+### 6. Time Management
+During mock exams, practice managing your time effectively. Don't spend too long on a single question. If you're unsure, mark it and come back later if time permits.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">9. Stay Calm on Exam Day</h3>
-      <p>Get a good night's sleep before the exam. Arrive at the test center early. Read each question carefully before answering. Stay calm and focused.</p>
+### 7. Stay Updated
+Traffic rules and regulations can sometimes be updated. Ensure you are aware of any recent changes. Our platform strives to keep content current.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">10. Read Instructions Carefully</h3>
-      <p>Before starting the exam, read all instructions provided by the invigilators or on the exam paper itself. Misunderstanding instructions can lead to unnecessary errors.</p>
+### 8. Group Study (Optional)
+Discussing difficult topics with friends or fellow applicants can provide new perspectives and help solidify your understanding.
 
-      <p class="mt-6">By following these tips and dedicating sufficient time to your studies, you'll significantly increase your chances of passing the Nepal driving license Likhit exam. Good luck!</p>
+### 9. Stay Calm on Exam Day
+Get a good night's sleep before the exam. Arrive at the test center early. Read each question carefully before answering. Stay calm and focused.
+
+### 10. Read Instructions Carefully
+Before starting the exam, read all instructions provided by the invigilators or on the exam paper itself. Misunderstanding instructions can lead to unnecessary errors.
+
+By following these tips and dedicating sufficient time to your studies, you'll significantly increase your chances of passing the Nepal driving license Likhit exam. Good luck!
     `,
   },
    {
@@ -63,39 +64,39 @@ const blogPostsData = [
     dataAiHint: "car driving lesson",
     category: "Driving Tips",
     content: `
-      <p>The practical driving test, or "trial," is often the most nerve-wracking part of getting a driving license in Nepal. While practice is essential, knowing common pitfalls can also help you prepare better. Here are some frequent mistakes to avoid:</p>
+The practical driving test, or "trial," is often the most nerve-wracking part of getting a driving license in Nepal. While practice is essential, knowing common pitfalls can also help you prepare better. Here are some frequent mistakes to avoid:
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">1. Poor Observation</h3>
-      <p>Failing to check mirrors (rear-view and side mirrors) regularly, especially before changing lanes, turning, or stopping. Also, not checking blind spots is a major error.</p>
+### 1. Poor Observation
+Failing to check mirrors (rear-view and side mirrors) regularly, especially before changing lanes, turning, or stopping. Also, not checking blind spots is a major error.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">2. Incorrect Use of Signals</h3>
-      <p>Signaling too late, too early, or not at all. Ensure your signals accurately reflect your intentions and are given in good time.</p>
+### 2. Incorrect Use of Signals
+Signaling too late, too early, or not at all. Ensure your signals accurately reflect your intentions and are given in good time.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">3. Speed Control Issues</h3>
-      <p>Driving too fast for the conditions or too slowly, impeding traffic flow. Maintain appropriate speed according to speed limits and road/traffic situations.</p>
+### 3. Speed Control Issues
+Driving too fast for the conditions or too slowly, impeding traffic flow. Maintain appropriate speed according to speed limits and road/traffic situations.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">4. Steering Control Problems</h3>
-      <p>Over-steering, under-steering, or jerky movements. Aim for smooth and controlled steering, especially during turns and maneuvers like the "8" shape.</p>
+### 4. Steering Control Problems
+Over-steering, under-steering, or jerky movements. Aim for smooth and controlled steering, especially during turns and maneuvers like the "8" shape.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">5. Difficulty with Maneuvers</h3>
-      <p>Struggling with specific trial components like the figure "8", u-turn, incline start (ukalo), or parking. Practice these maneuvers extensively until you are confident.</p>
+### 5. Difficulty with Maneuvers
+Struggling with specific trial components like the figure "8", u-turn, incline start (ukalo), or parking. Practice these maneuvers extensively until you are confident.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">6. Not Following Traffic Signs or Markings</h3>
-      <p>Ignoring stop signs, lane discipline, or other road markings. This shows a lack of understanding of basic traffic rules.</p>
+### 6. Not Following Traffic Signs or Markings
+Ignoring stop signs, lane discipline, or other road markings. This shows a lack of understanding of basic traffic rules.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">7. Hesitation or Lack of Confidence</h3>
-      <p>Being overly cautious can be as problematic as being reckless. Examiners look for confident, decisive driving. Hesitation at junctions, for example, can be marked down.</p>
+### 7. Hesitation or Lack of Confidence
+Being overly cautious can be as problematic as being reckless. Examiners look for confident, decisive driving. Hesitation at junctions, for example, can be marked down.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">8. Poor Clutch Control (for manual vehicles)</h3>
-      <p>Stalling the vehicle, especially on an incline, or jerky gear changes due to improper clutch use.</p>
+### 8. Poor Clutch Control (for manual vehicles)
+Stalling the vehicle, especially on an incline, or jerky gear changes due to improper clutch use.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">9. Incorrect Positioning on the Road</h3>
-      <p>Driving too close to the curb, too far into the center of the road, or incorrect positioning for turns.</p>
+### 9. Incorrect Positioning on the Road
+Driving too close to the curb, too far into the center of the road, or incorrect positioning for turns.
 
-      <h3 class="text-xl font-semibold mt-6 mb-2">10. Panicking Under Pressure</h3>
-      <p>Letting nerves get the better of you. Try to stay calm, breathe, and focus on one step at a time. If you make a small mistake, don't dwell on it; focus on recovering and driving safely.</p>
+### 10. Panicking Under Pressure
+Letting nerves get the better of you. Try to stay calm, breathe, and focus on one step at a time. If you make a small mistake, don't dwell on it; focus on recovering and driving safely.
 
-      <p class="mt-6">Remember, the driving test assesses your ability to control the vehicle safely and follow traffic rules. Practice, awareness of these common mistakes, and a calm demeanor will significantly improve your chances of success. Good luck with your trial!</p>
+Remember, the driving test assesses your ability to control the vehicle safely and follow traffic rules. Practice, awareness of these common mistakes, and a calm demeanor will significantly improve your chances of success. Good luck with your trial!
     `,
   },
   // Add more posts as needed, following the same structure.
@@ -190,8 +191,9 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                      prose-headings:font-semibold prose-headings:tracking-tight
                      prose-a:text-primary prose-a:no-underline hover:prose-a:underline
                      prose-img:rounded-md prose-img:shadow-md"
-          dangerouslySetInnerHTML={{ __html: post.content }} 
-        />
+        >
+          <MarkdownContent content={post.content} />
+        </div>
 
       </article>
 
