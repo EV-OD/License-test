@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SITE_NAME, KEY_FEATURES, TESTIMONIALS_DATA, ADDITIONAL_RESOURCES, APP_DOWNLOAD_LINKS } from '@/lib/constants';
-import { CheckCircle, Download, Smartphone, ArrowRight, Apple } from 'lucide-react';
+import { ClipboardCheck, Download, ArrowRight, Apple } from 'lucide-react'; 
 
 
 export default function HomePage() {
@@ -26,13 +26,13 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link href="/practice">
-                <CheckCircle className="mr-2 h-5 w-5" />
-                Start Practice Test
+              <Link href="/real-exam"> 
+                <ClipboardCheck className="mr-2 h-5 w-5" /> 
+                Start Real Exam 
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-lg px-8 py-6">
-              <Link href="#download-app"> {/* Link to download section */}
+              <Link href="#download-app">
                 <Download className="mr-2 h-5 w-5" />
                 Download App
               </Link>

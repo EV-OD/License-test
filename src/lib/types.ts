@@ -1,9 +1,10 @@
+
 import type { LucideIcon } from 'lucide-react';
 
 export type NavItem = {
   href: string;
   label: string;
-  icon?: LucideIcon;
+  icon?: LucideIcon; // Make icon optional as not all nav items might have one
 };
 
 export type FeatureItem = {
@@ -72,13 +73,14 @@ export type TrafficSign = {
   category_np: 'अनिवार्य' | 'चेतावनी' | 'जानकारीमूलक' | ' प्राथमिकता संकेतहरू' | 'निषेधात्मक संकेतहरू';
 };
 
-// Mock Exam Types
+// Exam Types (Common structure for Mock and Real Exam)
 export type ExamCategoryType = 'A' | 'B' | 'K' | 'Mixed';
 
-export type MockExamResult = {
+export type MockExamResult = { // This type is used by MockExamClient and RealExamClient
   score: number;
   totalQuestions: number;
   date: string; // ISO string
   answers: { questionId: string; selectedOption: number | null; isCorrect: boolean }[];
   category: ExamCategoryType; 
 };
+```

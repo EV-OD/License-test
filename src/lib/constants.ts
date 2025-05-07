@@ -1,18 +1,19 @@
 
 import type { NavItem, FeatureItem, Testimonial, ResourceLink } from '@/lib/types';
-import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin } from 'lucide-react';
+import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin, ClipboardCheck, Home, FileText, Rss, Film, HelpCircle, Phone } from 'lucide-react';
 
 export const SITE_NAME = "Nepal License Prep";
 
 export const NAV_LINKS: NavItem[] = [
-  { href: "/", label: "Home" },
-  { href: "/practice", label: "Practice Test" },
-  { href: "/traffic-signs", label: "Traffic Signs" },
-  { href: "/mock-exam", label: "Mock Exam" },
-  { href: "/blog", label: "Blog" },
-  { href: "/tutorials", label: "Tutorials" },
-  { href: "/faq", label: "FAQs" },
-  { href: "/contact", label: "Contact Us" },
+  { href: "/", label: "Home", icon: Home },
+  { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck },
+  { href: "/practice", label: "Practice Test", icon: FileText },
+  { href: "/traffic-signs", label: "Traffic Signs", icon: TrafficCone },
+  { href: "/mock-exam", label: "Mock Exam", icon: Timer },
+  { href: "/blog", label: "Blog", icon: Rss },
+  { href: "/tutorials", label: "Tutorials", icon: Film },
+  { href: "/faq", label: "FAQs", icon: HelpCircle },
+  { href: "/contact", label: "Contact Us", icon: Mail },
 ];
 
 export const KEY_FEATURES: FeatureItem[] = [
@@ -89,16 +90,17 @@ export const ADDITIONAL_RESOURCES: ResourceLink[] = [
     icon: HelpCircleIcon,
     title: "Driving License Process FAQs",
     description: "Answers to common questions about obtaining your license.",
-    href: "/faq/license-process", // Assuming this FAQ slug might exist or be created later
+    href: "/faq", 
   },
 ];
 
 export const APP_DOWNLOAD_LINKS = {
-  googlePlay: "#", // Placeholder
-  appleStore: "#", // Placeholder
+  googlePlay: "#", 
+  appleStore: "#", 
 };
 
 export const CONTACT_DETAILS = {
-  email: "support@nepallicenseprep.com", // Updated email domain to reflect new name
+  email: "support@nepallicenseprep.com",
   address: "Kathmandu, Nepal",
+  phone: "N/A" // Add phone if available
 };

@@ -23,10 +23,9 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          {NAV_LINKS.slice(0,4).map((link) => ( // Show first 4 links prominently
+          {NAV_LINKS.map((link) => ( 
             <NavLink key={link.href} {...link} />
           ))}
-           {/* Dropdown for more links if needed, or list them all if space permits */}
         </nav>
 
         <div className="flex items-center gap-2">
