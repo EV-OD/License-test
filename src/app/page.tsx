@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SITE_NAME, KEY_FEATURES, TESTIMONIALS_DATA, ADDITIONAL_RESOURCES, APP_DOWNLOAD_LINKS } from '@/lib/constants';
 import { ClipboardCheck, Download, ArrowRight, Apple } from 'lucide-react'; 
+import GoogleAd from '@/components/ads/GoogleAd';
 
 
 export default function HomePage() {
@@ -100,6 +101,29 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Ad Unit Section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-semibold text-muted-foreground">Advertisement</h2>
+          </div>
+          {/* 
+            IMPORTANT: Replace YOUR_ADSENSE_CLIENT_ID with your actual Google AdSense Publisher ID.
+            Example: ca-pub-1234567890123456
+            IMPORTANT: Replace YOUR_AD_SLOT_ID with your actual Ad Slot ID.
+            Example: 1234567890
+          */}
+          <GoogleAd
+            adClient="YOUR_ADSENSE_CLIENT_ID" // Replace with your AdSense client ID
+            adSlot="YOUR_AD_SLOT_ID"       // Replace with your ad slot ID
+            adFormat="auto"
+            responsive={true}
+            className="min-h-[250px] w-full mx-auto max-w-4xl" // Adjust styling as needed
+          />
+        </div>
+      </section>
+
 
       {/* Additional Resources Section */}
       <section className="py-16 md:py-24 bg-secondary/50">

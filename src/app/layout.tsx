@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
+import Script from 'next/script';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -48,11 +49,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* 
+          IMPORTANT: Replace YOUR_ADSENSE_CLIENT_ID with your actual Google AdSense Publisher ID.
+          Example: ca-pub-1234567890123456
+        */}
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR_ADSENSE_CLIENT_ID`}
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="antialiased font-sans bg-background text-foreground">
         <LanguageProvider>
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow w-full">{children}</main> {/* Removed container and mx-auto for individual page control */}
+            <main className="flex-grow w-full">{children}</main>
             <Footer />
           </div>
           <Toaster />
