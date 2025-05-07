@@ -24,6 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from '@/hooks/use-toast';
+import GoogleAd from '@/components/ads/GoogleAd';
 
 const REAL_EXAM_QUESTIONS_COUNT = 25;
 const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60; // 25 minutes in seconds
@@ -67,7 +68,7 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   const finishExam = useCallback(() => {
     setExamFinished(currentExamFinished => {
       if (currentExamFinished) {
-        return true; // Already finished
+        return true; 
       }
 
       setExamStarted(false);
@@ -89,17 +90,13 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
       setExamResult(resultData);
       saveResult(resultData);
       setShowResultsDialog(true);
-      return true; // Set examFinished to true
+      return true; 
     });
   }, [
     examQuestions,
     userAnswers,
     examCategory,
     saveResult,
-    setExamStarted, // setExamStarted is stable
-    setExamResult,   // setExamResult is stable
-    setShowResultsDialog, // setShowResultsDialog is stable
-    setExamFinished // setExamFinished is stable
   ]);
 
   const finishExamRef = useRef(finishExam);
@@ -121,7 +118,6 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
         });
       }, 1000);
     } else if (timeLeft === 0 && examStarted && !examFinished) {
-      // Fallback if re-render happens exactly when timeLeft is 0
       finishExamRef.current();
     }
     return () => clearInterval(timer);
@@ -200,72 +196,124 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
+  // Ad display logic
+  const renderAds = (position: 'side' | 'bottom') => {
+    // IMPORTANT: Replace with your actual AdSense Client and Slot IDs
+    const adClient = "YOUR_ADSENSE_CLIENT_ID"; 
+    const adSlotSide = "YOUR_AD_SLOT_ID_SIDE"; // Example: for side banners
+    const adSlotBottom = "YOUR_AD_SLOT_ID_BOTTOM"; // Example: for bottom banners
+
+    if (position === 'side') {
+      return (
+        <div className="hidden lg:block w-48 space-y-4"> {/* Adjust width as needed */}
+          <GoogleAd
+            adClient={adClient}
+            adSlot={adSlotSide}
+            adFormat="auto" // Or specific format like 'vertical'
+            responsive={true}
+            className="min-h-[250px] w-full"
+          />
+           <GoogleAd // Second side ad
+            adClient={adClient}
+            adSlot={adSlotSide + "_2"} // Ensure unique slot or use same if design allows
+            adFormat="auto"
+            responsive={true}
+            className="min-h-[250px] w-full"
+          />
+        </div>
+      );
+    }
+    if (position === 'bottom') {
+      return (
+        <div className="lg:hidden mt-8">
+          <GoogleAd
+            adClient={adClient}
+            adSlot={adSlotBottom}
+            adFormat="auto" // Or specific format like 'horizontal'
+            responsive={true}
+            className="min-h-[100px] w-full"
+          />
+        </div>
+      );
+    }
+    return null;
+  };
+
+
   if (!examStarted && !examFinished) {
     return (
-        <Card className="max-w-lg mx-auto shadow-xl rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl">{t('Real Exam Setup', 'वास्तविक परीक्षा सेटअप')}</CardTitle>
-            <CardDescription>{t('Prepare for the official Likhit exam experience.', 'आधिकारिक लिखित परीक्षाको अनुभवको लागि तयारी गर्नुहोस्।')}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <Label htmlFor="examCategory">{t('Select Category (Optional)', 'श्रेणी चयन गर्नुहोस् (ऐच्छिक)')}</Label>
-              <Select value={examCategory} onValueChange={(value: ExamCategory) => setExamCategory(value)}>
-                <SelectTrigger id="examCategory" className="w-full mt-1">
-                  <SelectValue placeholder={t('Select category', 'श्रेणी चयन गर्नुहोस्')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Mixed">{t('Mixed (All Categories - Recommended for Real Simulation)', 'मिश्रित (सबै श्रेणीहरू - वास्तविक सिमुलेशनको लागि सिफारिश गरिएको)')}</SelectItem>
-                  <SelectItem value="A">{t('Category A (Motorcycle)', 'श्रेणी A (मोटरसाइकल)')}</SelectItem>
-                  <SelectItem value="B">{t('Category B (Car/Jeep/Van)', 'श्रेणी B (कार/जीप/भ्यान)')}</SelectItem>
-                  <SelectItem value="K">{t('Category K (Scooter)', 'श्रेणी K (स्कुटर)')}</SelectItem>
-                </SelectContent>
-              </Select>
-               <p className="text-xs text-muted-foreground mt-1">{t('Choosing "Mixed" provides the most realistic simulation.', '"मिश्रित" छनोट गर्दा सबैभन्दा यथार्थपरक सिमुलेशन प्रदान गर्दछ।')}</p>
-            </div>
-            <div className="p-4 border rounded-md bg-muted/50">
-                <p className="font-semibold">{t('Exam Details:', 'परीक्षा विवरण:')}</p>
-                <ul className="list-disc list-inside text-sm text-muted-foreground mt-2 space-y-1">
-                    <li>{t(`Number of questions: ${REAL_EXAM_QUESTIONS_COUNT}`, `प्रश्नहरूको संख्या: ${REAL_EXAM_QUESTIONS_COUNT}`)}</li>
-                    <li>{t(`Time limit: ${REAL_EXAM_TIME_LIMIT_SECONDS / 60} minutes`, `समय सीमा: ${REAL_EXAM_TIME_LIMIT_SECONDS / 60} मिनेट`)}</li>
-                    <li>{t('Results shown after completion.', 'समाप्ति पछि नतिजा देखाइनेछ।')}</li>
-                </ul>
-            </div>
-          </CardContent>
-          <CardFooter className="flex-col gap-4 pt-6">
-            <Button onClick={startExam} className="w-full text-lg py-6 rounded-lg">
-                <ClipboardCheckIcon className="mr-2 h-5 w-5" />
-                {t('Start Real Exam', 'वास्तविक परीक्षा सुरु गर्नुहोस्')}
-            </Button>
-            {pastResults.length > 0 && (
-               <AlertDialog open={showPastResultsDialog} onOpenChange={setShowPastResultsDialog}>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" className="w-full rounded-lg"><History className="mr-2 h-4 w-4"/>{t('View Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू हेर्नुहोस्')}</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="max-h-[80vh] overflow-y-auto rounded-xl">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>{t('Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू')}</AlertDialogTitle>
-                  </AlertDialogHeader>
-                  <div className="space-y-3 my-4">
-                    {pastResults.map((res, idx) => (
-                      <Card key={idx} className="p-3 rounded-md">
-                        <p>{t('Date:', 'मिति:')} {new Date(res.date).toLocaleDateString()} {res.category ? `(${t('Category', 'श्रेणी')}: ${res.category})` : ''}</p>
-                        <p>{t('Score:', 'स्कोर:')} {res.score}/{res.totalQuestions}</p>
-                      </Card>
-                    ))}
-                  </div>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="rounded-md">{t('Close', 'बन्द गर्नुहोस्')}</AlertDialogCancel>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
-          </CardFooter>
-        </Card>
+      <div className="flex flex-col lg:flex-row gap-4 justify-center items-start">
+        {renderAds('side')}
+        <div className="flex-grow max-w-lg">
+          <Card className="w-full shadow-xl rounded-xl">
+            <CardHeader>
+              <CardTitle className="text-2xl">{t('Real Exam Setup', 'वास्तविक परीक्षा सेटअप')}</CardTitle>
+              <CardDescription>{t('Prepare for the official Likhit exam experience.', 'आधिकारिक लिखित परीक्षाको अनुभवको लागि तयारी गर्नुहोस्।')}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label htmlFor="examCategory">{t('Select Category (Optional)', 'श्रेणी चयन गर्नुहोस् (ऐच्छिक)')}</Label>
+                <Select value={examCategory} onValueChange={(value: ExamCategory) => setExamCategory(value)}>
+                  <SelectTrigger id="examCategory" className="w-full mt-1">
+                    <SelectValue placeholder={t('Select category', 'श्रेणी चयन गर्नुहोस्')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Mixed">{t('Mixed (All Categories - Recommended for Real Simulation)', 'मिश्रित (सबै श्रेणीहरू - वास्तविक सिमुलेशनको लागि सिफारिश गरिएको)')}</SelectItem>
+                    <SelectItem value="A">{t('Category A (Motorcycle)', 'श्रेणी A (मोटरसाइकल)')}</SelectItem>
+                    <SelectItem value="B">{t('Category B (Car/Jeep/Van)', 'श्रेणी B (कार/जीप/भ्यान)')}</SelectItem>
+                    <SelectItem value="K">{t('Category K (Scooter)', 'श्रेणी K (स्कुटर)')}</SelectItem>
+                  </SelectContent>
+                </Select>
+                 <p className="text-xs text-muted-foreground mt-1">{t('Choosing "Mixed" provides the most realistic simulation.', '"मिश्रित" छनोट गर्दा सबैभन्दा यथार्थपरक सिमुलेशन प्रदान गर्दछ।')}</p>
+              </div>
+              <div className="p-4 border rounded-md bg-muted/50">
+                  <p className="font-semibold">{t('Exam Details:', 'परीक्षा विवरण:')}</p>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground mt-2 space-y-1">
+                      <li>{t(`Number of questions: ${REAL_EXAM_QUESTIONS_COUNT}`, `प्रश्नहरूको संख्या: ${REAL_EXAM_QUESTIONS_COUNT}`)}</li>
+                      <li>{t(`Time limit: ${REAL_EXAM_TIME_LIMIT_SECONDS / 60} minutes`, `समय सीमा: ${REAL_EXAM_TIME_LIMIT_SECONDS / 60} मिनेट`)}</li>
+                      <li>{t('Results shown after completion.', 'समाप्ति पछि नतिजा देखाइनेछ।')}</li>
+                  </ul>
+              </div>
+            </CardContent>
+            <CardFooter className="flex-col gap-4 pt-6">
+              <Button onClick={startExam} className="w-full text-lg py-6 rounded-lg">
+                  <ClipboardCheckIcon className="mr-2 h-5 w-5" />
+                  {t('Start Real Exam', 'वास्तविक परीक्षा सुरु गर्नुहोस्')}
+              </Button>
+              {pastResults.length > 0 && (
+                 <AlertDialog open={showPastResultsDialog} onOpenChange={setShowPastResultsDialog}>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="w-full rounded-lg"><History className="mr-2 h-4 w-4"/>{t('View Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू हेर्नुहोस्')}</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="max-h-[80vh] overflow-y-auto rounded-xl">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{t('Past Real Exam Results', 'विगतका वास्तविक परीक्षा नतिजाहरू')}</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <div className="space-y-3 my-4">
+                      {pastResults.map((res, idx) => (
+                        <Card key={idx} className="p-3 rounded-md">
+                          <p>{t('Date:', 'मिति:')} {new Date(res.date).toLocaleDateString()} {res.category ? `(${t('Category', 'श्रेणी')}: ${res.category})` : ''}</p>
+                          <p>{t('Score:', 'स्कोर:')} {res.score}/{res.totalQuestions}</p>
+                        </Card>
+                      ))}
+                    </div>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="rounded-md">{t('Close', 'बन्द गर्नुहोस्')}</AlertDialogCancel>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+            </CardFooter>
+          </Card>
+        </div>
+        {renderAds('side')}
+        {renderAds('bottom')}
+      </div>
     );
   }
 
   if (examStarted && currentQuestion) {
+    // No ads during the exam to avoid distraction
     return (
       <div className="container py-8">
         <Card className="max-w-2xl mx-auto shadow-xl rounded-xl">
@@ -344,64 +392,70 @@ export function RealExamClient({ allQuestions }: RealExamClientProps) {
   if (examFinished && examResult) {
     const passed = examResult.totalQuestions > 0 && (examResult.score / examResult.totalQuestions) >= PASS_PERCENTAGE;
     return (
-      <AlertDialog open={showResultsDialog} onOpenChange={(open) => {
-          setShowResultsDialog(open);
-          if (!open) {
-            setExamFinished(false);
-            setExamResult(null);
-            // Reset to exam setup screen
-          }
-        }}>
-        <AlertDialogContent className="max-h-[90vh] max-w-lg w-full overflow-y-auto rounded-xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-2xl text-center">{t('Real Exam Results', 'वास्तविक परीक्षाको नतिजा')}</AlertDialogTitle>
-          </AlertDialogHeader>
-          <div className="my-6 space-y-4 text-center">
-            <p className="text-3xl font-bold">
-              {t('Your Score:', 'तपाईंको स्कोर:')} <span className={`${passed ? 'text-accent' : 'text-destructive'}`}>{examResult.score} / {examResult.totalQuestions}</span>
-            </p>
-            {examResult.totalQuestions > 0 && <Progress value={(examResult.score / examResult.totalQuestions) * 100} className="w-full h-3 rounded-full" />}
-             <p className={`text-xl font-semibold ${passed ? 'text-accent' : 'text-destructive'}`}>
-              {passed ? t('Congratulations! You Passed!', 'बधाई छ! तपाईं उत्तीर्ण हुनुभयो!') : t('Unfortunately, You Did Not Pass. Keep Practicing!', 'दुर्भाग्यवश, तपाईं उत्तीर्ण हुनुभएन। अभ्यास जारी राख्नुहोस्!')}
-            </p>
-            <p className="text-sm text-muted-foreground">{t(`(Passing score is ${PASS_PERCENTAGE*100}%)`, `(उत्तीर्ण अंक ${PASS_PERCENTAGE*100}%)`)}</p>
+      <div className="flex flex-col lg:flex-row gap-4 justify-center items-start">
+        {renderAds('side')}
+        <div className="flex-grow">
+            <AlertDialog open={showResultsDialog} onOpenChange={(open) => {
+                setShowResultsDialog(open);
+                if (!open) {
+                  setExamFinished(false);
+                  setExamResult(null);
+                }
+              }}>
+              <AlertDialogContent className="max-h-[90vh] max-w-lg w-full overflow-y-auto rounded-xl">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-2xl text-center">{t('Real Exam Results', 'वास्तविक परीक्षाको नतिजा')}</AlertDialogTitle>
+                </AlertDialogHeader>
+                <div className="my-6 space-y-4 text-center">
+                  <p className="text-3xl font-bold">
+                    {t('Your Score:', 'तपाईंको स्कोर:')} <span className={`${passed ? 'text-accent' : 'text-destructive'}`}>{examResult.score} / {examResult.totalQuestions}</span>
+                  </p>
+                  {examResult.totalQuestions > 0 && <Progress value={(examResult.score / examResult.totalQuestions) * 100} className="w-full h-3 rounded-full" />}
+                   <p className={`text-xl font-semibold ${passed ? 'text-accent' : 'text-destructive'}`}>
+                    {passed ? t('Congratulations! You Passed!', 'बधाई छ! तपाईं उत्तीर्ण हुनुभयो!') : t('Unfortunately, You Did Not Pass. Keep Practicing!', 'दुर्भाग्यवश, तपाईं उत्तीर्ण हुनुभएन। अभ्यास जारी राख्नुहोस्!')}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{t(`(Passing score is ${PASS_PERCENTAGE*100}%)`, `(उत्तीर्ण अंक ${PASS_PERCENTAGE*100}%)`)}</p>
 
-            <details className="mt-6 text-left">
-              <summary className="cursor-pointer font-medium text-primary hover:underline text-center">{t('View Answer Details', 'उत्तर विवरण हेर्नुहोस्')}</summary>
-              <div className="mt-4 space-y-3 max-h-72 overflow-y-auto border p-4 rounded-md bg-muted/30">
-                {examQuestions.map((q, idx) => {
-                  const ans = examResult.answers.find(a => a.questionId === q.id);
-                  if (!ans) return null;
-                  return (
-                    <Card key={idx} className={`p-3 rounded-md ${ans.isCorrect ? 'border-accent bg-accent/5' : 'border-destructive bg-destructive/5'}`}>
-                      <p className="font-semibold text-sm mb-1">{idx+1}. {language === 'en' ? q.question_en : q.question_np}</p>
-                      {(language === 'en' ? q.image_url_en : q.image_url_np) && (
-                        <Image src={language === 'en' ? q.image_url_en! : q.image_url_np!} alt="Question image" width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
-                      )}
-                      <p className={`text-xs ${ans.isCorrect ? 'text-accent-foreground' : 'text-destructive-foreground'}`}>
-                        <span className="font-medium">{t('Your answer:', 'तपाईंको उत्तर:')}</span> {ans.selectedOption !== null ? (language === 'en' ? q.options[ans.selectedOption].en.text : q.options[ans.selectedOption].np.text) : t('Not answered', 'उत्तर दिइएको छैन')}
-                        {ans.isCorrect ? <CheckCircle className="inline ml-1 h-3 w-3 text-accent" /> : <XCircle className="inline ml-1 h-3 w-3 text-destructive" />}
-                      </p>
-                      {!ans.isCorrect && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">{t('Correct answer:', 'सही उत्तर:')}</span> {language === 'en' ? q.options[q.correct_option_index].en.text : q.options[q.correct_option_index].np.text}</p>}
-                      {(q.explanation_en || q.explanation_np) && (
-                        <p className="text-xs text-muted-foreground mt-1 italic">{t('Explanation: ', 'स्पष्टीकरण: ')}{language === 'en' ? q.explanation_en : q.explanation_np}</p>
-                      )}
-                    </Card>
-                  );
-                })}
-              </div>
-            </details>
-          </div>
-          <AlertDialogFooter className="flex-col sm:flex-row gap-2 pt-4">
-             <AlertDialogCancel asChild>
-                <Button variant="outline" className="w-full sm:w-auto rounded-md" onClick={() => { setExamFinished(false); setExamResult(null); }}>{t('Close', 'बन्द गर्नुहोस्')}</Button>
-             </AlertDialogCancel>
-             <Button onClick={() => { setExamFinished(false); setExamResult(null); startExam(); }} className="w-full sm:w-auto rounded-md">
-               <RotateCcw className="mr-2 h-4 w-4" /> {t('Take New Real Exam', 'नयाँ वास्तविक परीक्षा दिनुहोस्')}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+                  <details className="mt-6 text-left">
+                    <summary className="cursor-pointer font-medium text-primary hover:underline text-center">{t('View Answer Details', 'उत्तर विवरण हेर्नुहोस्')}</summary>
+                    <div className="mt-4 space-y-3 max-h-72 overflow-y-auto border p-4 rounded-md bg-muted/30">
+                      {examQuestions.map((q, idx) => {
+                        const ans = examResult.answers.find(a => a.questionId === q.id);
+                        if (!ans) return null;
+                        return (
+                          <Card key={idx} className={`p-3 rounded-md ${ans.isCorrect ? 'border-accent bg-accent/5' : 'border-destructive bg-destructive/5'}`}>
+                            <p className="font-semibold text-sm mb-1">{idx+1}. {language === 'en' ? q.question_en : q.question_np}</p>
+                            {(language === 'en' ? q.image_url_en : q.image_url_np) && (
+                              <Image src={language === 'en' ? q.image_url_en! : q.image_url_np!} alt="Question image" width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
+                            )}
+                            <p className={`text-xs ${ans.isCorrect ? 'text-accent-foreground' : 'text-destructive-foreground'}`}>
+                              <span className="font-medium">{t('Your answer:', 'तपाईंको उत्तर:')}</span> {ans.selectedOption !== null ? (language === 'en' ? q.options[ans.selectedOption].en.text : q.options[ans.selectedOption].np.text) : t('Not answered', 'उत्तर दिइएको छैन')}
+                              {ans.isCorrect ? <CheckCircle className="inline ml-1 h-3 w-3 text-accent" /> : <XCircle className="inline ml-1 h-3 w-3 text-destructive" />}
+                            </p>
+                            {!ans.isCorrect && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">{t('Correct answer:', 'सही उत्तर:')}</span> {language === 'en' ? q.options[q.correct_option_index].en.text : q.options[q.correct_option_index].np.text}</p>}
+                            {(q.explanation_en || q.explanation_np) && (
+                              <p className="text-xs text-muted-foreground mt-1 italic">{t('Explanation: ', 'स्पष्टीकरण: ')}{language === 'en' ? q.explanation_en : q.explanation_np}</p>
+                            )}
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  </details>
+                </div>
+                <AlertDialogFooter className="flex-col sm:flex-row gap-2 pt-4">
+                   <AlertDialogCancel asChild>
+                      <Button variant="outline" className="w-full sm:w-auto rounded-md" onClick={() => { setExamFinished(false); setExamResult(null); }}>{t('Close', 'बन्द गर्नुहोस्')}</Button>
+                   </AlertDialogCancel>
+                   <Button onClick={() => { setExamFinished(false); setExamResult(null); startExam(); }} className="w-full sm:w-auto rounded-md">
+                     <RotateCcw className="mr-2 h-4 w-4" /> {t('Take New Real Exam', 'नयाँ वास्तविक परीक्षा दिनुहोस्')}
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+        </div>
+        {renderAds('side')}
+        {renderAds('bottom')}
+      </div>
     );
   }
   return null;

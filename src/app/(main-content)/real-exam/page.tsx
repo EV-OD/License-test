@@ -22,6 +22,7 @@ export default async function RealExamPage() {
                 Test your knowledge under official exam conditions. 25 questions, 25 minutes.
             </p>
         </header>
+        {/* The RealExamClient now handles its own internal layout for ads */}
         <RealExamClient allQuestions={practiceQuestionsData} />
     </div>
   );
