@@ -4,6 +4,10 @@ import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpe
 
 export const SITE_NAME = "Nepal License Prep";
 
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:9002';
+export const SITE_LOGO_URL = `${SITE_URL}${process.env.NEXT_PUBLIC_SITE_LOGO_URL || '/images/logo-placeholder.png'}`; // Assuming logo is relative to public or a full URL is provided
+export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`; // Example path, ensure this image exists
+
 export const NAV_LINKS: NavItem[] = [
   { href: "/", label: "Home", icon: Home },
   { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck },

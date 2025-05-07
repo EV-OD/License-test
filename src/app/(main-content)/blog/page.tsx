@@ -1,7 +1,7 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { SITE_NAME } from '@/lib/constants';
+import { SITE_NAME, SITE_URL, DEFAULT_OG_IMAGE_URL } from '@/lib/constants';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Rss } from 'lucide-react';
@@ -9,9 +9,36 @@ import Image from 'next/image';
 import GoogleAd from '@/components/ads/GoogleAd';
 import { getSortedPostsData, type BlogPost } from '@/lib/blog';
 
+const pageUrl = `${SITE_URL}/blog`;
+
 export const metadata: Metadata = {
   title: `Blog | ${SITE_NAME}`,
-  description: `Tips, guides, and updates related to Nepal's driving license tests and road safety.`,
+  description: `Stay updated with the latest tips, guides, and news related to Nepal's driving license (Likhit) tests, traffic rules, and road safety on the ${SITE_NAME} blog.`,
+  keywords: ['Nepal driving license blog', 'Likhit exam tips', 'driving test Nepal guides', 'traffic rules Nepal updates', 'road safety Nepal'],
+  alternates: {
+    canonical: pageUrl,
+  },
+  openGraph: {
+    title: `Blog | ${SITE_NAME}`,
+    description: `Stay updated with the latest tips, guides, and news related to Nepal's driving license (Likhit) tests, traffic rules, and road safety on the ${SITE_NAME} blog.`,
+    url: pageUrl,
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE_URL, // You might want a specific OG image for the blog section
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} Blog`,
+      },
+    ],
+    type: 'website', // or 'blog' if it represents the main blog feed
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `Blog | ${SITE_NAME}`,
+    description: `Stay updated with the latest tips, guides, and news related to Nepal's driving license (Likhit) tests, traffic rules, and road safety on the ${SITE_NAME} blog.`,
+    images: [DEFAULT_OG_IMAGE_URL],
+  },
 };
 
 export default function BlogPage() {
@@ -34,7 +61,7 @@ export default function BlogPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {blogPosts.map((post) => (
           <Card key={post.slug} className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <Link href={`/blog/${post.slug}`} className="block">
+            <Link href={`/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.title}`}>
               <div className="relative h-56 w-full">
                 <Image 
                   src={post.image} 
@@ -51,7 +78,11 @@ export default function BlogPage() {
               <Link href={`/blog/${post.slug}`}>
                 <CardTitle className="text-xl font-semibold hover:text-primary transition-colors">{post.title}</CardTitle>
               </Link>
-              <p className="text-xs text-muted-foreground">{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <p className="text-xs text-muted-foreground">
+                <time dateTime={new Date(post.date).toISOString()}>
+                 {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </time>
+              </p>
             </CardHeader>
             <CardContent className="flex-grow">
               <CardDescription>{post.excerpt}</CardDescription>

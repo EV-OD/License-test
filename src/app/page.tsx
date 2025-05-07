@@ -1,12 +1,44 @@
 
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { SITE_NAME, KEY_FEATURES, TESTIMONIALS_DATA, ADDITIONAL_RESOURCES, APP_DOWNLOAD_LINKS } from '@/lib/constants';
+import { SITE_NAME, KEY_FEATURES, TESTIMONIALS_DATA, ADDITIONAL_RESOURCES, APP_DOWNLOAD_LINKS, SITE_URL, DEFAULT_OG_IMAGE_URL } from '@/lib/constants';
 import { ClipboardCheck, Download, ArrowRight, Apple } from 'lucide-react'; 
 import GoogleAd from '@/components/ads/GoogleAd';
+
+export const metadata: Metadata = {
+  title: `${SITE_NAME}: Car & Bike Driving License Practice Tests (Nepal)`,
+  description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A, K) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, mock exams, traffic signs, and bilingual support.`,
+  keywords: ['Nepal driving license', 'Likhit exam', 'driving test practice Nepal', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A test', 'Category B test', 'Category K test', 'bike license Nepal', 'car license Nepal', 'scooter license Nepal', 'लिखित परीक्षा', 'नेपाल सवारी चालक अनुमतिपत्र'],
+  alternates: {
+    canonical: SITE_URL,
+  },
+  openGraph: {
+    title: `${SITE_NAME}: Car & Bike Driving License Practice Tests (Nepal)`,
+    description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A, K) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, mock exams, traffic signs, and bilingual support.`,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE_URL, // Specific OG image for homepage if different from default
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} - Homepage`,
+      },
+    ],
+    locale: 'en_US', 
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SITE_NAME}: Car & Bike Driving License Practice Tests (Nepal)`,
+    description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A, K) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, mock exams, traffic signs, and bilingual support.`,
+    images: [DEFAULT_OG_IMAGE_URL], // Specific Twitter image for homepage
+  },
+};
 
 
 export default function HomePage() {
