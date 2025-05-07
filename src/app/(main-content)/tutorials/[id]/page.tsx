@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { SITE_NAME } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ThumbsUp, MessageSquare, Clock, ArrowRight } from 'lucide-react'; // Added ArrowRight
-import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
@@ -17,6 +17,7 @@ const tutorialsData = [
     title: "Understanding Nepal's Traffic Signs (Part 1: Mandatory Signs)",
     description: "A comprehensive visual guide to mandatory traffic signs in Nepal, explaining their meaning and importance for road safety. This video covers all essential mandatory signs you'll encounter on Nepali roads and in your Likhit exam.",
     thumbnailUrl: "https://picsum.photos/seed/tutorial1/600/338",
+    dataAiHint: "traffic signs video",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Example YouTube embed URL
     duration: "12:35",
     category: "Traffic Signs",
@@ -34,6 +35,7 @@ const tutorialsData = [
     title: "Nepal Likhit Exam: What to Expect",
     description: "An overview of the computer-based Likhit exam format, question types, and tips for navigating the test interface. Prepare yourself for what the actual test day will look like.",
     thumbnailUrl: "https://picsum.photos/seed/tutorial2/600/338",
+    dataAiHint: "exam preparation video",
     videoUrl: "https://www.youtube.com/embed/rokGy0huYEA", // Another example
     duration: "08:52",
     category: "Exam Preparation",
@@ -51,6 +53,7 @@ const tutorialsData = [
     title: "Common Mistakes in Nepal Driving Trial (Bike & Scooter)",
     description: "Learn about common errors made during the practical driving test for two-wheelers and how to avoid them. This video demonstrates typical mistakes and provides guidance for a smoother trial experience.",
     thumbnailUrl: "https://picsum.photos/seed/tutorial3/600/338",
+    dataAiHint: "motorcycle test mistakes",
     videoUrl: "https://www.youtube.com/embed/watch?v=h6fcK_fRYaI",
     duration: "15:20",
     category: "Driving Trial",
