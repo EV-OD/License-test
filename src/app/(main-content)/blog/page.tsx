@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Rss } from 'lucide-react';
 import Image from 'next/image';
+import GoogleAd from '@/components/ads/GoogleAd'; // Added import
 
 export const metadata: Metadata = {
   title: `Blog | ${SITE_NAME}`,
@@ -45,6 +46,9 @@ const blogPosts = [
 
 
 export default function BlogPage() {
+  const adClient = "YOUR_ADSENSE_CLIENT_ID";
+  const adSlotBottom = "YOUR_AD_SLOT_ID_BLOG_LIST_BOTTOM";
+
   return (
     <div className="container py-8 md:py-12">
       <header className="mb-10 text-center">
@@ -100,6 +104,18 @@ export default function BlogPage() {
           <p className="text-muted-foreground mt-2">Check back soon for helpful articles and updates!</p>
         </div>
       )}
+
+      {/* Ad Unit Section */}
+      <div className="mt-12 w-full">
+        <GoogleAd
+          adClient={adClient}
+          adSlot={adSlotBottom}
+          adFormat="auto"
+          responsive={true}
+          className="min-h-[100px] w-full"
+        />
+      </div>
     </div>
   );
 }
+
