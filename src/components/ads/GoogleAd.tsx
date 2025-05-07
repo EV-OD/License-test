@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react'; // Added React and useState import
 
 interface GoogleAdProps {
   adClient: string; // e.g., "ca-pub-xxxxxxxxxxxxxxxx"
@@ -30,8 +30,8 @@ const GoogleAd: FC<GoogleAdProps> = ({
   layoutKey,
 }) => {
   const adRef = useRef<HTMLDivElement>(null);
-  const [isDevelopment, setIsDevelopment] = React.useState(process.env.NODE_ENV === 'development');
-  const [adPushed, setAdPushed] = React.useState(false);
+  const [isDevelopment, setIsDevelopment] = useState(process.env.NODE_ENV === 'development');
+  const [adPushed, setAdPushed] = useState(false);
 
   useEffect(() => {
     // This effect should run only once per ad unit on mount or when key ad props change.
@@ -107,3 +107,4 @@ const cn = (...inputs: (string | undefined | null | false)[]) => inputs.filter(B
 
 
 export default GoogleAd;
+
