@@ -1,7 +1,7 @@
 
 import { TrafficSignsClient } from './TrafficSignsClient';
-import { trafficSigns } from '@/data/traffic-signs'; 
-import { Metadata } from 'next';
+import trafficSignsData from '@/data/traffic-signs.json'; 
+import type { Metadata } from 'next';
 import { SITE_NAME } from '@/lib/constants';
 
 export const metadata: Metadata = {
@@ -11,5 +11,6 @@ export const metadata: Metadata = {
 
 export default async function TrafficSignsPage() {
   // In a real app, you might fetch this data
-  return <TrafficSignsClient allSigns={trafficSigns} />;
+  return <TrafficSignsClient allSigns={trafficSignsData} />;
 }
+

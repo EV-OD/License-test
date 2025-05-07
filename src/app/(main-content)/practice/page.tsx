@@ -1,7 +1,7 @@
 
 import { PracticeTestClient } from './PracticeTestClient';
-import { practiceQuestions } from '@/data/practice-questions'; 
-import { Metadata } from 'next';
+import practiceQuestionsData from '@/data/practice-questions.json'; 
+import type { Metadata } from 'next';
 import { SITE_NAME } from '@/lib/constants';
 
 export const metadata: Metadata = {
@@ -12,5 +12,6 @@ export const metadata: Metadata = {
 export default async function PracticePage() {
   // In a real app, you might fetch this data or filter based on user selection
   // For now, we pass all questions. The client component will handle filtering.
-  return <PracticeTestClient allQuestions={practiceQuestions} />;
+  return <PracticeTestClient allQuestions={practiceQuestionsData} />;
 }
+

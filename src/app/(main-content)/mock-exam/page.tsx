@@ -1,7 +1,7 @@
 
 import { MockExamClient } from './MockExamClient';
-import { practiceQuestions } from '@/data/practice-questions'; 
-import { Metadata } from 'next';
+import practiceQuestionsData from '@/data/practice-questions.json'; 
+import type { Metadata } from 'next';
 import { SITE_NAME } from '@/lib/constants';
 
 export const metadata: Metadata = {
@@ -12,5 +12,6 @@ export const metadata: Metadata = {
 export default async function MockExamPage() {
   // In a real app, mock exam questions might be different or specifically curated
   // For now, we'll use a subset of practice questions.
-  return <MockExamClient allQuestions={practiceQuestions} />;
+  return <MockExamClient allQuestions={practiceQuestionsData} />;
 }
+
