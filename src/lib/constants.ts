@@ -10,10 +10,10 @@ export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`; // Ensu
 
 export const NAV_LINKS: NavItem[] = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck }, // Updated link to category selection page
+  { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck },
   { href: "/practice", label: "Practice Test", icon: FileText },
   { href: "/traffic-signs", label: "Traffic Signs", icon: TrafficCone },
-  { href: "/mock-exam", label: "Mock Exam", icon: Timer }, 
+  // { href: "/mock-exam", label: "Mock Exam", icon: Timer }, // Removed Mock Exam
   { href: "/blog", label: "Blog", icon: Rss },
   { href: "/tutorials", label: "Tutorials", icon: Film },
   { href: "/faq", label: "FAQs", icon: HelpCircle },
@@ -32,9 +32,9 @@ export const KEY_FEATURES: FeatureItem[] = [
     description: "Interactive traffic sign tutorials with clear visuals and bilingual explanations.",
   },
   {
-    icon: Timer,
-    title: "Realistic Mock Exams",
-    description: "Timed mock exams that simulate real test conditions to build your confidence.",
+    icon: Timer, // This icon can represent timed exams in general (Real Exam)
+    title: "Realistic Exam Simulation", // Renamed from "Realistic Mock Exams"
+    description: "Timed exams that simulate real test conditions to build your confidence.",
   },
   {
     icon: Languages,
@@ -116,3 +116,4 @@ export const REAL_EXAM_CATEGORIES = [
   { id: 'K', name: 'Category K (Scooter)', icon: ScooterIcon, description: 'Practice for your scooter license.' },
   { id: 'Mixed', name: 'Mixed Exam', icon: Layers, description: 'Comprehensive test with questions from all categories.' },
 ];
+

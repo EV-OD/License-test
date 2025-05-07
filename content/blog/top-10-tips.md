@@ -19,7 +19,7 @@ The Department of Transport Management (DoTM) often provides official handbooks 
 Traffic signs are a significant portion of the exam. Use our [interactive traffic sign tutorials](/traffic-signs) to learn them visually and by meaning. Don't just memorize; understand their purpose.
 
 ### 4. Take Regular Practice Tests
-Consistent practice is key. Utilize platforms like ours that offer [practice questions](/practice) and [mock exams](/mock-exam). This helps you get used to the question format and time constraints.
+Consistent practice is key. Utilize platforms like ours that offer [practice questions](/practice) and [Real Exam Simulation](/real-exam). This helps you get used to the question format and time constraints.
 
 ### 5. Analyze Your Mistakes
 When you get a question wrong in a practice test, don't just move on. Understand why you made the mistake. This is crucial for learning and improvement.
