@@ -76,31 +76,28 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
   let rawQuestions: any[] = [];
 
   // Populate rawQuestions based on the category
-  if (category === 'A' || category === 'K') {
-    rawQuestions.push(...(akQuestionsData.questions || []).filter(q => q.category === category));
+  if (category === 'A' || category === 'K' || category === 'B') { // Category B questions will be filtered from akQuestionsData
+    const categoryQuestions = (akQuestionsData.questions || []).filter(q => q.category === category);
+    rawQuestions.push(...categoryQuestions);
   } else if (category === 'Traffic') {
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   } else if (category === 'Mixed') {
-    rawQuestions.push(...(akQuestionsData.questions || []));
+    rawQuestions.push(...(akQuestionsData.questions || [])); 
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   }
-  // For category 'B', rawQuestions remains empty, handled by isCategoryBComingSoon logic
-
-  // Filter and map rawQuestions to AppQuestionType, ensuring data integrity
+  
   const allQuestions: AppQuestionType[] = rawQuestions
     .filter(q => q && q.n && q.category && Array.isArray(q.a4) && q.a4.length > 0 && typeof q.an === 'string')
     .map((q: any) => ({
-      id: q.n, // Use n as id, assuming n is unique
+      id: q.n, 
       n: q.n,
-      category: q.category as ExamCategoryType, // Cast category
+      category: q.category as ExamCategoryType, 
       qn: q.qn,
       imageUrl: q.imageUrl,
-      a4: q.a4 as string[], // Cast a4
-      an: q.an as string,   // Cast an
+      a4: q.a4 as string[], 
+      an: q.an as string,   
     }));
 
-  // Determine if category B is "Coming Soon"
-  // This specific check for 'B' might be simplified if rawQuestions for B are always empty
   const isCategoryBComingSoon = category === 'B' && allQuestions.filter(q => q.category === 'B').length === 0;
   const categoryDisplayName = getCategoryDisplayName(category);
 
