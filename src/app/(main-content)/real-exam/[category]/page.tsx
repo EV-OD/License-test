@@ -1,11 +1,13 @@
 
 import { RealExamClient } from '../RealExamClient';
-import practiceQuestionsData from '@/data/practice-questions.json'; 
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
 import { ClipboardCheck } from 'lucide-react';
 import type { ExamCategoryType, Question as AppQuestionType } from '@/lib/types';
 import { notFound } from 'next/navigation';
+
+import akQuestionsData from '@/data/ak.json';
+import trafficQuestionsData from '@/data/trafficqn.json';
 
 const VALID_CATEGORIES: ExamCategoryType[] = ['A', 'B', 'K', 'Mixed', 'Traffic'];
 
@@ -64,8 +66,6 @@ export async function generateMetadata({ params }: RealExamPageProps): Promise<M
   };
 }
 
-// The practiceQuestionsData is now expected to directly conform to AppQuestionType items
-// or a very similar structure.
 export default async function RealExamCategoryPage({ params }: RealExamPageProps) {
   const { category } = params;
 
@@ -73,17 +73,34 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
     notFound();
   }
 
-  // Map the raw data from JSON to ensure it strictly conforms to AppQuestionType
-  const allQuestions: AppQuestionType[] = (practiceQuestionsData as any[]).map(q => ({
-    id: q.id || q.n, // Use id if present, fallback to n
-    n: q.n,
-    category: q.category,
-    qn: q.qn,
-    imageUrl: q.imageUrl,
-    a4: q.a4, // Directly use a4 as it's an array of strings
-    an: q.an, // Directly use an as it's the correct answer string
-  }));
+  let rawQuestions: any[] = [];
 
+  // Populate rawQuestions based on the category
+  if (category === 'A' || category === 'K') {
+    rawQuestions.push(...(akQuestionsData.questions || []).filter(q => q.category === category));
+  } else if (category === 'Traffic') {
+    rawQuestions.push(...(trafficQuestionsData.questions || []));
+  } else if (category === 'Mixed') {
+    rawQuestions.push(...(akQuestionsData.questions || []));
+    rawQuestions.push(...(trafficQuestionsData.questions || []));
+  }
+  // For category 'B', rawQuestions remains empty, handled by isCategoryBComingSoon logic
+
+  // Filter and map rawQuestions to AppQuestionType, ensuring data integrity
+  const allQuestions: AppQuestionType[] = rawQuestions
+    .filter(q => q && q.n && q.category && Array.isArray(q.a4) && q.a4.length > 0 && typeof q.an === 'string')
+    .map((q: any) => ({
+      id: q.n, // Use n as id, assuming n is unique
+      n: q.n,
+      category: q.category as ExamCategoryType, // Cast category
+      qn: q.qn,
+      imageUrl: q.imageUrl,
+      a4: q.a4 as string[], // Cast a4
+      an: q.an as string,   // Cast an
+    }));
+
+  // Determine if category B is "Coming Soon"
+  // This specific check for 'B' might be simplified if rawQuestions for B are always empty
   const isCategoryBComingSoon = category === 'B' && allQuestions.filter(q => q.category === 'B').length === 0;
   const categoryDisplayName = getCategoryDisplayName(category);
 
