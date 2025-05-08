@@ -102,7 +102,7 @@ export default function SelectRealExamCategoryPage() {
             <CardFooter>
               <Button asChild className="w-full">
                 <Link href={category.href}>
-                  Start Exam for {category.type === 'Mixed' ? 'Mixed' : (category.type === 'Traffic' ? 'Traffic Signs' : `${category.name}`)}
+                  Start Exam
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
