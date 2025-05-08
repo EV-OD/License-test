@@ -90,7 +90,7 @@ export function ExamResultsScreen({
                       <Image src={q.imageUrl} alt={`Image for question ${q.n}`} width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
                     )}
                     <p className={`text-xs ${ans.isCorrect ? 'text-accent-foreground' : 'text-destructive-foreground'}`}>
-                      <span className="font-medium text-foreground/80">Your Answer:</span> {selectedOptionText !== null ? selectedOptionText : 'Not Answered'} 
+                      <span className="font-medium text-foreground/80">Your Answer:</span> {selectedOptionText !== null ? <span className='font-normal text-foreground/80'>{selectedOptionText}</span> : 'Not Answered'} 
                       {ans.isCorrect ? <CheckCircle className="inline ml-1 h-3 w-3 text-accent" /> : <XCircle className="inline ml-1 h-3 w-3 text-destructive" />}
                     </p>
                     {!ans.isCorrect && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium text-foreground/80">Correct Answer:</span> {correctOptionText}</p>} 
