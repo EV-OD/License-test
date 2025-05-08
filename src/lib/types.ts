@@ -41,13 +41,13 @@ export type Question = {
 
 
 // Traffic Sign type for the /traffic-signs learning page
-// Name, description, and category are now expected to be in English.
+// Name is now Nepali. Description and category are optional.
 export type TrafficSign = {
   id: string;
-  name: string; // English name
+  name: string; // Nepali name from the new JSON format
   image_url: string;
-  description: string; // English description
-  category: string; // English category
+  description?: string; // Optional: English or Nepali description if available
+  category?: string;    // Optional: English or Nepali category if available
 };
 
 // Exam Types (Common structure for Real Exam)
@@ -60,4 +60,3 @@ export type MockExamResult = {
   answers: { questionId: string; selectedOptionIndex: number | null; isCorrect: boolean }[]; // Storing index
   category: ExamCategoryType;
 };
-```

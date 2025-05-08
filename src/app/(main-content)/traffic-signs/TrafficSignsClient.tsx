@@ -26,20 +26,25 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
 
   const uniqueCategories = useMemo(() => {
     const categories = new Set<string>();
-    allSigns.forEach(sign => categories.add(sign.category)); 
+    allSigns.forEach(sign => {
+      if (sign.category) { // Only add if category exists
+        categories.add(sign.category);
+      }
+    });
     return ['All', ...Array.from(categories)];
   }, [allSigns]);
 
 
   const filteredSigns = useMemo(() => {
     return allSigns.filter(sign => {
-      const name = sign.name || ''; // Ensure name is not undefined
-      const description = sign.description || ''; // Ensure description is not undefined
-      const category = sign.category || ''; // Ensure category is not undefined
+      const name = sign.name || ''; 
+      const description = sign.description || ''; 
+      const category = sign.category; // Can be undefined
 
       const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = categoryFilter === 'All' || category === categoryFilter;
+      
+      const matchesCategory = categoryFilter === 'All' || (category && category === categoryFilter);
       
       return matchesSearch && matchesCategory;
     });
@@ -80,22 +85,24 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
             className="pl-10 w-full"
           />
         </div>
-        <Select value={categoryFilter} onValueChange={(value: SignCategoryFilter) => setCategoryFilter(value)}>
-          <SelectTrigger className="w-full sm:w-[280px]">
-            <Tag className="mr-2 h-4 w-4" />
-            <SelectValue placeholder="Filter by category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Sign Categories</SelectLabel>
-              {uniqueCategories.map(cat => (
-                <SelectItem key={cat} value={cat}>
-                  {cat === 'All' ? 'All Categories' : cat}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        {uniqueCategories.length > 1 && ( // Only show filter if there are actual categories beyond "All"
+            <Select value={categoryFilter} onValueChange={(value: SignCategoryFilter) => setCategoryFilter(value)}>
+            <SelectTrigger className="w-full sm:w-[280px]">
+                <Tag className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Filter by category" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectGroup>
+                <SelectLabel>Sign Categories</SelectLabel>
+                {uniqueCategories.map(cat => (
+                    <SelectItem key={cat} value={cat}>
+                    {cat === 'All' ? 'All Categories' : cat}
+                    </SelectItem>
+                ))}
+                </SelectGroup>
+            </SelectContent>
+            </Select>
+        )}
       </div>
 
       {filteredSigns.length > 0 ? (
@@ -106,7 +113,7 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
                 <div className="aspect-[4/3] relative w-full bg-muted">
                   <Image
                     src={sign.image_url}
-                    alt={sign.name}
+                    alt={sign.name} // Alt text will be Nepali name
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="object-contain p-4"
@@ -116,12 +123,16 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
               </CardHeader>
               <CardContent className="p-4 flex-grow flex flex-col">
                 <CardTitle className="text-lg font-semibold mb-1">{sign.name}</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground flex-grow">
-                  {sign.description}
-                </CardDescription>
-                <p className="mt-3 text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full self-start">
-                  {sign.category}
-                </p>
+                {sign.description && (
+                    <CardDescription className="text-sm text-muted-foreground flex-grow">
+                        {sign.description}
+                    </CardDescription>
+                )}
+                {sign.category && (
+                    <p className="mt-3 text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full self-start">
+                    {sign.category}
+                    </p>
+                )}
               </CardContent>
             </Card>
           ))}

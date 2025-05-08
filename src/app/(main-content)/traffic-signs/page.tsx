@@ -11,15 +11,18 @@ export const metadata: Metadata = {
 };
 
 export default async function TrafficSignsPage() {
-  // Map raw data to the TrafficSign type, using English fields
-  const signs: TrafficSign[] = rawTrafficSignsData.map((sign: any) => ({
-    id: sign.id,
-    name: sign.name_en, 
-    image_url: sign.image_url,
-    description: sign.description_en, 
-    category: sign.category_en, 
+  // Ensure rawTrafficSignsData has the 'sign' property and it's an array
+  const rawSignsArray = rawTrafficSignsData?.sign || [];
+
+  // Map raw data to the TrafficSign type
+  const signs: TrafficSign[] = rawSignsArray.map((rawSign: any, index: number) => ({
+    id: `ts-${index + 1}`, // Generate a unique ID
+    name: rawSign.name, // This is the Nepali name from the new JSON
+    image_url: rawSign.selection1, // Use selection1 for image_url
+    // description and category are optional and will be undefined if not in rawSign
+    description: rawSign.description_np || rawSign.description_en || undefined, // Prioritize Nepali if available, fallback or undefined
+    category: rawSign.category_np || rawSign.category_en || undefined, // Prioritize Nepali if available, fallback or undefined
   }));
   
   return <TrafficSignsClient allSigns={signs} />;
 }
-```
