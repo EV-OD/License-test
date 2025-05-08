@@ -9,18 +9,16 @@ import { notFound } from 'next/navigation';
 import akQuestionsData from '@/data/ak.json';
 import trafficQuestionsData from '@/data/trafficqn.json';
 
-const VALID_CATEGORIES: ExamCategoryType[] = ['A', 'B', 'K', 'Mixed', 'Traffic'];
+const VALID_CATEGORIES: ExamCategoryType[] = ['A', 'B', 'Mixed', 'Traffic']; // K removed
 
 interface RealExamPageProps {
   params: { category: ExamCategoryType };
 }
 
-// Returns English display names for categories
 function getCategoryDisplayName(category: ExamCategoryType): string {
   switch (category) {
-    case 'A': return 'Category A (Motorcycle)';
+    case 'A': return 'Category A (Bike/Scooter)'; // Updated
     case 'B': return 'Category B (Car/Jeep/Van)';
-    case 'K': return 'Category K (Scooter)';
     case 'Traffic': return 'Traffic Signs';
     case 'Mixed': return 'Mixed Exam';
     default: return 'Exam';
@@ -44,11 +42,21 @@ export async function generateMetadata({ params }: RealExamPageProps): Promise<M
 
   const categoryDisplayName = getCategoryDisplayName(category);
   const pageUrl = `${SITE_URL}/real-exam/${category}`;
+  const keywords = [
+    `Nepal driving license real exam ${categoryDisplayName}`, 
+    `Likhit exam ${categoryDisplayName}`, 
+    `Nepal driving test ${categoryDisplayName}`, 
+    `real exam simulation ${SITE_NAME}`, 
+    `practice test ${categoryDisplayName}`,
+    ...(category === 'A' ? ['bike license Nepal', 'scooter license Nepal'] : []),
+    ...(category === 'B' ? ['car license Nepal'] : [])
+  ];
+
 
   return {
     title: `Real Exam Simulation - ${categoryDisplayName} | ${SITE_NAME}`,
     description: `Take a timed real exam simulation for ${categoryDisplayName} on ${SITE_NAME}. Test your knowledge under official Nepal driving license Likhit exam conditions. 25 questions, 25 minutes.`,
-    keywords: [`Nepal driving license real exam ${category}`, `Likhit exam ${category}`, `Nepal driving test ${category}`, `real exam simulation ${SITE_NAME}`, `practice test ${category}`],
+    keywords: keywords,
     alternates: {
       canonical: pageUrl,
     },
@@ -76,12 +84,14 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
 
   let rawQuestions: any[] = [];
 
-  if (category === 'A' || category === 'K' || category === 'B') { 
+  // Category 'A' now handles both Bike and Scooter questions from ak.json
+  if (category === 'A' || category === 'B') { 
     const categorySpecificQuestions = (akQuestionsData.questions || []).filter(q => q.category === category);
     rawQuestions.push(...categorySpecificQuestions);
   } else if (category === 'Traffic') {
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   } else if (category === 'Mixed') {
+    // For mixed, include all questions from ak.json (which now contains A and B)
     rawQuestions.push(...(akQuestionsData.questions || [])); 
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   }
@@ -91,7 +101,7 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
     .map((q: any) => ({
       id: q.n, 
       n: q.n,
-      category: q.category as ExamCategoryType, 
+      category: q.category as 'A' | 'B' | 'Traffic', // Cast to narrower type
       qn: q.qn,
       imageUrl: q.imageUrl,
       a4: q.a4 as string[], 

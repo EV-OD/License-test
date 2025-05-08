@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import type { Question } from '@/lib/types'; // Updated type
+import type { Question } from '@/lib/types'; 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -26,7 +26,7 @@ import {
 import GoogleAd from '@/components/ads/GoogleAd';
 import { cn } from '@/lib/utils';
 
-type CategoryFilter = 'All' | 'A' | 'B' | 'K' | 'Traffic';
+type CategoryFilter = 'All' | 'A' | 'B' | 'Traffic'; // K removed
 
 interface PracticeTestClientProps {
   allQuestions: Question[];
@@ -38,11 +38,10 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   const [category, setCategory] = useState<CategoryFilter>('All');
   const [currentSetQuestions, setCurrentSetQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null); // Store index
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null); 
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
-  // Explanations are removed from the new Question type, so showExplanation state is removed.
   const [incorrectAnswers, setIncorrectAnswers] = useState<Question[]>([]);
 
   const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
@@ -54,7 +53,6 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     if (!allQuestions) return [];
     if (category === 'All') return allQuestions;
     if (category === 'B' && allQuestions.filter(q => q.category === 'B').length === 0) {
-        // Special handling for "Coming Soon" for category B
         return []; 
     }
     return allQuestions.filter(q => q.category === category);
@@ -62,8 +60,8 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
 
   const startNewSet = () => {
     if (!filteredQuestions || filteredQuestions.length === 0) {
-      if (category === 'B') { // Show coming soon specifically for B if it's empty
-         setCurrentSetQuestions([]); // Ensure it's empty to trigger the "Coming Soon" message
+      if (category === 'B') { 
+         setCurrentSetQuestions([]); 
       } else {
         setCurrentSetQuestions([]);
       }
@@ -108,7 +106,6 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
   const handleNextQuestion = () => {
     setShowAnswer(false); 
     setSelectedOptionIndex(null); 
-    // setShowExplanation(false); // Removed
 
     if (currentQuestionIndex < currentSetQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
@@ -123,12 +120,12 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     
     let optionStyle = "border-border hover:border-primary";
     if (showAnswer) {
-      if (optionText === currentQuestion.an) { // Correct answer
+      if (optionText === currentQuestion.an) { 
         optionStyle = "border-accent bg-accent/10";
-      } else if (selectedOptionIndex === index) { // User's incorrect selection
+      } else if (selectedOptionIndex === index) { 
         optionStyle = "border-destructive bg-destructive/10";
       }
-    } else if (selectedOptionIndex === index) { // User's current selection (before check)
+    } else if (selectedOptionIndex === index) { 
        optionStyle = "border-primary bg-primary/10";
     }
 
@@ -146,7 +143,6 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
         />
         <Label htmlFor={optionId} className="flex-1 cursor-pointer text-base">
           {optionText}
-          {/* Image rendering within options might be needed if data supports it */}
         </Label>
       </div>
     );
@@ -221,9 +217,8 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="All">सबै श्रेणीहरू</SelectItem>
-                        <SelectItem value="A">श्रेणी A (मोटरसाइकल)</SelectItem>
+                        <SelectItem value="A">श्रेणी A (बाइक/स्कुटर)</SelectItem>
                         <SelectItem value="B">श्रेणी B (कार/जीप/भ्यान)</SelectItem>
-                        <SelectItem value="K">श्रेणी K (स्कुटर)</SelectItem>
                         <SelectItem value="Traffic">ट्राफिक संकेत</SelectItem>
                     </SelectContent>
                 </Select>
@@ -252,9 +247,8 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="All">सबै श्रेणीहरू</SelectItem>
-                        <SelectItem value="A">श्रेणी A (मोटरसाइकल)</SelectItem>
+                        <SelectItem value="A">श्रेणी A (बाइक/स्कुटर)</SelectItem>
                         <SelectItem value="B">श्रेणी B (कार/जीप/भ्यान)</SelectItem>
-                        <SelectItem value="K">श्रेणी K (स्कुटर)</SelectItem>
                         <SelectItem value="Traffic">ट्राफिक संकेत</SelectItem>
                     </SelectContent>
                 </Select>
@@ -273,7 +267,6 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
     );
   }
 
-  // Renamed loading state check
   if (currentSetQuestions.length === 0 && filteredQuestions.length > 0 && !quizFinished) {
     return (
       <div className="container py-8 text-center">
@@ -300,9 +293,8 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="All">सबै श्रेणीहरू</SelectItem>
-                  <SelectItem value="A">श्रेणी A (मोटरसाइकल)</SelectItem>
+                  <SelectItem value="A">श्रेणी A (बाइक/स्कुटर)</SelectItem>
                   <SelectItem value="B">श्रेणी B (कार/जीप/भ्यान)</SelectItem>
-                  <SelectItem value="K">श्रेणी K (स्कुटर)</SelectItem>
                   <SelectItem value="Traffic">ट्राफिक संकेत</SelectItem>
                 </SelectContent>
               </Select>
@@ -318,9 +310,9 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                   <CardTitle>प्रश्न {currentQuestionIndex + 1} / {currentSetQuestions.length}</CardTitle>
                   {currentSetQuestions.length > 0 && <Progress value={((currentQuestionIndex + 1) / currentSetQuestions.length) * 100} className="mt-2 h-2.5" />}
                   <CardDescription className="pt-6 text-xl font-semibold leading-relaxed">
-                    {currentQuestion.qn} {/* Directly use qn */}
+                    {currentQuestion.qn} 
                   </CardDescription>
-                  {currentQuestion.imageUrl && ( // Check for imageUrl
+                  {currentQuestion.imageUrl && ( 
                     <div className="mt-4 flex justify-center">
                       <Image
                         src={currentQuestion.imageUrl}
@@ -335,7 +327,7 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                 </CardHeader>
                 <CardContent>
                   <RadioGroup
-                    key={`${currentQuestion.id}-${currentQuestionIndex}`}
+                    key={`${currentQuestion.id}-${currentQuestionIndex}-${selectedOptionIndex}`} // Added selectedOptionIndex to key to force re-render
                     value={selectedOptionIndex !== null ? selectedOptionIndex.toString() : undefined}
                     onValueChange={(value) => setSelectedOptionIndex(parseInt(value))}
                     className="space-y-3"
@@ -350,10 +342,8 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                       <AlertDescription>
                         सही उत्तर हो: {currentQuestion.an}
                       </AlertDescription>
-                      {/* Explanations removed */}
                     </Alert>
                   )}
-                  {/* Explanation display removed */}
                 </CardContent>
                 <CardFooter className="flex justify-between pt-6">
                   <Button 
@@ -362,7 +352,6 @@ export function PracticeTestClient({ allQuestions }: PracticeTestClientProps) {
                         setCurrentQuestionIndex(i => i-1); 
                         setSelectedOptionIndex(null); 
                         setShowAnswer(false);
-                        // setShowExplanation(false); // Removed
                       }
                     }} 
                     variant="outline" 

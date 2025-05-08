@@ -11,14 +11,14 @@ import GoogleAd from '@/components/ads/GoogleAd';
 
 export const metadata: Metadata = {
   title: `${SITE_NAME}: Car & Bike Driving License Practice Tests (Nepal)`,
-  description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A, K) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, mock exams, traffic signs, and bilingual support.`,
-  keywords: ['Nepal driving license', 'Likhit exam', 'driving test practice Nepal', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A test', 'Category B test', 'Category K test', 'bike license Nepal', 'car license Nepal', 'scooter license Nepal', 'लिखित परीक्षा', 'नेपाल सवारी चालक अनुमतिपत्र'],
+  description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, real exam simulations, traffic signs, and more.`,
+  keywords: ['Nepal driving license', 'Likhit exam', 'driving test practice Nepal', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A test', 'Category B test', 'bike license Nepal', 'scooter license Nepal', 'car license Nepal', 'लिखित परीक्षा', 'नेपाल सवारी चालक अनुमतिपत्र'],
   alternates: {
     canonical: SITE_URL,
   },
   openGraph: {
     title: `${SITE_NAME}: Car & Bike Driving License Practice Tests (Nepal)`,
-    description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A, K) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, mock exams, traffic signs, and bilingual support.`,
+    description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, real exam simulations, traffic signs, and more.`,
     url: SITE_URL,
     siteName: SITE_NAME,
     images: [
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: `${SITE_NAME}: Car & Bike Driving License Practice Tests (Nepal)`,
-    description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A, K) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, mock exams, traffic signs, and bilingual support.`,
+    description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, real exam simulations, traffic signs, and more.`,
     images: [DEFAULT_OG_IMAGE_URL], 
   },
 };
@@ -50,7 +50,6 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-gradient-to-br from-primary/10 via-background to-background">
         <div className="absolute inset-0 opacity-10 overflow-hidden">
-          {/* Decorative background elements can be added here */}
         </div>
         <div className="container relative text-center">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
@@ -58,11 +57,11 @@ export default function HomePage() {
             <span className="block text-primary">License Test</span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground sm:text-xl md:text-2xl">
-            Master the Likhit exam with interactive quizzes, traffic sign tutorials, and real-time mock tests. For both Car & Bike.
+            Master the Likhit exam with interactive quizzes, traffic sign tutorials, and real exam simulations. For both Car & Bike/Scooter.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link href="/real-exam"> {/* Updated Link to category selection page */}
+              <Link href="/real-exam"> 
                 <ClipboardCheck className="mr-2 h-5 w-5" /> 
                 Start Real Exam 
               </Link>

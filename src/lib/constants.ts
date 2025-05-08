@@ -1,6 +1,6 @@
 
 import type { NavItem, FeatureItem, Testimonial, ResourceLink } from '@/lib/types';
-import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin, ClipboardCheck, Home, FileText, Rss, Film, HelpCircle, Phone, Car, Bike as MotorcycleIcon, Bike as ScooterIcon, Layers } from 'lucide-react';
+import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin, ClipboardCheck, Home, FileText, Rss, Film, HelpCircle, Phone, Car, Bike as MotorcycleIcon, Layers } from 'lucide-react'; // ScooterIcon removed as it's merged
 
 export const SITE_NAME = "Nepal License Prep";
 
@@ -25,7 +25,7 @@ export const KEY_FEATURES: FeatureItem[] = [
   {
     icon: ListChecks,
     title: "विस्तृत प्रश्न बैंक",
-    description: "सवारी साधन श्रेणी A, B (चाँडै आउँदैछ), र K को लागि १०००+ अभ्यास प्रश्नहरू।",
+    description: "सवारी साधन श्रेणी A (मोटरसाइकल/स्कुटर) र B (कार/जीप/भ्यान - चाँडै आउँदैछ) को लागि अभ्यास प्रश्नहरू।",
   },
   {
     icon: TrafficCone,
@@ -114,9 +114,8 @@ export const CONTACT_DETAILS = {
 
 // Real Exam Categories - Updated to English for UI
 export const REAL_EXAM_CATEGORIES = [
-  { id: 'A', name: 'Category A (Motorcycle)', icon: MotorcycleIcon, description: 'Practice for motorcycle license.' },
+  { id: 'A', name: 'Category A (Bike/Scooter)', icon: MotorcycleIcon, description: 'Practice for motorcycle and scooter license.' },
   { id: 'B', name: 'Category B (Car/Jeep/Van)', icon: Car, description: 'Practice for car, jeep, or van license. (Coming Soon)' },
-  { id: 'K', name: 'Category K (Scooter)', icon: ScooterIcon, description: 'Practice for scooter license.' },
   { id: 'Traffic', name: 'Traffic Signs', icon: TrafficCone, description: 'Practice traffic sign questions.' },
   { id: 'Mixed', name: 'Mixed Exam', icon: Layers, description: 'Comprehensive exam with questions from all categories.' },
 ];

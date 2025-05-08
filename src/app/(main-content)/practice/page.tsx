@@ -10,7 +10,7 @@ import trafficQuestionsData from '@/data/trafficqn.json';
 
 export const metadata: Metadata = {
   title: `अभ्यास परीक्षा | ${SITE_NAME}`,
-  description: `${SITE_NAME} मा नेपालको ड्राइभिङ लाइसेन्स (लिखित) परीक्षाको अभ्यास गर्नुहोस्। श्रेणी A (मोटरसाइकल), B (कार/जीप/भ्यान), र K (स्कुटर) समावेश गर्दछ।`,
+  description: `${SITE_NAME} मा नेपालको ड्राइभिङ लाइसेन्स (लिखित) परीक्षाको अभ्यास गर्नुहोस्। श्रेणी A (बाइक/स्कुटर), B (कार/जीप/भ्यान), र ट्राफिक संकेत प्रश्नहरू समावेश गर्दछ।`,
 };
 
 export default async function PracticePage() {
@@ -23,13 +23,13 @@ export default async function PracticePage() {
   const questions: AppQuestionType[] = rawQuestions
     .filter(q => q && q.n && q.category && Array.isArray(q.a4) && q.a4.length > 0 && typeof q.an === 'string')
     .map((q: any) => ({
-      id: q.n, // Use n as id
+      id: q.n, 
       n: q.n,
-      category: q.category as ExamCategoryType, // Cast category
+      category: q.category as 'A' | 'B' | 'Traffic', // Cast to narrower type
       qn: q.qn,
       imageUrl: q.imageUrl,
-      a4: q.a4 as string[], // Cast a4
-      an: q.an as string,   // Cast an
+      a4: q.a4 as string[], 
+      an: q.an as string,   
     }));
 
   return (

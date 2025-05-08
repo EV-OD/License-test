@@ -32,12 +32,11 @@ export type ResourceLink = {
 export type Question = {
   id: string; // Unique identifier, can be same as 'n' or generated
   n: string; // Question number/identifier from source
-  category: 'A' | 'B' | 'K' | 'Traffic'; // Category of the question
-  qn?: string; // Question text (for text-based questions like A, B, K)
+  category: 'A' | 'B' | 'Traffic'; // Category of the question. 'A' now includes former 'K'.
+  qn?: string; // Question text (for text-based questions like A, B)
   imageUrl?: string; // Image URL (for image-based questions like Traffic)
   a4: string[]; // Array of 4 option strings
   an: string; // The correct answer string (must be one of the strings in a4)
-  // Explanations are removed as they are not in the new requested format
 };
 
 
@@ -52,7 +51,7 @@ export type TrafficSign = {
 };
 
 // Exam Types (Common structure for Real Exam)
-export type ExamCategoryType = 'A' | 'B' | 'K' | 'Mixed' | 'Traffic'; // Added Traffic
+export type ExamCategoryType = 'A' | 'B' | 'Mixed' | 'Traffic'; // K removed
 
 export type MockExamResult = {
   score: number;

@@ -42,12 +42,10 @@ export function ExamResultsScreen({
     onRestartExam();
   };
 
-  // Helper to get category display name (English)
   function getCategoryDisplayName(category: ExamCategoryType): string {
     switch (category) {
-      case 'A': return 'Category A (Motorcycle)';
+      case 'A': return 'Category A (Bike/Scooter)'; // Updated
       case 'B': return 'Category B (Car/Jeep/Van)';
-      case 'K': return 'Category K (Scooter)';
       case 'Traffic': return 'Traffic Signs';
       case 'Mixed': return 'Mixed Exam (All Categories)';
       default: return category;
@@ -87,15 +85,15 @@ export function ExamResultsScreen({
 
                 return (
                   <Card key={idx} className={`p-3 rounded-md ${ans.isCorrect ? 'border-accent bg-accent/5' : 'border-destructive bg-destructive/5'}`}>
-                    <p className="font-semibold text-sm mb-1">{idx + 1}. {q.qn || `Question ${q.n}`}</p> {/* q.qn is Nepali */}
+                    <p className="font-semibold text-sm mb-1">{idx + 1}. {q.qn || `Question ${q.n}`}</p> 
                      {q.imageUrl && (
                       <Image src={q.imageUrl} alt={`Image for question ${q.n}`} width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
                     )}
                     <p className={`text-xs ${ans.isCorrect ? 'text-accent-foreground' : 'text-destructive-foreground'}`}>
-                      <span className="font-medium">Your Answer:</span> {selectedOptionText !== null ? selectedOptionText : 'Not Answered'} {/* selectedOptionText is Nepali */}
+                      <span className="font-medium">Your Answer:</span> {selectedOptionText !== null ? selectedOptionText : 'Not Answered'} 
                       {ans.isCorrect ? <CheckCircle className="inline ml-1 h-3 w-3 text-accent" /> : <XCircle className="inline ml-1 h-3 w-3 text-destructive" />}
                     </p>
-                    {!ans.isCorrect && selectedOptionText !== null && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">Correct Answer:</span> {correctOptionText}</p>} {/* correctOptionText is Nepali */}
+                    {!ans.isCorrect && selectedOptionText !== null && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">Correct Answer:</span> {correctOptionText}</p>} 
                   </Card>
                 );
               })}

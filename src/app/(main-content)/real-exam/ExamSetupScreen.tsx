@@ -21,12 +21,10 @@ interface ExamSetupScreenProps {
   isCategoryBComingSoon: boolean; 
 }
 
-// Helper to get category display name (English)
 function getCategoryDisplayName(category: ExamCategoryType): string {
   switch (category) {
-    case 'A': return 'Category A (Motorcycle)';
+    case 'A': return 'Category A (Bike/Scooter)'; // Updated
     case 'B': return 'Category B (Car/Jeep/Van)';
-    case 'K': return 'Category K (Scooter)';
     case 'Traffic': return 'Traffic Signs';
     case 'Mixed': return 'Mixed Exam (All Categories)';
     default: return category;
@@ -65,7 +63,6 @@ export function ExamSetupScreen({
 
           {isCategoryBComingSoon && (
              <Alert variant="default">
-                {/* <AlertTitle>Coming Soon!</AlertTitle> */}
                 <AlertDescription>
                     Questions for Category B (Car/Jeep/Van) are currently unavailable.
                 </AlertDescription>

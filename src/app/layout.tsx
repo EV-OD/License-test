@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     default: `${SITE_NAME}: Nepal Driving License Practice Exams (Likhit)`,
     template: `%s | ${SITE_NAME}`,
   },
-  description: `Ace your Nepal driving license (Likhit) test for car & bike (Category A, B, K) with ${SITE_NAME}. Free online practice questions, realistic mock exams, traffic sign tutorials, and bilingual support (English/Nepali). Start preparing today!`,
-  keywords: ['Nepal driving license', 'Likhit exam', 'driving test Nepal', 'practice questions', 'mock exam', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A license', 'Category B license', 'Category K license', 'नेपाल ड्राइभिङ लाइसेन्स', 'लिखित परीक्षा'],
+  description: `Ace your Nepal driving license (Likhit) test for car & bike/scooter (Category A, B) with ${SITE_NAME}. Free online practice questions, realistic real exam simulations, traffic sign tutorials, and more. Start preparing today!`,
+  keywords: ['Nepal driving license', 'Likhit exam', 'driving test Nepal', 'practice questions', 'real exam', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A license', 'Category B license', 'bike license Nepal', 'scooter license Nepal', 'नेपाल ड्राइभिङ लाइसेन्स', 'लिखित परीक्षा'],
   authors: [{ name: SITE_NAME, url: siteUrl }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  themeColor: '#3498db', // Match primary color from globals.css & manifest
+  themeColor: '#3498db', 
   openGraph: {
     title: {
         default: `${SITE_NAME}: Nepal Driving License Practice Exams (Likhit)`,
         template: `%s | ${SITE_NAME}`,
     },
-    description: `Ace your Nepal driving license (Likhit) test for car & bike (Category A, B, K) with ${SITE_NAME}. Free online practice questions, realistic mock exams, traffic sign tutorials, and bilingual support (English/Nepali). Start preparing today!`,
+    description: `Ace your Nepal driving license (Likhit) test for car & bike/scooter (Category A, B) with ${SITE_NAME}. Free online practice questions, realistic real exam simulations, traffic sign tutorials, and more. Start preparing today!`,
     url: siteUrl,
     siteName: SITE_NAME,
     images: [
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
         alt: `${SITE_NAME} - Driving License Preparation`,
       },
     ],
-    locale: 'en_US', // Changed to English locale to match navbar
+    locale: 'en_US', 
     type: 'website',
   },
   twitter: {
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
         default: `${SITE_NAME}: Nepal Driving License Practice Exams (Likhit)`,
         template: `%s | ${SITE_NAME}`,
     },
-    description: `Ace your Nepal driving license (Likhit) test for car & bike (Category A, B, K) with ${SITE_NAME}. Free online practice questions, realistic mock exams, traffic sign tutorials, and bilingual support (English/Nepali). Start preparing today!`,
+    description: `Ace your Nepal driving license (Likhit) test for car & bike/scooter (Category A, B) with ${SITE_NAME}. Free online practice questions, realistic real exam simulations, traffic sign tutorials, and more. Start preparing today!`,
     images: [DEFAULT_OG_IMAGE_URL], 
   },
   robots: { 
@@ -102,7 +102,6 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={`${GeistSans.variable} font-sans`} suppressHydrationWarning>
-      {/* <head /> is automatically managed by Next.js. Do not add <head> here. */}
       {showAds && (
          <Script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
          crossOrigin="anonymous" strategy="lazyOnload" />
@@ -119,4 +118,3 @@ export default function RootLayout({
     </html>
   );
 }
-
