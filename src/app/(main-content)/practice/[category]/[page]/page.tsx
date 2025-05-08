@@ -1,7 +1,8 @@
+
 import { PracticeTestClient } from '../../PracticeTestClient'; 
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
-import { FileText } from 'lucide-react';
+import { FileText, AlertTriangle } from 'lucide-react'; // Added AlertTriangle
 import type { Question as AppQuestionType } from '@/lib/types';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -83,9 +84,14 @@ export async function generateStaticParams() {
     
     const totalPages = Math.ceil(categoryQuestions.length / QUESTIONS_PER_PAGE);
     for (let i = 1; i <= totalPages; i++) {
-      if (categoryQuestions.length > 0 || (category === 'B' && textualQuestions.length === 0)) { 
+      // Ensure pages are generated even if Category B has no textual questions yet (but traffic questions exist)
+      if (categoryQuestions.length > 0 || (category === 'B' && textualQuestions.length === 0 && allTrafficQuestions.length > 0)) { 
          params.push({ category, page: i.toString() });
       }
+    }
+     // If a category (like B) has absolutely no questions (neither textual nor traffic), generate at least one page param to show "Coming Soon".
+    if (categoryQuestions.length === 0 && (category === 'B' && textualQuestions.length === 0 && allTrafficQuestions.length === 0)) {
+        params.push({ category, page: '1' });
     }
   }
   return params;
@@ -118,20 +124,23 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
     .map(q => ({ ...q, id: q.n, category: 'Traffic' as 'Traffic' }));
 
   const allQuestionsForCategory: AppQuestionType[] = [...categoryTextualQuestions, ...allTrafficQuestions];
+  const isCategoryBComingSoon = category === 'B' && categoryTextualQuestions.length === 0;
+
 
   if (allQuestionsForCategory.length === 0) {
-    const message = category === 'B' ? "Category B questions are coming soon. Please check back later or try Category A."
+    const message = isCategoryBComingSoon ? "Practice questions for Category B (Car/Jeep/Van) are coming soon. Please check back later or try Category A."
                                     : "No questions are currently available for this category. Please try another category.";
     return (
       <div className="container py-8 md:py-12 text-center">
          <header className="mb-10 text-center">
-            <FileText className="mx-auto h-12 w-12 text-primary mb-4" />
+            {isCategoryBComingSoon ? <AlertTriangle className="mx-auto h-12 w-12 text-primary mb-4" /> : <FileText className="mx-auto h-12 w-12 text-primary mb-4" />}
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
                 Practice Test: {getCategoryDisplayName(category)}
             </h1>
         </header>
-        <Alert variant={category === 'B' ? "default" : "destructive"} className="max-w-xl mx-auto">
-          <AlertTitle>{category === 'B' ? "Coming Soon!" : "No Questions Available"}</AlertTitle>
+        <Alert variant={isCategoryBComingSoon ? "default" : "destructive"} className="max-w-xl mx-auto">
+           {isCategoryBComingSoon && <AlertTriangle className="h-4 w-4" />}
+          <AlertTitle>{isCategoryBComingSoon ? "Coming Soon!" : "No Questions Available"}</AlertTitle>
           <AlertDescription>{message}</AlertDescription>
         </Alert>
         <Button asChild className="mt-6">
@@ -176,7 +185,7 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
             questionsForCurrentPage={questionsForCurrentPage}
             currentPage={page}
             totalPages={totalPages}
-            category={category} // Pass category for NumberPagination
+            category={category}
         />
     </div>
   );

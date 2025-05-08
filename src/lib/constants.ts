@@ -1,5 +1,5 @@
 
-import type { NavItem, FeatureItem, Testimonial, ResourceLink } from '@/lib/types';
+import type { NavItem, FeatureItem, Testimonial, ResourceLink, ExamCategoryType as LibExamCategoryType } from '@/lib/types';
 import { ListChecks, TrafficCone, Timer, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin, ClipboardCheck, Home, FileText, Rss, Film, HelpCircle, Car, Bike as MotorcycleIcon, Layers } from 'lucide-react';
 
 export const SITE_NAME = "Nepal License Prep";
@@ -12,7 +12,7 @@ export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`;
 export const NAV_LINKS: NavItem[] = [
   { href: "/", label: "Home", icon: Home },
   { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck },
-  { href: "/practice", label: "Practice Test", icon: FileText }, // Points to category selection
+  { href: "/practice", label: "Practice Test", icon: FileText }, 
   { href: "/traffic-signs", label: "Traffic Signs", icon: TrafficCone },
   { href: "/blog", label: "Blog", icon: Rss },
   { href: "/tutorials", label: "Tutorials", icon: Film },
@@ -112,8 +112,18 @@ export const CONTACT_DETAILS = {
   phone: "N/A"
 };
 
+interface ExtendedExamCategoryDetail {
+  type: LibExamCategoryType;
+  name: string;
+  icon: React.ElementType;
+  description: string;
+  href: string;
+  comingSoon?: boolean;
+}
+
+
 // Real Exam Categories - Using English for UI consistency
-export const REAL_EXAM_CATEGORIES_CONFIG = [
+export const REAL_EXAM_CATEGORIES_CONFIG: ExtendedExamCategoryDetail[] = [
   { 
     type: 'A' as const, 
     name: 'Category A (Bike/Scooter)', 
@@ -125,8 +135,9 @@ export const REAL_EXAM_CATEGORIES_CONFIG = [
     type: 'B' as const, 
     name: 'Category B (Car/Jeep/Van)', 
     icon: Car, 
-    description: 'Prepare for car, jeep, or van license exam. (Coming Soon)',
-    href: '/real-exam/B'
+    description: 'Prepare for car, jeep, or van license exam.', // Description updated
+    href: '/real-exam/B',
+    comingSoon: true, // Marked as coming soon
   },
 ];
 
@@ -149,7 +160,7 @@ export const PRACTICE_CATEGORIES_CONFIG: {
   {
     type: 'B',
     name: 'Category B (Car/Jeep/Van)',
-    description: 'Comprehensive practice for all Category B (car, jeep, van) textual questions and all traffic sign questions. (Category B questions coming soon)',
+    description: 'Comprehensive practice for all Category B (car, jeep, van) textual questions and all traffic sign questions.', // Description updated
     icon: Car,
     href: '/practice/B/1',
     comingSoon: true, 

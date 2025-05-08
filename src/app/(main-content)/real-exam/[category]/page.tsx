@@ -2,9 +2,12 @@
 import { RealExamClient } from '../RealExamClient';
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
-import { ClipboardCheck } from 'lucide-react';
+import { ClipboardCheck, AlertTriangle } from 'lucide-react'; // Added AlertTriangle
 import type { ExamCategoryType, Question as AppQuestionType } from '@/lib/types';
 import { notFound } from 'next/navigation';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'; // Added Alert components
+import { Button } from '@/components/ui/button'; // Added Button
+import Link from 'next/link'; // Added Link
 
 import akQuestionsData from '@/data/ak.json';
 import trafficQuestionsData from '@/data/trafficqn.json';
@@ -85,21 +88,16 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
   let rawQuestions: any[] = [];
 
   if (category === 'A' || category === 'B') {
-    // Load textual questions for this specific category
     const textualCategoryQuestions = (akQuestionsData.questions || []).filter(q => q.category === category);
     rawQuestions.push(...textualCategoryQuestions);
-    // Also load all traffic questions for potential mixing by the client
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   } else if (category === 'Traffic') {
-    // Only traffic questions
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   } else if (category === 'Mixed') {
-    // All textual (A and B) and all traffic questions
     rawQuestions.push(...(akQuestionsData.questions || [])); 
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   }
   
-  // Deduplicate questions by 'n' (id) just in case of overlap, though data sources should be distinct
   const uniqueQuestionsMap = new Map<string, any>();
   rawQuestions.forEach(q => {
     if (q && q.n && !uniqueQuestionsMap.has(q.n)) {
@@ -112,7 +110,6 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
     .map((q: any) => ({
       id: q.n, 
       n: q.n,
-      // Ensure the category here is the *source* category of the question (A, B, or Traffic)
       category: q.category as 'A' | 'B' | 'Traffic', 
       qn: q.qn,
       imageUrl: q.imageUrl,
@@ -122,6 +119,30 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
 
   const isCategoryBComingSoon = category === 'B' && allQuestions.filter(q => q.category === 'B').length === 0;
   const categoryDisplayName = getCategoryDisplayName(category);
+
+  if (isCategoryBComingSoon && category === 'B') {
+    return (
+      <div className="container py-8 md:py-12 text-center">
+        <header className="mb-10 text-center">
+          <AlertTriangle className="mx-auto h-12 w-12 text-primary mb-4" />
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+            Real Exam: {categoryDisplayName}
+          </h1>
+        </header>
+        <Alert variant="default" className="max-w-md mx-auto">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Coming Soon!</AlertTitle>
+          <AlertDescription>
+            Real exam questions for Category B (Car/Jeep/Van) are currently being prepared and will be available soon. Please check back later or try another category.
+          </AlertDescription>
+        </Alert>
+        <Button asChild className="mt-8">
+          <Link href="/real-exam">Choose Another Category</Link>
+        </Button>
+      </div>
+    );
+  }
+
 
   return (
     <div className="container py-8 md:py-12">
@@ -135,7 +156,7 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
             </p>
         </header>
         <RealExamClient
-            allQuestions={allQuestions} // This now contains the necessary superset
+            allQuestions={allQuestions} 
             initialCategory={category}
             isCategoryBComingSoon={isCategoryBComingSoon}
         />
@@ -143,7 +164,5 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
   );
 }
 
-// Constants for exam parameters, also used in RealExamClient
 const REAL_EXAM_QUESTIONS_COUNT = 25;
 const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60;
-

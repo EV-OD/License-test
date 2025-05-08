@@ -36,6 +36,7 @@ interface ExamCategoryDetail {
   description: string; 
   icon: React.ElementType;
   href: string;
+  comingSoon?: boolean; // Added comingSoon property
 }
 
 const ALL_EXAM_CATEGORIES_CONFIG: ExamCategoryDetail[] = [
@@ -49,9 +50,10 @@ const ALL_EXAM_CATEGORIES_CONFIG: ExamCategoryDetail[] = [
   {
     type: 'B',
     name: 'Category B (Car/Jeep/Van)',
-    description: 'Prepare for car, jeep, or van license exam. (Coming Soon)',
+    description: 'Prepare for car, jeep, or van license exam.', // Removed (Coming Soon) from description as button will handle it
     icon: Car,
-    href: '/real-exam/B'
+    href: '/real-exam/B',
+    comingSoon: true, // Mark B as coming soon
   },
   {
     type: 'Traffic',
@@ -89,7 +91,7 @@ export default function SelectRealExamCategoryPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-xl mx-auto">
         {DISPLAYED_EXAM_CATEGORIES_CONFIG.map((category) => (
-          <Card key={category.type} className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <Card key={category.type} className={`flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ${category.comingSoon ? 'opacity-70' : ''}`}>
             <CardHeader className="flex-row items-center gap-4 pb-4">
               <category.icon className="h-10 w-10 text-primary" />
               <div>
@@ -97,13 +99,13 @@ export default function SelectRealExamCategoryPage() {
               </div>
             </CardHeader>
             <CardContent className="flex-grow">
-              <CardDescription>{category.description}</CardDescription>
+              <CardDescription>{category.description} {category.comingSoon && <span className="text-xs font-medium text-primary">(Coming Soon)</span>}</CardDescription>
             </CardContent>
             <CardFooter>
-              <Button asChild className="w-full">
+              <Button asChild className="w-full" disabled={category.comingSoon}>
                 <Link href={category.href}>
-                  Start Exam
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {category.comingSoon ? 'Coming Soon' : 'Start Exam'}
+                  {!category.comingSoon && <ArrowRight className="ml-2 h-4 w-4" />}
                 </Link>
               </Button>
             </CardFooter>
@@ -113,4 +115,3 @@ export default function SelectRealExamCategoryPage() {
     </div>
   );
 }
-

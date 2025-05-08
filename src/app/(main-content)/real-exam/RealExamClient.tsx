@@ -9,7 +9,6 @@ import { ExamSetupScreen } from './ExamSetupScreen';
 import { ExamInProgressScreen } from './ExamInProgressScreen';
 import { ExamResultsScreen } from './ExamResultsScreen';
 import { QuestionStatusIndicator } from '@/components/shared/QuestionStatusIndicator';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 const REAL_EXAM_QUESTIONS_COUNT = 25;
 const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60; // 25 minutes
@@ -17,7 +16,7 @@ const PASS_PERCENTAGE = 0.7; // 70% to pass
 const NUM_TRAFFIC_QUESTIONS_IN_MIX = () => Math.floor(Math.random() * 2) + 4; // 4 or 5
 
 interface RealExamClientProps {
-  allQuestions: Question[]; // This prop now holds the superset of questions needed for the selected examCategory
+  allQuestions: Question[]; 
   initialCategory: ExamCategoryType;
   isCategoryBComingSoon: boolean; 
 }
@@ -138,9 +137,17 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
 
 
   const startExam = useCallback(() => {
+    if (isCategoryBComingSoon && examCategory === 'B') {
+         toast({
+            title: "Coming Soon",
+            description: `Category B exams are not yet available. Please check back later.`,
+            variant: "default",
+        });
+        return;
+    }
+
     let finalExamQuestions: Question[] = [];
 
-    // Filter questions by their actual category from the allQuestions prop
     const availableTextualA = allQuestions.filter(q => q.category === 'A');
     const availableTextualB = allQuestions.filter(q => q.category === 'B');
     const availableTraffic = allQuestions.filter(q => q.category === 'Traffic');
@@ -154,8 +161,8 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
         let sourceTextual: Question[];
         if (examCategory === 'Mixed') {
             sourceTextual = [...availableTextualA, ...availableTextualB];
-        } else { // 'A' or 'B'
-            sourceTextual = allQuestions.filter(q => q.category === examCategory); // e.g. only 'A' textual for 'A' exam
+        } else { 
+            sourceTextual = allQuestions.filter(q => q.category === examCategory); 
         }
         const selectedTextual = [...sourceTextual].sort(() => 0.5 - Math.random()).slice(0, numTextualToSelect);
         
@@ -165,7 +172,6 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
         finalExamQuestions = [...availableTraffic].sort(() => 0.5 - Math.random()).slice(0, REAL_EXAM_QUESTIONS_COUNT);
     }
     
-    // Ensure we don't exceed the total count if sources were abundant
     if (finalExamQuestions.length > REAL_EXAM_QUESTIONS_COUNT) {
         finalExamQuestions = finalExamQuestions.slice(0, REAL_EXAM_QUESTIONS_COUNT);
     }
@@ -185,7 +191,7 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
         toast({
             title: "Warning",
             description: `The exam will have ${finalExamQuestions.length} questions as fewer than ${REAL_EXAM_QUESTIONS_COUNT} were available for the selected category and desired mix.`,
-            variant: "default", // Using 'default' for warning, 'destructive' is too strong
+            variant: "default", 
             duration: 5000,
         });
     }
@@ -261,7 +267,7 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
           pastResults={pastResults}
           showPastResultsDialog={showPastResultsDialog}
           setShowPastResultsDialog={setShowPastResultsDialog}
-          isCategoryBComingSoon={isCategoryBComingSoon} 
+          isCategoryBComingSoon={isCategoryBComingSoon && examCategory === 'B'} 
         />
         
         <aside className="hidden lg:block w-48 space-y-6 shrink-0 sticky top-20">
