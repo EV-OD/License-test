@@ -1,6 +1,6 @@
 
 import type { NavItem, FeatureItem, Testimonial, ResourceLink } from '@/lib/types';
-import { ListChecks, TrafficCone, Timer, Languages, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin, ClipboardCheck, Home, FileText, Rss, Film, HelpCircle, Phone, Car, Bike as MotorcycleIcon, Layers } from 'lucide-react'; // ScooterIcon removed as it's merged
+import { ListChecks, TrafficCone, Timer, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, Smartphone, Apple, Mail, MapPin, ClipboardCheck, Home, FileText, Rss, Film, HelpCircle, Car, Bike as MotorcycleIcon, Layers } from 'lucide-react';
 
 export const SITE_NAME = "Nepal License Prep";
 
@@ -12,7 +12,7 @@ export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`;
 export const NAV_LINKS: NavItem[] = [
   { href: "/", label: "Home", icon: Home },
   { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck },
-  { href: "/practice", label: "Practice Test", icon: FileText },
+  { href: "/practice", label: "Practice Test", icon: FileText }, // Points to category selection
   { href: "/traffic-signs", label: "Traffic Signs", icon: TrafficCone },
   { href: "/blog", label: "Blog", icon: Rss },
   { href: "/tutorials", label: "Tutorials", icon: Film },
@@ -112,10 +112,10 @@ export const CONTACT_DETAILS = {
   phone: "N/A"
 };
 
-// Real Exam Categories - Updated to English for UI
+// Real Exam Categories - Using English for UI consistency
 export const REAL_EXAM_CATEGORIES = [
   { id: 'A', name: 'Category A (Bike/Scooter)', icon: MotorcycleIcon, description: 'Practice for motorcycle and scooter license.' },
-  { id: 'B', name: 'Category B (Car/Jeep/Van)', icon: Car, description: 'Practice for car, jeep, or van license. (Coming Soon)' },
-  { id: 'Traffic', name: 'Traffic Signs', icon: TrafficCone, description: 'Practice traffic sign questions.' },
-  { id: 'Mixed', name: 'Mixed Exam', icon: Layers, description: 'Comprehensive exam with questions from all categories.' },
+  { id: 'B', name: 'Category B (Car/Jeep/Van)', icon: Car, description: 'Practice for car, jeep, or van license. (Questions Coming Soon)' },
+  // { id: 'Traffic', name: 'Traffic Signs', icon: TrafficCone, description: 'Practice traffic sign questions.' }, // Removed as per previous request
+  // { id: 'Mixed', name: 'Mixed Exam', icon: Layers, description: 'Comprehensive exam with questions from all categories.' }, // Removed as per previous request
 ];
