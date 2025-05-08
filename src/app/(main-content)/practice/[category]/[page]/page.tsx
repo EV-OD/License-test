@@ -1,5 +1,5 @@
 
-import { PracticeTestClient } from '../PracticeTestClient'; // Adjusted path
+import { PracticeTestClient } from '../../PracticeTestClient'; // Adjusted path
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
 import { FileText } from 'lucide-react';
@@ -66,8 +66,12 @@ export async function generateStaticParams() {
   for (const category of VALID_CATEGORIES) {
     let categoryQuestions: AppQuestionType[] = [];
     const textualQuestions = (akQuestionsData.questions || [])
-      .filter(q => q.category === category || (category === 'A' && q.category === 'K')) // K is part of A
-      .map(q => ({ ...q, id: q.n, category: category as 'A' | 'B' | 'Traffic' })); // Ensure consistent ID and narrow category type
+      .filter(q => {
+        if (category === 'A') return q.category === 'A'; // Category 'A' now includes 'K' from ak.json by its nature
+        if (category === 'B') return q.category === 'B';
+        return false;
+      })
+      .map(q => ({ ...q, id: q.n, category: category as 'A' | 'B' | 'Traffic' })); 
 
     const allTrafficQuestions = (trafficQuestionsData.questions || [])
       .map(q => ({ ...q, id: q.n, category: 'Traffic' as 'Traffic' }));
@@ -75,16 +79,13 @@ export async function generateStaticParams() {
     if (category === 'A') {
       categoryQuestions = [...textualQuestions, ...allTrafficQuestions];
     } else if (category === 'B') {
-      // For now, Category B textual questions might be empty, but still include traffic
+      // For Category B, only include specific B textual questions and all traffic questions
       categoryQuestions = [...textualQuestions, ...allTrafficQuestions];
-      if (textualQuestions.length === 0) { // If no 'B' specific questions yet
-        // console.log(`Category B has no specific textual questions, only traffic questions will be available if any.`);
-      }
     }
     
     const totalPages = Math.ceil(categoryQuestions.length / QUESTIONS_PER_PAGE);
     for (let i = 1; i <= totalPages; i++) {
-      if (categoryQuestions.length > 0 || (category === 'B' && textualQuestions.length === 0)) { // Generate pages for B even if only traffic q's initially
+      if (categoryQuestions.length > 0 || (category === 'B' && textualQuestions.length === 0)) { 
          params.push({ category, page: i.toString() });
       }
     }
@@ -105,14 +106,14 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
 
   if (category === 'A') {
     categoryTextualQuestions = rawTextualQuestions
-      .filter(q => q.category === 'A' || q.category === 'K') // K questions are treated as 'A'
+      .filter(q => q.category === 'A') // Category 'A' from ak.json now covers former 'A' and 'K'
       .map(q => ({ ...q, id: q.n, category: 'A' as 'A' }));
   } else if (category === 'B') {
     categoryTextualQuestions = rawTextualQuestions
       .filter(q => q.category === 'B')
       .map(q => ({ ...q, id: q.n, category: 'B' as 'B' }));
   } else {
-    notFound(); // Should not happen if generateStaticParams is correct
+    notFound(); 
   }
   
   const allTrafficQuestions: AppQuestionType[] = (trafficQuestionsData.questions || [])
@@ -121,7 +122,6 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
   const allQuestionsForCategory: AppQuestionType[] = [...categoryTextualQuestions, ...allTrafficQuestions];
 
   if (allQuestionsForCategory.length === 0) {
-    // This case implies category B might be truly empty or A has no questions (error in data)
     const message = category === 'B' ? "Category B questions are coming soon. Please check back later or try Category A."
                                     : "No questions are currently available for this category. Please try another category.";
     return (
@@ -145,11 +145,11 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
 
   const totalPages = Math.ceil(allQuestionsForCategory.length / QUESTIONS_PER_PAGE);
 
-  if (page > totalPages && totalPages > 0) { // Redirect to last valid page if requested page is too high
+  if (page > totalPages && totalPages > 0) { 
     redirect(`/practice/${category}/${totalPages}`);
   }
-   if (page > totalPages && totalPages === 0) { // If no questions, but somehow reached here (e.g. manual URL)
-     redirect(`/practice/${category}/1`); // Go to page 1 which will show the 'no questions' message
+   if (page > totalPages && totalPages === 0) { 
+     redirect(`/practice/${category}/1`); 
    }
 
 
@@ -158,8 +158,6 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
   const questionsForCurrentPage = allQuestionsForCategory.slice(startIndex, endIndex);
 
   if (questionsForCurrentPage.length === 0 && page === 1 && allQuestionsForCategory.length > 0) {
-    // This should ideally not happen if totalPages logic is correct above.
-    // But as a fallback if page 1 has no questions but there are questions in total.
     console.error(`Error: Page 1 for category ${category} has no questions, but total questions exist.`);
     notFound();
   }
@@ -185,3 +183,4 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
     </div>
   );
 }
+
