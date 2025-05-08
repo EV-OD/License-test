@@ -49,7 +49,7 @@ export const metadata: Metadata = {
         alt: `${SITE_NAME} - Driving License Preparation`,
       },
     ],
-    locale: 'ne_NP', // Changed to Nepali locale
+    locale: 'en_US', // Changed to English locale to match navbar
     type: 'website',
   },
   twitter: {
@@ -101,7 +101,8 @@ export default function RootLayout({
   const showAds = isProduction && adSenseClientId && adSenseClientId !== "ca-pub-0000000000000000" && adSenseClientId !== "YOUR_ADSENSE_CLIENT_ID";
 
   return (
-    <html lang="ne" className={`${GeistSans.variable} font-sans`} suppressHydrationWarning>
+    <html lang="en" className={`${GeistSans.variable} font-sans`} suppressHydrationWarning>
+      {/* <head /> is automatically managed by Next.js. Do not add <head> here. */}
       {showAds && (
          <Script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
          crossOrigin="anonymous" strategy="lazyOnload" />
@@ -118,3 +119,4 @@ export default function RootLayout({
     </html>
   );
 }
+

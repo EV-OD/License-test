@@ -8,19 +8,19 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:90
 export const SITE_LOGO_URL = `${SITE_URL}${process.env.NEXT_PUBLIC_SITE_LOGO_URL || '/icon-512.png'}`;
 export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`; // Ensure this image exists
 
-// Monolingual Navigation Links (Nepali)
+// Navigation Links in English
 export const NAV_LINKS: NavItem[] = [
-  { href: "/", label: "गृह पृष्ठ", icon: Home },
-  { href: "/real-exam", label: "वास्तविक परीक्षा", icon: ClipboardCheck },
-  { href: "/practice", label: "अभ्यास परीक्षा", icon: FileText },
-  { href: "/traffic-signs", label: "ट्राफिक संकेतहरू", icon: TrafficCone },
-  { href: "/blog", label: "ब्लग", icon: Rss },
-  { href: "/tutorials", label: "ट्यूटोरियलहरू", icon: Film },
+  { href: "/", label: "Home", icon: Home },
+  { href: "/real-exam", label: "Real Exam", icon: ClipboardCheck },
+  { href: "/practice", label: "Practice Test", icon: FileText },
+  { href: "/traffic-signs", label: "Traffic Signs", icon: TrafficCone },
+  { href: "/blog", label: "Blog", icon: Rss },
+  { href: "/tutorials", label: "Tutorials", icon: Film },
   { href: "/faq", label: "FAQs", icon: HelpCircle },
-  { href: "/contact", label: "सम्पर्क गर्नुहोस्", icon: Mail },
+  { href: "/contact", label: "Contact Us", icon: Mail },
 ];
 
-// Feature descriptions can remain potentially mixed or primarily Nepali
+// Feature descriptions remain monolingual Nepali
 export const KEY_FEATURES: FeatureItem[] = [
   {
     icon: ListChecks,
@@ -38,7 +38,7 @@ export const KEY_FEATURES: FeatureItem[] = [
     description: "वास्तविक परीक्षा सर्तहरूको नक्कल गर्ने समयबद्ध परीक्षाहरू।",
   },
   {
-    icon: TrendingUp, // Icon changed, Languages removed
+    icon: TrendingUp,
     title: "कार्यसम्पादन विश्लेषण",
     description: "आफ्नो प्रगति ट्र्याक गर्नुहोस् र सुधारका लागि क्षेत्रहरू पहिचान गर्नुहोस्।",
   },
@@ -48,13 +48,13 @@ export const KEY_FEATURES: FeatureItem[] = [
     description: "इन्टरनेट जडान बिना पनि, जुनसुकै बेला, कहीं पनि अध्ययन गर्नुहोस् (मोबाइल एप मार्फत)।",
   },
   {
-    icon: Smartphone, // Icon changed, Bilingual removed
+    icon: Smartphone,
     title: "मोबाइल एप उपलब्ध",
     description: "हाम्रो मोबाइल एप डाउनलोड गरेर अन-द-गो तयारी गर्नुहोस्।"
   }
 ];
 
-// Testimonials can remain as they are user-generated content
+// Testimonials remain as they are user-generated content (Nepali)
 export const TESTIMONIALS_DATA: Testimonial[] = [
    {
     quote: "यो प्लेटफर्मको मद्दतले मैले पहिलो प्रयासमा नै लिखित परीक्षा पास गरें! नमुना परीक्षणहरू अविश्वसनीय रूपमा उपयोगी थिए।",
@@ -120,3 +120,4 @@ export const REAL_EXAM_CATEGORIES = [
   { id: 'Traffic', name: 'ट्राफिक संकेत', icon: TrafficCone, description: 'ट्राफिक संकेत प्रश्नहरूको अभ्यास गर्नुहोस्।' },
   { id: 'Mixed', name: 'मिश्रित परीक्षा', icon: Layers, description: 'सबै श्रेणीका प्रश्नहरू सहितको विस्तृत परीक्षा।' },
 ];
+
