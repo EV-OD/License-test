@@ -4,16 +4,27 @@ import practiceQuestionsData from '@/data/practice-questions.json';
 import type { Metadata } from 'next';
 import { SITE_NAME } from '@/lib/constants';
 import { FileText } from 'lucide-react';
-import type { Question } from '@/lib/types'; // Import the updated Question type
+import type { Question as AppQuestionType } from '@/lib/types';
 
 export const metadata: Metadata = {
   title: `अभ्यास परीक्षा | ${SITE_NAME}`,
   description: `${SITE_NAME} मा नेपालको ड्राइभिङ लाइसेन्स (लिखित) परीक्षाको अभ्यास गर्नुहोस्। श्रेणी A (मोटरसाइकल), B (कार/जीप/भ्यान), र K (स्कुटर) समावेश गर्दछ।`,
 };
 
+// The practiceQuestionsData is now expected to directly conform to AppQuestionType items
+// or a very similar structure.
 export default async function PracticePage() {
-  // Ensure the loaded data conforms to the Question[] type
-  const questions: Question[] = practiceQuestionsData.map(q => ({ ...q, id: q.n }));
+  // Map the raw data from JSON to ensure it strictly conforms to AppQuestionType
+  // This handles potential minor discrepancies or ensures all fields are present.
+  const questions: AppQuestionType[] = (practiceQuestionsData as any[]).map(q => ({
+    id: q.id || q.n, // Use id if present, fallback to n
+    n: q.n,
+    category: q.category,
+    qn: q.qn,
+    imageUrl: q.imageUrl,
+    a4: q.a4, // Directly use a4 as it's an array of strings
+    an: q.an, // Directly use an as it's the correct answer string
+  }));
 
   return (
     <div className="container py-8 md:py-12">

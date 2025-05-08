@@ -1,20 +1,18 @@
 
 import { RealExamClient } from '../RealExamClient';
-import practiceQuestionsData from '@/data/practice-questions.json'; // Load consolidated data
+import practiceQuestionsData from '@/data/practice-questions.json'; 
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
 import { ClipboardCheck } from 'lucide-react';
-import type { ExamCategoryType, Question } from '@/lib/types'; // Import Question type
+import type { ExamCategoryType, Question as AppQuestionType } from '@/lib/types';
 import { notFound } from 'next/navigation';
 
-// Updated valid categories to include Traffic
 const VALID_CATEGORIES: ExamCategoryType[] = ['A', 'B', 'K', 'Mixed', 'Traffic'];
 
 interface RealExamPageProps {
   params: { category: ExamCategoryType };
 }
 
-// Monolingual category display names
 function getCategoryDisplayName(category: ExamCategoryType): string {
   switch (category) {
     case 'A': return 'श्रेणी A (मोटरसाइकल)';
@@ -66,6 +64,8 @@ export async function generateMetadata({ params }: RealExamPageProps): Promise<M
   };
 }
 
+// The practiceQuestionsData is now expected to directly conform to AppQuestionType items
+// or a very similar structure.
 export default async function RealExamCategoryPage({ params }: RealExamPageProps) {
   const { category } = params;
 
@@ -73,12 +73,18 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
     notFound();
   }
 
-  // Ensure data conforms to Question type and add 'id' if missing
-  const allQuestions: Question[] = practiceQuestionsData.map(q => ({ ...q, id: q.n }));
+  // Map the raw data from JSON to ensure it strictly conforms to AppQuestionType
+  const allQuestions: AppQuestionType[] = (practiceQuestionsData as any[]).map(q => ({
+    id: q.id || q.n, // Use id if present, fallback to n
+    n: q.n,
+    category: q.category,
+    qn: q.qn,
+    imageUrl: q.imageUrl,
+    a4: q.a4, // Directly use a4 as it's an array of strings
+    an: q.an, // Directly use an as it's the correct answer string
+  }));
 
-  // Check if Category B has actual questions or is "Coming Soon"
   const isCategoryBComingSoon = category === 'B' && allQuestions.filter(q => q.category === 'B').length === 0;
-
   const categoryDisplayName = getCategoryDisplayName(category);
 
   return (
@@ -95,7 +101,7 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
         <RealExamClient
             allQuestions={allQuestions}
             initialCategory={category}
-            isCategoryBComingSoon={isCategoryBComingSoon} // Pass the status
+            isCategoryBComingSoon={isCategoryBComingSoon}
         />
     </div>
   );
