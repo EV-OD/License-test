@@ -5,6 +5,43 @@ excerpt: "A deep dive into the essential traffic laws and regulations in Nepal t
 image: "https://picsum.photos/seed/blog3/800/400"
 dataAiHint: "traffic rules city"
 category: "Traffic Rules"
+tags: ["Nepal", "Traffic Rules", "Road Safety", "Driving", "Regulations", "DrivingLicenseNepalOnlineForm",
+  "NepaliDrivingLicenceCheckOnline",
+  "DrivingLicensePrintCheck",
+  "OnlineDrivingLicenseForm",
+  "OnlineDrivingLicenseCheck",
+  "DoTMLicenseCheck",
+  "SmartLicenseCheckOnline",
+  "DrivingLicenseNepalForm",
+  "NepalDrivingLicensePreparation",
+  "OnlineDrivingLicenseCourseNepal",
+  "VehicleLicenseTestNepal",
+  "DrivingTestPreparationNepal",
+  "NepalDrivingExamTips",
+  "DrivingLicenseOnlineClassesNepal",
+  "NepalTrafficRulesStudy",
+  "DrivingLicensePracticeTestNepal",
+  "VehicleLicenseExamGuideNepal",
+  "DrivingLicenseTipsNepal",
+  "RoadSafetyTestNepal",
+  "NepalDrivingLicenseExamPreparation",
+  "OnlineVehicleLicenseNepal",
+  "DrivingLicenseMockTestNepal",
+  "सवारीचालक",
+  "सवारीचालकअनुमतिपत्र",
+  "यातायातव्यवस्था विभाग",
+  "ड्राइभिङलाइसेन्स",
+  "प्रिन्ट",
+  "NepalDrivingLicenseApp",
+  "NepalDrivingLicenseWebsite",
+  "लिखितपरीक्षाकोप्रश्नसंग्रह",
+  "लिखितपरीक्षा",
+  "DrivingLicenseTayariNepal",
+  "dotm.gov.np",
+  "बायोमेट्रिक",
+  "लिखिततथा प्रयोगात्मकपरीक्षा"]
+authors:
+    - name: Subhash Lamichhane
 ---
 
 Navigating the roads of Nepal requires a solid understanding of its traffic rules. This guide provides an overview of key regulations to help you drive safely and legally.

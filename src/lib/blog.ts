@@ -6,11 +6,13 @@ const postsDirectory = path.join(process.cwd(), 'content/blog');
 
 export interface BlogPostFrontmatter {
   title: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   excerpt: string;
   image: string;
   dataAiHint?: string;
   category: string;
+  tags: string[];
+  authors?: {name: string}[];
 }
 
 export interface BlogPost extends BlogPostFrontmatter {

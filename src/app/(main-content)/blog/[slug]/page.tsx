@@ -1,4 +1,3 @@
-
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -124,6 +123,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     <Tag className="mr-1.5 h-4 w-4" />
                     <span>{post.category}</span>
                   </div>
+                  <div className="flex items-center">
+                    <Tag className="mr-1.5 h-4 w-4" />
+                    <span>By {post.authors?.map(author => author.name).join(', ')}</span>
+                  </div>
                 </div>
                 {post.image && (
                   <div className="relative h-64 md:h-80 lg:h-96 w-full rounded-lg overflow-hidden shadow-lg mb-8">
@@ -138,7 +141,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   </div>
                 )}
               </header>
-              
               <Separator className="my-8" />
 
               <div 
@@ -149,6 +151,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               >
                 <MarkdownContent content={post.content} />
               </div>
+
+              {post.tags && post.tags.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 mt-8" role="list" aria-label="Tags">
+                  <Tag className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                  <span className="sr-only">Tags:</span>
+                  {post.tags.map((tag) => (
+                    <Link
+                      key={tag}
+                      href={`/blog/tag/${encodeURIComponent(tag)}`}
+                      className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors"
+                      role="listitem"
+                      aria-label={`Tag: ${tag}`}
+                      rel="tag"
+                    >
+                      {tag}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </article>
 
             <Separator className="my-12" />
