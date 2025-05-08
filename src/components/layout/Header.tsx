@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { NAV_LINKS, SITE_NAME } from '@/lib/constants';
 import { NavLink } from './NavLink';
-import { LanguageToggle } from '@/components/shared/LanguageToggle';
 import { cn } from '@/lib/utils';
 
 export function Header() {
@@ -29,7 +28,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {/* <LanguageToggle /> */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon" aria-label="Open menu">

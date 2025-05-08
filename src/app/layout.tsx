@@ -7,7 +7,6 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/toaster';
-import { LanguageProvider } from '@/contexts/LanguageContext';
 import { SITE_NAME, SITE_URL, DEFAULT_OG_IMAGE_URL, SITE_LOGO_URL } from '@/lib/constants';
 import MobileBackButtonHandler from '@/components/shared/MobileBackButtonHandler';
 
@@ -50,7 +49,7 @@ export const metadata: Metadata = {
         alt: `${SITE_NAME} - Driving License Preparation`,
       },
     ],
-    locale: 'en_US', 
+    locale: 'ne_NP', // Changed to Nepali locale
     type: 'website',
   },
   twitter: {
@@ -85,8 +84,8 @@ export const metadata: Metadata = {
       { url: '/apple-icon.png', type: 'image/png' },
     ],
   },
-  other: { // For MS specific PWA tags not covered by browserconfig.xml or manifest
-    'msapplication-TileColor': '#3498db', // Match theme
+  other: { 
+    'msapplication-TileColor': '#3498db', 
     'msapplication-tap-highlight': 'no',
   }
 };
@@ -102,19 +101,12 @@ export default function RootLayout({
   const showAds = isProduction && adSenseClientId && adSenseClientId !== "ca-pub-0000000000000000" && adSenseClientId !== "YOUR_ADSENSE_CLIENT_ID";
 
   return (
-    <html lang="en" className={`${GeistSans.variable} font-sans`} suppressHydrationWarning>
-      {/* 
-        The <head> tag is managed by Next.js based on the metadata export.
-        Do not add a manual <head> tag here.
-        The AdSense Script component will be placed correctly by Next.js based on its strategy.
-        PWA meta tags are now part of the `metadata` object above.
-      */}
+    <html lang="ne" className={`${GeistSans.variable} font-sans`} suppressHydrationWarning>
       {showAds && (
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5479646105292963"
-     crossOrigin="anonymous"></script>
+         <Script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
+         crossOrigin="anonymous" strategy="lazyOnload" />
       )}
       <body className="antialiased bg-background text-foreground">
-        <LanguageProvider>
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow w-full">{children}</main>
@@ -122,7 +114,6 @@ export default function RootLayout({
           </div>
           <Toaster />
           <MobileBackButtonHandler />
-        </LanguageProvider>
       </body>
     </html>
   );

@@ -1,10 +1,10 @@
 
-import type { LucideIcon, Car, Bike, Layers, Home, FileText, TrafficCone, Timer, Rss, Film, HelpCircle, Mail, ListChecks, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, ClipboardCheck } from 'lucide-react'; // Added specific icons for clarity, though LucideIcon usually covers all.
+import type { LucideIcon, Car, Bike, Layers, Home, FileText, TrafficCone, Timer, Rss, Film, HelpCircle, Mail, ListChecks, TrendingUp, WifiOff, BookOpen, Video, HelpCircleIcon, ClipboardCheck } from 'lucide-react';
 
 export type NavItem = {
   href: string;
   label: string;
-  icon?: LucideIcon; // Make icon optional as not all nav items might have one
+  icon?: LucideIcon;
 };
 
 export type FeatureItem = {
@@ -28,65 +28,36 @@ export type ResourceLink = {
   href: string;
 };
 
-export type Language = 'en' | 'np';
-
-export interface LanguageContextType {
-  language: Language;
-  setLanguage: (language: Language) => void;
-  toggleLanguage: () => void;
-  t: (enText: string, npText: string) => string;
-}
-
-// Practice Question Types
-export type OptionContent = {
-  text: string;
-  image_url?: string;
+// New Question type based on ak.json format and trafficqn.json requirements
+export type Question = {
+  id: string; // Unique identifier, can be same as 'n' or generated
+  n: string; // Question number/identifier from source
+  category: 'A' | 'B' | 'K' | 'Traffic'; // Category of the question
+  qn?: string; // Question text (for text-based questions like A, B, K)
+  imageUrl?: string; // Image URL (for image-based questions like Traffic)
+  a4: string[]; // Array of 4 option strings
+  an: string; // The correct answer string (must be one of the strings in a4)
+  // Explanations are removed as they are not in the new requested format
 };
 
-export type QuestionOption = {
-  en: OptionContent;
-  np: OptionContent;
-};
 
-export type PracticeQuestion = {
-  id: string;
-  category: 'A' | 'B' | 'K'; // A: Motorcycle, B: Car/Jeep/Van, K: Scooter
-  question_en: string;
-  question_np: string;
-  options: QuestionOption[];
-  correct_option_index: number;
-  image_url_en?: string; 
-  image_url_np?: string; 
-  explanation_en?: string;
-  explanation_np?: string;
-};
-
-export type PracticeQn = {
-  n: string;
-  a4:string[];
-  qn: string;
-  an: string;
-}
-
-// Traffic Sign Types
+// Traffic Sign type for the /traffic-signs learning page
+// This will be made monolingual (Nepali)
 export type TrafficSign = {
   id: string;
-  name_en: string;
-  name_np: string;
+  name: string; // Monolingual name
   image_url: string;
-  description_en: string;
-  description_np: string;
-  category_en: 'Mandatory' | 'Warning' | 'Informative' | 'Priority' | 'Prohibitory';
-  category_np: 'अनिवार्य' | 'चेतावनी' | 'जानकारीमूलक' | ' प्राथमिकता संकेतहरू' | 'निषेधात्मक संकेतहरू';
+  description: string; // Monolingual description
+  category: string; // Monolingual category
 };
 
-// Exam Types (Common structure for Mock and Real Exam)
-export type ExamCategoryType = 'A' | 'B' | 'K' | 'Mixed';
+// Exam Types (Common structure for Real Exam)
+export type ExamCategoryType = 'A' | 'B' | 'K' | 'Mixed' | 'Traffic'; // Added Traffic
 
-export type MockExamResult = { // This type is used by MockExamClient and RealExamClient
+export type MockExamResult = {
   score: number;
   totalQuestions: number;
   date: string; // ISO string
-  answers: { questionId: string; selectedOption: number | null; isCorrect: boolean }[];
-  category: ExamCategoryType; 
+  answers: { questionId: string; selectedOptionIndex: number | null; isCorrect: boolean }[]; // Storing index
+  category: ExamCategoryType;
 };

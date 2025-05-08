@@ -4,16 +4,15 @@
 import type React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import type { PracticeQuestion } from '@/lib/types';
+import type { Question } from '@/lib/types'; // Updated type
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface QuestionStatusIndicatorProps {
-  questions: PracticeQuestion[];
-  userAnswers: (number | null)[];
+  questions: Question[];
+  userAnswers: (number | null)[]; // Index of the selected answer
   currentQuestionIndex: number;
   onQuestionSelect: (index: number) => void;
   className?: string;
-  t: (enText: string, npText: string) => string;
   layout: 'desktop' | 'mobile';
 }
 
@@ -23,37 +22,34 @@ export const QuestionStatusIndicator: React.FC<QuestionStatusIndicatorProps> = (
   currentQuestionIndex,
   onQuestionSelect,
   className,
-  t,
   layout,
 }) => {
   if (!questions || questions.length === 0) {
     return null;
   }
 
-  const gridColsClass = layout === 'desktop' ? 'grid-cols-4' : 'grid-cols-5 sm:grid-cols-6'; 
+  const gridColsClass = layout === 'desktop' ? 'grid-cols-4' : 'grid-cols-5 sm:grid-cols-6';
 
   const containerClasses = cn(
     "rounded-lg shadow-md bg-card",
-    layout === 'desktop' ? "p-3 w-full" : "p-2 w-full", // Desktop: w-full of its container. Mobile: full width.
+    layout === 'desktop' ? "p-3 w-full" : "p-2 w-full",
     className
   );
-  
-  // Max height for desktop to allow scrolling within the sticky container
-  // Max height for mobile to limit its screen space before scrolling
+
   const scrollAreaMaxHeight = layout === 'desktop' ? 'max-h-[calc(100vh-160px)]' : 'max-h-36';
 
 
   return (
     <div className={containerClasses}>
       <h3 className="text-sm font-semibold mb-2 text-center text-card-foreground">
-        {t('Questions', 'प्रश्नहरू')}
+        प्रश्नहरू
       </h3>
       <ScrollArea className={cn("overflow-y-auto", scrollAreaMaxHeight)}>
         <div className={cn("grid gap-1.5 p-1", gridColsClass)}>
           {questions.map((_, index) => {
             const isAnswered = userAnswers[index] !== null;
             const isCurrent = index === currentQuestionIndex;
-            
+
             return (
               <Button
                 key={`q-status-${index}`}
@@ -65,7 +61,7 @@ export const QuestionStatusIndicator: React.FC<QuestionStatusIndicatorProps> = (
                   !isCurrent && !isAnswered && "bg-muted text-muted-foreground hover:bg-muted/80 border border-border",
                 )}
                 onClick={() => onQuestionSelect(index)}
-                aria-label={t(`Go to question ${index + 1}`, `प्रश्न ${index + 1} मा जानुहोस्`)}
+                aria-label={`प्रश्न ${index + 1} मा जानुहोस्`}
                 aria-current={isCurrent ? "step" : undefined}
               >
                 {index + 1}

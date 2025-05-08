@@ -1,25 +1,28 @@
 
-import { RealExamClient } from '../RealExamClient'; // Adjusted path
-import practiceQuestionsData from '@/data/practice-questions.json';
+import { RealExamClient } from '../RealExamClient';
+import practiceQuestionsData from '@/data/practice-questions.json'; // Load consolidated data
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
 import { ClipboardCheck } from 'lucide-react';
-import type { ExamCategoryType } from '@/lib/types';
+import type { ExamCategoryType, Question } from '@/lib/types'; // Import Question type
 import { notFound } from 'next/navigation';
 
-const VALID_CATEGORIES: ExamCategoryType[] = ['A', 'B', 'K', 'Mixed'];
+// Updated valid categories to include Traffic
+const VALID_CATEGORIES: ExamCategoryType[] = ['A', 'B', 'K', 'Mixed', 'Traffic'];
 
 interface RealExamPageProps {
   params: { category: ExamCategoryType };
 }
 
+// Monolingual category display names
 function getCategoryDisplayName(category: ExamCategoryType): string {
   switch (category) {
-    case 'A': return 'Category A (Motorcycle)';
-    case 'B': return 'Category B (Car/Jeep/Van)';
-    case 'K': return 'Category K (Scooter)';
-    case 'Mixed': return 'Mixed Categories';
-    default: return 'Exam';
+    case 'A': return 'श्रेणी A (मोटरसाइकल)';
+    case 'B': return 'श्रेणी B (कार/जीप/भ्यान)';
+    case 'K': return 'श्रेणी K (स्कुटर)';
+    case 'Traffic': return 'ट्राफिक संकेत';
+    case 'Mixed': return 'मिश्रित';
+    default: return 'परीक्षा';
   }
 }
 
@@ -34,7 +37,7 @@ export async function generateMetadata({ params }: RealExamPageProps): Promise<M
 
   if (!VALID_CATEGORIES.includes(category)) {
     return {
-      title: `Exam Category Not Found | ${SITE_NAME}`,
+      title: `परीक्षा श्रेणी फेला परेन | ${SITE_NAME}`,
     }
   }
 
@@ -42,23 +45,23 @@ export async function generateMetadata({ params }: RealExamPageProps): Promise<M
   const pageUrl = `${SITE_URL}/real-exam/${category}`;
 
   return {
-    title: `Real Exam Simulation - ${categoryDisplayName} | ${SITE_NAME}`,
-    description: `Take a timed Real Exam Simulation for ${categoryDisplayName} on ${SITE_NAME}. Test your knowledge under official Nepal Driving License Likhit exam conditions. 25 questions, 25 minutes.`,
-    keywords: [`Nepal driving license real exam ${category}`, `Likhit exam ${category}`, `driving test Nepal ${category}`, `real exam simulation ${SITE_NAME}`, `practice test ${category}`],
+    title: `वास्तविक परीक्षा सिमुलेशन - ${categoryDisplayName} | ${SITE_NAME}`,
+    description: `${SITE_NAME} मा ${categoryDisplayName} को लागि समयबद्ध वास्तविक परीक्षा सिमुलेशन लिनुहोस्। आधिकारिक नेपाल ड्राइभिङ लाइसेन्स लिखित परीक्षाको अवस्था अन्तर्गत आफ्नो ज्ञान परीक्षण गर्नुहोस्। २५ प्रश्न, २५ मिनेट।`,
+    keywords: [`नेपाल ड्राइभिङ लाइसेन्स वास्तविक परीक्षा ${category}`, `लिखित परीक्षा ${category}`, `नेपाल ड्राइभिङ टेस्ट ${category}`, `वास्तविक परीक्षा सिमुलेशन ${SITE_NAME}`, `अभ्यास परीक्षा ${category}`],
     alternates: {
       canonical: pageUrl,
     },
     openGraph: {
-      title: `Real Exam - ${categoryDisplayName} | ${SITE_NAME}`,
-      description: `Experience the official Likhit exam conditions for ${categoryDisplayName}.`,
+      title: `वास्तविक परीक्षा - ${categoryDisplayName} | ${SITE_NAME}`,
+      description: `${categoryDisplayName} को लागि आधिकारिक लिखित परीक्षाको अवस्था अनुभव गर्नुहोस्।`,
       url: pageUrl,
       siteName: SITE_NAME,
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `Real Exam - ${categoryDisplayName} | ${SITE_NAME}`,
-      description: `Test your readiness for the ${categoryDisplayName} Likhit exam.`,
+      title: `वास्तविक परीक्षा - ${categoryDisplayName} | ${SITE_NAME}`,
+      description: `${categoryDisplayName} लिखित परीक्षाको लागि आफ्नो तयारी परीक्षण गर्नुहोस्।`,
     },
   };
 }
@@ -70,6 +73,12 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
     notFound();
   }
 
+  // Ensure data conforms to Question type and add 'id' if missing
+  const allQuestions: Question[] = practiceQuestionsData.map(q => ({ ...q, id: q.n }));
+
+  // Check if Category B has actual questions or is "Coming Soon"
+  const isCategoryBComingSoon = category === 'B' && allQuestions.filter(q => q.category === 'B').length === 0;
+
   const categoryDisplayName = getCategoryDisplayName(category);
 
   return (
@@ -77,13 +86,17 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
         <header className="mb-10 text-center">
             <ClipboardCheck className="mx-auto h-12 w-12 text-primary mb-4" />
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-                Real Exam: {categoryDisplayName}
+                वास्तविक परीक्षा: {categoryDisplayName}
             </h1>
             <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-                Test your knowledge under official exam conditions. 25 questions, 25 minutes.
+                आधिकारिक परीक्षा शर्तहरू अन्तर्गत आफ्नो ज्ञान परीक्षण गर्नुहोस्। २५ प्रश्न, २५ मिनेट।
             </p>
         </header>
-        <RealExamClient allQuestions={practiceQuestionsData} initialCategory={category} />
+        <RealExamClient
+            allQuestions={allQuestions}
+            initialCategory={category}
+            isCategoryBComingSoon={isCategoryBComingSoon} // Pass the status
+        />
     </div>
   );
 }

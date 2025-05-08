@@ -3,22 +3,20 @@
 
 import type React from 'react';
 import Image from 'next/image';
-import type { MockExamResult, PracticeQuestion, ExamCategoryType } from '@/lib/types';
+import type { MockExamResult, Question, ExamCategoryType } from '@/lib/types'; // Updated types
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { RotateCcw, CheckCircle, XCircle } from 'lucide-react';
-import Link from 'next/link'; // Added for linking to specific category exam
+import Link from 'next/link';
 
 interface ExamResultsScreenProps {
   examResult: MockExamResult;
-  examQuestions: PracticeQuestion[];
+  examQuestions: Question[];
   passPercentage: number;
-  onClose: () => void; // Takes user back to setup for the current category
-  onRestartExam: () => void; // Restarts exam for the current category
-  t: (enText: string, npText: string) => string;
-  language: 'en' | 'np';
+  onClose: () => void;
+  onRestartExam: () => void;
   showResultsDialog: boolean;
   setShowResultsDialog: (show: boolean) => void;
 }
@@ -29,8 +27,6 @@ export function ExamResultsScreen({
   passPercentage,
   onClose,
   onRestartExam,
-  t,
-  language,
   showResultsDialog,
   setShowResultsDialog,
 }: ExamResultsScreenProps) {
@@ -38,55 +34,69 @@ export function ExamResultsScreen({
 
   const handleCloseAndReset = () => {
     setShowResultsDialog(false);
-    onClose(); 
+    onClose();
   };
-  
+
   const handleRestartAndClose = () => {
     setShowResultsDialog(false);
     onRestartExam();
   };
 
+  // Helper to get category display name (monolingual)
+  function getCategoryDisplayName(category: ExamCategoryType): string {
+    switch (category) {
+      case 'A': return 'श्रेणी A (मोटरसाइकल)';
+      case 'B': return 'श्रेणी B (कार/जीप/भ्यान)';
+      case 'K': return 'श्रेणी K (स्कुटर)';
+      case 'Traffic': return 'ट्राफिक संकेत';
+      case 'Mixed': return 'मिश्रित (सबै श्रेणीहरू)';
+      default: return category;
+    }
+  }
+
+
   return (
     <AlertDialog open={showResultsDialog} onOpenChange={(open) => {
       setShowResultsDialog(open);
       if (!open) {
-        onClose(); 
+        onClose();
       }
     }}>
       <AlertDialogContent className="max-h-[90vh] max-w-lg w-full overflow-y-auto rounded-xl">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-2xl text-center">{t('Real Exam Results', 'वास्तविक परीक्षाको नतिजा')}</AlertDialogTitle>
+          <AlertDialogTitle className="text-2xl text-center">वास्तविक परीक्षाको नतिजा</AlertDialogTitle>
         </AlertDialogHeader>
         <div className="my-6 space-y-4 text-center">
           <p className="text-3xl font-bold">
-            {t('Your Score:', 'तपाईंको स्कोर:')} <span className={`${passed ? 'text-accent' : 'text-destructive'}`}>{examResult.score} / {examResult.totalQuestions}</span>
+            तपाईंको स्कोर: <span className={`${passed ? 'text-accent' : 'text-destructive'}`}>{examResult.score} / {examResult.totalQuestions}</span>
           </p>
           {examResult.totalQuestions > 0 && <Progress value={(examResult.score / examResult.totalQuestions) * 100} className="w-full h-3 rounded-full" />}
           <p className={`text-xl font-semibold ${passed ? 'text-accent' : 'text-destructive'}`}>
-            {passed ? t('Congratulations! You Passed!', 'बधाई छ! तपाईं उत्तीर्ण हुनुभयो!') : t('Unfortunately, You Did Not Pass. Keep Practicing!', 'दुर्भाग्यवश, तपाईं उत्तीर्ण हुनुभएन। अभ्यास जारी राख्नुहोस्!')}
+            {passed ? 'बधाई छ! तपाईं उत्तीर्ण हुनुभयो!' : 'दुर्भाग्यवश, तपाईं उत्तीर्ण हुनुभएन। अभ्यास जारी राख्नुहोस्!'}
           </p>
-          <p className="text-sm text-muted-foreground">{t(`(Passing score is ${passPercentage * 100}%)`, `(उत्तीर्ण अंक ${passPercentage * 100}%)`)}</p>
+          <p className="text-sm text-muted-foreground">(उत्तीर्ण अंक {passPercentage * 100}%)</p>
 
           <details className="mt-6 text-left">
-            <summary className="cursor-pointer font-medium text-primary hover:underline text-center">{t('View Answer Details', 'उत्तर विवरण हेर्नुहोस्')}</summary>
+            <summary className="cursor-pointer font-medium text-primary hover:underline text-center">उत्तर विवरण हेर्नुहोस्</summary>
             <div className="mt-4 space-y-3 max-h-72 overflow-y-auto border p-4 rounded-md bg-muted/30">
               {examQuestions.map((q, idx) => {
                 const ans = examResult.answers.find(a => a.questionId === q.id);
                 if (!ans) return null;
+                const selectedOptionText = ans.selectedOptionIndex !== null ? q.a4[ans.selectedOptionIndex] : null;
+                const correctOptionText = q.an;
+
                 return (
                   <Card key={idx} className={`p-3 rounded-md ${ans.isCorrect ? 'border-accent bg-accent/5' : 'border-destructive bg-destructive/5'}`}>
-                    <p className="font-semibold text-sm mb-1">{idx + 1}. {language === 'en' ? q.question_en : q.question_np}</p>
-                    {(language === 'en' ? q.image_url_en : q.image_url_np) && (
-                      <Image src={language === 'en' ? q.image_url_en! : q.image_url_np!} alt={t('Question image', 'प्रश्नको छवि')} width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
+                    <p className="font-semibold text-sm mb-1">{idx + 1}. {q.qn || `प्रश्न ${q.n}`}</p>
+                     {q.imageUrl && (
+                      <Image src={q.imageUrl} alt={`प्रश्न ${q.n} को छवि`} width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
                     )}
                     <p className={`text-xs ${ans.isCorrect ? 'text-accent-foreground' : 'text-destructive-foreground'}`}>
-                      <span className="font-medium">{t('Your answer:', 'तपाईंको उत्तर:')}</span> {ans.selectedOption !== null ? (language === 'en' ? q.options[ans.selectedOption].en.text : q.options[ans.selectedOption].np.text) : t('Not answered', 'उत्तर दिइएको छैन')}
+                      <span className="font-medium">तपाईंको उत्तर:</span> {selectedOptionText !== null ? selectedOptionText : 'उत्तर दिइएको छैन'}
                       {ans.isCorrect ? <CheckCircle className="inline ml-1 h-3 w-3 text-accent" /> : <XCircle className="inline ml-1 h-3 w-3 text-destructive" />}
                     </p>
-                    {!ans.isCorrect && ans.selectedOption !== null && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">{t('Correct answer:', 'सही उत्तर:')}</span> {language === 'en' ? q.options[q.correct_option_index].en.text : q.options[q.correct_option_index].np.text}</p>}
-                    {(q.explanation_en || q.explanation_np) && (
-                      <p className="text-xs text-muted-foreground mt-1 italic">{t('Explanation: ', 'स्पष्टीकरण: ')}{language === 'en' ? q.explanation_en : q.explanation_np}</p>
-                    )}
+                    {!ans.isCorrect && selectedOptionText !== null && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">सही उत्तर:</span> {correctOptionText}</p>}
+                    {/* Explanations removed */}
                   </Card>
                 );
               })}
@@ -95,12 +105,14 @@ export function ExamResultsScreen({
         </div>
         <AlertDialogFooter className="flex-col sm:flex-row gap-2 pt-4">
           <AlertDialogCancel asChild>
-            <Button variant="outline" className="w-full sm:w-auto rounded-md" onClick={handleCloseAndReset}>{t('Try Another Category', 'अर्को श्रेणी प्रयास गर्नुहोस्')}</Button>
+             {/* Changed button to link to the main /real-exam page */}
+             <Button variant="outline" className="w-full sm:w-auto rounded-md" asChild>
+                <Link href="/real-exam" onClick={handleCloseAndReset}>अर्को श्रेणी प्रयास गर्नुहोस्</Link>
+             </Button>
           </AlertDialogCancel>
-           {/* Link to the specific category exam restart */}
            <Button asChild className="w-full sm:w-auto rounded-md">
             <Link href={`/real-exam/${examResult.category}`} onClick={handleRestartAndClose}>
-                <RotateCcw className="mr-2 h-4 w-4" /> {t('Retake This Exam', 'यो परीक्षा फेरि दिनुहोस्')}
+                <RotateCcw className="mr-2 h-4 w-4" /> यो परीक्षा फेरि दिनुहोस्
             </Link>
           </Button>
         </AlertDialogFooter>

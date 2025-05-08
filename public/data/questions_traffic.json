@@ -1,0 +1,40 @@
+
+{
+  "questions": [
+    {
+      "n": "T001",
+      "category": "Traffic",
+      "imageUrl": "https://picsum.photos/seed/stopsign_q/300/150",
+      "a4": ["अगाडि बढ्नुहोस्", "रोक्नुहोस्", "बाटो दिनुहोस्", "गति बढाउनुहोस्"],
+      "an": "रोक्नुहोस्"
+    },
+    {
+      "n": "T002",
+      "category": "Traffic",
+      "imageUrl": "https://picsum.photos/seed/noentry_q/300/150",
+      "a4": ["प्रवेश अनुमति छ", "एकतर्फी बाटो", "प्रवेश निषेध", "पार्किङ स्थल"],
+      "an": "प्रवेश निषेध"
+    },
+    {
+      "n": "T003",
+      "category": "Traffic",
+      "imageUrl": "https://picsum.photos/seed/giveway_q/300/150",
+      "a4": ["रोक्नुहोस्", "दायाँ मोडनुहोस्", "बाटो दिनुहोस्", "सिधा जानुहोस्"],
+      "an": "बाटो दिनुहोस्"
+    },
+    {
+      "n": "T004",
+      "category": "Traffic",
+      "imageUrl": "https://picsum.photos/seed/speed50_q/300/150",
+      "a4": ["न्यूनतम गति ५०", "गति सीमा ५०", "५० मिटरमा रोक्नुहोस्", "५०% छुट"],
+      "an": "गति सीमा ५०"
+    },
+    {
+      "n": "T005",
+      "category": "Traffic",
+      "imageUrl": "https://picsum.photos/seed/pedestrian_q/300/150",
+      "a4": ["पैदल यात्री निषेध", "विद्यालय क्षेत्र", "पैदल यात्री क्रसिङ", "साइकल मार्ग"],
+      "an": "पैदल यात्री क्रसिङ"
+    }
+  ]
+}
