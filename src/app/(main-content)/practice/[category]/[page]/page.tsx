@@ -1,5 +1,4 @@
-
-import { PracticeTestClient } from '../../PracticeTestClient'; // Adjusted path
+import { PracticeTestClient } from '../../PracticeTestClient'; 
 import type { Metadata } from 'next';
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
 import { FileText } from 'lucide-react';
@@ -67,7 +66,7 @@ export async function generateStaticParams() {
     let categoryQuestions: AppQuestionType[] = [];
     const textualQuestions = (akQuestionsData.questions || [])
       .filter(q => {
-        if (category === 'A') return q.category === 'A'; // Category 'A' now includes 'K' from ak.json by its nature
+        if (category === 'A') return q.category === 'A'; 
         if (category === 'B') return q.category === 'B';
         return false;
       })
@@ -79,7 +78,6 @@ export async function generateStaticParams() {
     if (category === 'A') {
       categoryQuestions = [...textualQuestions, ...allTrafficQuestions];
     } else if (category === 'B') {
-      // For Category B, only include specific B textual questions and all traffic questions
       categoryQuestions = [...textualQuestions, ...allTrafficQuestions];
     }
     
@@ -106,7 +104,7 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
 
   if (category === 'A') {
     categoryTextualQuestions = rawTextualQuestions
-      .filter(q => q.category === 'A') // Category 'A' from ak.json now covers former 'A' and 'K'
+      .filter(q => q.category === 'A') 
       .map(q => ({ ...q, id: q.n, category: 'A' as 'A' }));
   } else if (category === 'B') {
     categoryTextualQuestions = rawTextualQuestions
@@ -178,9 +176,8 @@ export default async function PaginatedPracticeTestPage({ params }: PracticeTest
             questionsForCurrentPage={questionsForCurrentPage}
             currentPage={page}
             totalPages={totalPages}
-            category={category}
+            category={category} // Pass category for NumberPagination
         />
     </div>
   );
 }
-

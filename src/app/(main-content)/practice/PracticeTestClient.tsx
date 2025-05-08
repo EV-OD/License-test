@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import type { Question } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle, XCircle, RotateCcw, Lightbulb, ChevronLeft, ChevronRight, Home, ListChecks } from 'lucide-react';
+import { CheckCircle, XCircle, ChevronLeft, ChevronRight, Home, ListChecks } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -25,12 +24,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import GoogleAd from '@/components/ads/GoogleAd';
 import { cn } from '@/lib/utils';
+import { NumberPagination } from '@/components/shared/NumberPagination'; // Import NumberPagination
 
 interface PracticeTestClientProps {
   questionsForCurrentPage: Question[];
   currentPage: number;
   totalPages: number;
-  category: string; // 'A' or 'B'
+  category: string;
 }
 
 export function PracticeTestClient({ 
@@ -51,10 +51,14 @@ export function PracticeTestClient({
   const adSlotSide2 = process.env.NEXT_PUBLIC_AD_SLOT_PRACTICE_SIDE_2;
   const adSlotBottomMobile = process.env.NEXT_PUBLIC_AD_SLOT_PRACTICE_BOTTOM_MOBILE;
 
-  const startNewPage = () => {
-    setCurrentQuestionIndexOnPage(0);
+  const resetQuestionState = () => {
     setSelectedOptionIndex(null);
     setShowAnswer(false);
+  };
+
+  const startNewPage = () => {
+    setCurrentQuestionIndexOnPage(0);
+    resetQuestionState();
     setScoreForPage(0);
     setPageFinished(false);
     setIncorrectAnswersOnPage([]);
@@ -67,25 +71,34 @@ export function PracticeTestClient({
 
   const currentQuestion = questionsForCurrentPage && questionsForCurrentPage.length > 0 ? questionsForCurrentPage[currentQuestionIndexOnPage] : null;
 
-  const handleAnswerSubmit = () => {
-    if (selectedOptionIndex === null || !currentQuestion) return;
-    setShowAnswer(true);
-    const selectedAnswerText = currentQuestion.a4[selectedOptionIndex];
+  const handleOptionSelection = (value: string) => {
+    if (showAnswer || !currentQuestion) return; // Prevent changing answer after it's shown or if no question
+
+    const newlySelectedOptionIndex = parseInt(value);
+    setSelectedOptionIndex(newlySelectedOptionIndex);
+    setShowAnswer(true); // Show feedback immediately
+
+    const selectedAnswerText = currentQuestion.a4[newlySelectedOptionIndex];
     if (selectedAnswerText === currentQuestion.an) {
       setScoreForPage(prev => prev + 1);
     } else {
       setIncorrectAnswersOnPage(prev => [...prev, currentQuestion]);
     }
   };
-
+  
   const handleNextQuestionOnPage = () => {
-    setShowAnswer(false);
-    setSelectedOptionIndex(null);
-
+    resetQuestionState();
     if (currentQuestionIndexOnPage < questionsForCurrentPage.length - 1) {
       setCurrentQuestionIndexOnPage(prev => prev + 1);
     } else {
       setPageFinished(true);
+    }
+  };
+
+  const handlePreviousQuestionOnPage = () => {
+    resetQuestionState();
+    if (currentQuestionIndexOnPage > 0) {
+      setCurrentQuestionIndexOnPage(prev => prev - 1);
     }
   };
 
@@ -96,27 +109,28 @@ export function PracticeTestClient({
     let optionStyle = "border-border hover:border-primary";
     if (showAnswer) {
       if (optionText === currentQuestion.an) {
-        optionStyle = "border-accent bg-accent/10";
+        optionStyle = "border-accent bg-accent/10 text-accent-foreground"; // Correct answer
       } else if (selectedOptionIndex === index) {
-        optionStyle = "border-destructive bg-destructive/10";
+        optionStyle = "border-destructive bg-destructive/10 text-destructive-foreground"; // Incorrect selected answer
       }
     } else if (selectedOptionIndex === index) {
-      optionStyle = "border-primary bg-primary/10";
+      optionStyle = "border-primary bg-primary/10"; // Selected but not yet revealed
     }
 
     return (
       <div key={optionId} className={cn(
         "flex items-center space-x-3 p-3 rounded-lg border transition-all",
-        optionStyle
+        optionStyle,
+        showAnswer ? "cursor-default" : "cursor-pointer"
       )}>
         <RadioGroupItem
             value={index.toString()}
             id={optionId}
             className="shrink-0"
-            disabled={showAnswer}
+            disabled={showAnswer} // Disable radio item after an answer is shown
             checked={selectedOptionIndex === index}
         />
-        <Label htmlFor={optionId} className="flex-1 cursor-pointer text-base">
+        <Label htmlFor={optionId} className={cn("flex-1 text-base", showAnswer ? "cursor-default" : "cursor-pointer")}>
           {optionText}
         </Label>
       </div>
@@ -189,15 +203,15 @@ export function PracticeTestClient({
                 </CardHeader>
                 <CardContent>
                   <RadioGroup
-                    key={`${currentQuestion.id}-${currentQuestionIndexOnPage}-${currentPage}-${selectedOptionIndex}`}
+                    key={`${currentQuestion.id}-${currentQuestionIndexOnPage}-${currentPage}`} // Simpler key
                     value={selectedOptionIndex !== null ? selectedOptionIndex.toString() : undefined}
-                    onValueChange={(value) => setSelectedOptionIndex(parseInt(value))}
+                    onValueChange={handleOptionSelection} // Changed to immediate feedback handler
                     className="space-y-3"
                   >
                     {currentQuestion.a4.map(renderOption)}
                   </RadioGroup>
 
-                  {showAnswer && (
+                  {showAnswer && ( // This alert block might become redundant if styling is in renderOption, but can be kept for explicit text feedback
                     <Alert className={`mt-6 ${selectedOptionIndex !== null && currentQuestion.a4[selectedOptionIndex] === currentQuestion.an ? 'border-accent text-accent' : 'border-destructive text-destructive'}`}>
                       {selectedOptionIndex !== null && currentQuestion.a4[selectedOptionIndex] === currentQuestion.an ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
                       <AlertTitle>{selectedOptionIndex !== null && currentQuestion.a4[selectedOptionIndex] === currentQuestion.an ? 'सही!' : 'गलत!'}</AlertTitle>
@@ -209,29 +223,23 @@ export function PracticeTestClient({
                 </CardContent>
                 <CardFooter className="flex justify-between pt-6">
                    <Button
-                    onClick={() => {
-                        if (currentQuestionIndexOnPage > 0) {
-                            setCurrentQuestionIndexOnPage(i => i - 1);
-                            setSelectedOptionIndex(null);
-                            setShowAnswer(false);
-                        }
-                    }}
+                    onClick={handlePreviousQuestionOnPage}
                     variant="outline"
-                    disabled={currentQuestionIndexOnPage === 0 || showAnswer}
+                    disabled={currentQuestionIndexOnPage === 0} // Only disable if it's the first question
                     className="rounded-lg"
                     >
                     <ChevronLeft className="mr-2 h-4 w-4" /> अघिल्लो
                     </Button>
-                  {showAnswer ? (
-                    <Button onClick={handleNextQuestionOnPage} className="rounded-lg">
-                      {currentQuestionIndexOnPage === questionsForCurrentPage.length - 1 ? 'Page Results' : 'अर्को प्रश्न'}
-                       {currentQuestionIndexOnPage < questionsForCurrentPage.length - 1 && <ChevronRight className="ml-2 h-4 w-4" />}
-                    </Button>
-                  ) : (
-                    <Button onClick={handleAnswerSubmit} disabled={selectedOptionIndex === null} className="rounded-lg">
-                      उत्तर जाँच गर्नुहोस्
-                    </Button>
-                  )}
+                  
+                  <Button 
+                    onClick={handleNextQuestionOnPage} 
+                    className="rounded-lg"
+                    // Enable if an answer has been shown, or disable if it's the last q and answer not shown
+                    disabled={!showAnswer && currentQuestionIndexOnPage < questionsForCurrentPage.length -1} 
+                  >
+                    {currentQuestionIndexOnPage === questionsForCurrentPage.length - 1 ? 'Page Results' : 'अर्को प्रश्न'}
+                    {currentQuestionIndexOnPage < questionsForCurrentPage.length - 1 && <ChevronRight className="ml-2 h-4 w-4" />}
+                  </Button>
                 </CardFooter>
               </Card>
             )}
@@ -277,31 +285,23 @@ export function PracticeTestClient({
                     </AlertDialog>
                   )}
                 </CardContent>
-                <CardFooter className="flex-col sm:flex-row justify-center gap-3 pt-6">
-                  {currentPage > 1 && (
-                    <Button asChild variant="outline" className="w-full sm:w-auto">
-                      <Link href={`/practice/${category}/${currentPage - 1}`}>
-                        <ChevronLeft className="mr-2 h-4 w-4" /> Previous Page
-                      </Link>
-                    </Button>
-                  )}
-                  {currentPage < totalPages && (
-                    <Button asChild className="w-full sm:w-auto">
-                      <Link href={`/practice/${category}/${currentPage + 1}`}>
-                        Next Page <ChevronRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  )}
-                  {(currentPage === totalPages) && (
-                     <p className="text-center text-accent font-semibold w-full py-2">You've completed all pages for this category!</p>
-                  )}
-                   <Button asChild variant="secondary" className="w-full sm:w-auto mt-2 sm:mt-0">
+                <CardFooter className="flex-col items-center gap-3 pt-6">
+                   <Button asChild variant="secondary" className="w-full sm:w-auto">
                       <Link href="/practice">
                         <ListChecks className="mr-2 h-4 w-4" /> Choose Another Category
                       </Link>
                     </Button>
                 </CardFooter>
               </Card>
+            )}
+            {totalPages > 0 && (
+                 <div className="mt-8 flex justify-center">
+                    <NumberPagination 
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        basePath={`/practice/${category}`}
+                    />
+                </div>
             )}
         </div>
         {renderAds('side')}
