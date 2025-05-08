@@ -1,44 +1,372 @@
 {
   "sign": [
-    {
-      "name": "रोक्न निषेध",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/1.png"
-    },
-    {
-      "name": "पार्किङ्ग निषेध",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/2.png"
-    },
-    {
-      "name": "यू-टर्न निषेध",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/3.png"
-    },
-    {
-      "name": "गति सीमा (२० कि.मि./घन्टा)",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/4.png"
-    },
-    {
-      "name": "हर्न बजाउन निषेध",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/5.png"
-    },
-    {
-      "name": "दायाँ मोड्न निषेध",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/6.png"
-    },
-    {
-      "name": "बायाँ मोड्न निषेध",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/7.png"
-    },
-    {
-      "name": "ओभरटेक गर्न निषेध",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/8.png"
-    },
-    {
-      "name": "पैदल यात्री निषेध",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/9.png"
-    },
-    {
-      "name": "अनिवार्य बायाँ मोड",
-      "selection1": "https://www.nepallicense.com/img/traffic-sign/10.png"
-    }
+      {
+          "name": "रोक्न निषेध",
+          "selection1": "/traffic/images/1.png"
+      },
+      {
+          "name": "पर्किङ्ग निषेध",
+          "selection1": "/traffic/images/2.png"
+      },
+      {
+          "name": "प्रवेश निषेध",
+          "selection1": "/traffic/images/3.png"
+      },
+      {
+          "name": "दाहिने मोड्न निषेध",
+          "selection1": "/traffic/images/4.png"
+      },
+      {
+          "name": "बायाँ मोड्न निषेध",
+          "selection1": "/traffic/images/5.png"
+      },
+      {
+          "name": "यु टर्न गर्न निषेध",
+          "selection1": "/traffic/images/6.png"
+      },
+      {
+          "name": "अधिकतम गति",
+          "selection1": "/traffic/images/7.png"
+      },
+      {
+          "name": "सबारी चौडाही सिमा",
+          "selection1": "/traffic/images/8.png"
+      },
+      {
+          "name": "उछिन्न निषेध",
+          "selection1": "/traffic/images/9.png"
+      },
+      {
+          "name": "हर्न निषेध",
+          "selection1": "/traffic/images/10.png"
+      },
+      {
+          "name": "रोक हेर र जाऊ",
+          "selection1": "/traffic/images/11.png"
+      },
+      {
+          "name": "गति सिमा समाप्त",
+          "selection1": "/traffic/images/12.png"
+      },
+      {
+          "name": "सिधा मात्र जाउ",
+          "selection1": "/traffic/images/13.png"
+      },
+      {
+          "name": "आगाडी गएर बाया मोड",
+          "selection1": "/traffic/images/14.png"
+      },
+      {
+          "name": "कुनै तिर बाट जाउ",
+          "selection1": "/traffic/images/15.png"
+      },
+      {
+          "name": "सानो गोल घुम्ती",
+          "selection1": "/traffic/images/16.png"
+      },
+      {
+          "name": "सवारी भार सिमा",
+          "selection1": "/traffic/images/17.png"
+      },
+      {
+          "name": "बाया मोड",
+          "selection1": "/traffic/images/18.png"
+      },
+      {
+          "name": "बाया च्याप",
+          "selection1": "/traffic/images/19.png"
+      },
+      {
+          "name": "एक तर्फी सवारी",
+          "selection1": "/traffic/images/20.png"
+      },
+      {
+          "name": "रोक र जन्देउ",
+          "selection1": "/traffic/images/21.png"
+      },
+      {
+          "name": "मूल सडक वा गोल घुम्ती मा आउने लाई पहिला जान देउ",
+          "selection1": "/traffic/images/22.png"
+      },
+      {
+          "name": "ट्रक निषेध",
+          "selection1": "/traffic/images/23.png"
+      },
+      {
+          "name": "सबारी लम्बाई सिमा",
+          "selection1": "/traffic/images/24.png"
+      },
+      {
+          "name": "सवारी उचाई सिमा",
+          "selection1": "/traffic/images/25.png"
+      },
+      {
+          "name": "एक्सल भार सिमा",
+          "selection1": "/traffic/images/26.png"
+      },
+      {
+          "name": "पैदल यात्री निषेध",
+          "selection1": "/traffic/images/27.png"
+      },
+      {
+          "name": "बेल गाडा निषेध",
+          "selection1": "/traffic/images/28.png"
+      },
+      {
+          "name": "गति सिमा समाप्त",
+          "selection1": "/traffic/images/29.png"
+      },
+      {
+          "name": "जाउ (अस्थाई चिन्ह )",
+          "selection1": "/traffic/images/30.png"
+      },
+      {
+          "name": "टी जक्शन",
+          "selection1": "/traffic/images/31.png"
+      },
+      {
+          "name": "खतरा",
+          "selection1": "/traffic/images/32.png"
+      },
+      {
+          "name": "आगाडी दुइ तर्फी बाटो सिधा",
+          "selection1": "/traffic/images/33.png"
+      },
+      {
+          "name": "आगाडी दुइ तर्फी बाटो",
+          "selection1": "/traffic/images/34.png"
+      },
+      {
+          "name": "दाहिने मोड",
+          "selection1": "/traffic/images/35.png"
+      },
+      {
+          "name": "दाहिने पुरा मोड",
+          "selection1": "/traffic/images/36.png"
+      },
+      {
+          "name": "साँघुरो पुल",
+          "selection1": "/traffic/images/37.png"
+      },
+      {
+          "name": "बढी उकालो",
+          "selection1": "/traffic/images/38.png"
+      },
+      {
+          "name": "खतरनाक दबेको बाटो",
+          "selection1": "/traffic/images/39.png"
+      },
+      {
+          "name": "दुवै तिर बाट साँघुरिएको सडक",
+          "selection1": "/traffic/images/40.png"
+      },
+      {
+          "name": "पहिरो झर्ने ठाउँ",
+          "selection1": "/traffic/images/41.png"
+      },
+      {
+          "name": "दाहिने तिरबाट साँघुरिएको बाटो",
+          "selection1": "/traffic/images/42.png"
+      },
+      {
+          "name": "दोहोरो मोड पहिले बायाँ",
+          "selection1": "/traffic/images/43.png"
+      },
+      {
+          "name": "वाई जंक्सन",
+          "selection1": "/traffic/images/44.png"
+      },
+      {
+          "name": "बायाँबाट सबारी आउन सक्छ",
+          "selection1": "/traffic/images/45.png"
+      },
+      {
+          "name": "दाहीनेबाट सबारी आउन सक्छ",
+          "selection1": "/traffic/images/46.png"
+      },
+      {
+          "name": "गोल घुम्ती",
+          "selection1": "/traffic/images/47.png"
+      },
+      {
+          "name": "आगाडी उचायी सिमा",
+          "selection1": "/traffic/images/48.png"
+      },
+      {
+          "name": "चौबाटो आगाडी सडक",
+          "selection1": "/traffic/images/49.png"
+      },
+      {
+          "name": "चौबाटो आगाडी साखा सडक",
+          "selection1": "/traffic/images/50.png"
+      },
+      {
+          "name": "बढी ओरालो",
+          "selection1": "/traffic/images/51.png"
+      },
+      {
+          "name": "पाल्तु जनावर",
+          "selection1": "/traffic/images/52.png"
+      },
+      {
+          "name": "कम उचाइमा डिलहरु",
+          "selection1": "/traffic/images/53.png"
+      },
+      {
+          "name": "उठेको बाटो",
+          "selection1": "/traffic/images/54.png"
+      },
+      {
+          "name": "पैदल यात्रीले बाटो काट्ने ठाउँ",
+          "selection1": "/traffic/images/55.png"
+      },
+      {
+          "name": "दाहिने साखा सडक",
+          "selection1": "/traffic/images/56.png"
+      },
+      {
+          "name": "एक पछि आर्को दोबाटोहरु",
+          "selection1": "/traffic/images/57.png"
+      },
+      {
+          "name": "दोहोरो बाटोहरु समाप्त",
+          "selection1": "/traffic/images/58.png"
+      },
+      {
+          "name": "ट्राफिक चिन्ह",
+          "selection1": "/traffic/images/59.png"
+      },
+      {
+          "name": "जंङ्गली जनावर",
+          "selection1": "/traffic/images/60.png"
+      },
+      {
+          "name": "अगाडी बाटोमा पैदल यात्री",
+          "selection1": "/traffic/images/61.png"
+      },
+      {
+          "name": "नदीको किनारा",
+          "selection1": "/traffic/images/62.png"
+      },
+      {
+          "name": "रेल गाढी गेट नभएको",
+          "selection1": "/traffic/images/63.png"
+      },
+      {
+          "name": "गिट्टी उछिट्टिटन सक्ने",
+          "selection1": "/traffic/images/64.png"
+      },
+      {
+          "name": "बाटोमा काम हुदै",
+          "selection1": "/traffic/images/65.png"
+      },
+      {
+          "name": "ज़ाच चौकी",
+          "selection1": "/traffic/images/66.png"
+      },
+      {
+          "name": "केटाकेटीहरु",
+          "selection1": "/traffic/images/67.png"
+      },
+      {
+          "name": "बायाँतिर तिखो मोड",
+          "selection1": "/traffic/images/68.png"
+      },
+      {
+          "name": "तिखो मोड (अस्थाई बाटो)",
+          "selection1": "/traffic/images/69.png"
+      },
+      {
+          "name": "टी जंक्शन (दायाँ बायाँ मोड )",
+          "selection1": "/traffic/images/70.png"
+      },
+      {
+          "name": "पार्किंग ईस्थल",
+          "selection1": "/traffic/images/71.png"
+      },
+      {
+          "name": "एक तर्फी बाटो",
+          "selection1": "/traffic/images/72.png"
+      },
+      {
+          "name": "वर्क शप",
+          "selection1": "/traffic/images/73.png"
+      },
+      {
+          "name": "प्राथिमिक उपचार सिबिर",
+          "selection1": "/traffic/images/74.png"
+      },
+      {
+          "name": "उछिने ठाउँ",
+          "selection1": "/traffic/images/75.png"
+      },
+      {
+          "name": "टेलिफोन",
+          "selection1": "/traffic/images/76.png"
+      },
+      {
+          "name": "बाटोको अन्त",
+          "selection1": "/traffic/images/77.png"
+      },
+      {
+          "name": "पैदल यात्री को बाटो",
+          "selection1": "/traffic/images/78.png"
+      },
+      {
+          "name": "पेट्रोल पम्प",
+          "selection1": "/traffic/images/79.png"
+      },
+      {
+          "name": "बस बस्ने ठाउँ",
+          "selection1": "/traffic/images/80.png"
+      },
+      {
+          "name": "अस्पताल",
+          "selection1": "/traffic/images/81.png"
+      },
+      {
+          "name": "जलपान ठाउँ",
+          "selection1": "/traffic/images/82.png"
+      },
+      {
+          "name": "पैदल यात्री र साइकल को बाटो",
+          "selection1": "/traffic/images/83.png"
+      },
+      {
+          "name": "रेस्टुरा",
+          "selection1": "/traffic/images/84.png"
+      },
+      {
+          "name": "पैदल यात्रीको बाटो",
+          "selection1": "/traffic/images/85.png"
+      },
+      {
+          "name": "साइकल को बाटो",
+          "selection1": "/traffic/images/86.png"
+      },
+      {
+          "name": "बस बिसौनी",
+          "selection1": "/traffic/images/87.png"
+      },
+      {
+          "name": "बन भोज क्षेत्र",
+          "selection1": "/traffic/images/88.png"
+      },
+      {
+          "name": "जेब्रा क्रस",
+          "selection1": "/traffic/images/89.png"
+      },
+      {
+          "name": "अत्यन्त जरुरि भए मात्र राख्न",
+          "selection1": "/traffic/images/90.png"
+      },
+      {
+          "name": "सडक छेउ का रेखाहरु",
+          "selection1": "/traffic/images/91.png"
+      },
+      {
+          "name": "सडक बीच का रेखाहरु",
+          "selection1": "/traffic/images/92.png"
+      }
   ]
 }
