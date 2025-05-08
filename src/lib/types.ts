@@ -61,6 +61,13 @@ export type PracticeQuestion = {
   explanation_np?: string;
 };
 
+export type PracticeQn = {
+  n: string;
+  a4:string[];
+  qn: string;
+  an: string;
+}
+
 // Traffic Sign Types
 export type TrafficSign = {
   id: string;

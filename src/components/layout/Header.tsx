@@ -29,7 +29,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LanguageToggle />
+          {/* <LanguageToggle /> */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon" aria-label="Open menu">
