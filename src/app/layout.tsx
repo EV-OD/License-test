@@ -106,6 +106,21 @@ export default function RootLayout({
          <Script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
          crossOrigin="anonymous" strategy="lazyOnload" />
       )}
+      <Script
+        strategy="afterInteractive"
+        src="https://www.googletagmanager.com/gtag/js?id=G-YFT5GSJYRX"
+      />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+      >
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-YFT5GSJYRX');
+        `}
+      </Script>
       <body className="antialiased bg-background text-foreground">
           <div className="flex flex-col min-h-screen">
             <Header />
