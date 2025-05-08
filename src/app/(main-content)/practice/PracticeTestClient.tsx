@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -151,9 +152,7 @@ export function PracticeTestClient({
             <CardHeader>
               <CardTitle>Page {currentPage}/{totalPages} - Practice Questions ({questionsForCurrentPage.length} questions)</CardTitle>
               <Progress value={progressValue} className="mt-2 h-2.5" />
-              <CardDescription className="pt-4 text-sm">
-                Select an answer for each question. Feedback will be shown immediately. Your page score will update at the bottom.
-              </CardDescription>
+              
             </CardHeader>
             <CardContent className="space-y-10">
               {questionsForCurrentPage.map((question, index) => {
@@ -286,3 +285,4 @@ export function PracticeTestClient({
     </div>
   );
 }
+
