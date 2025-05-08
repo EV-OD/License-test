@@ -41,17 +41,17 @@ export type Question = {
 
 
 // Traffic Sign type for the /traffic-signs learning page
-// This will be made monolingual (Nepali)
+// Name, description, and category are now expected to be in English.
 export type TrafficSign = {
   id: string;
-  name: string; // Monolingual name
+  name: string; // English name
   image_url: string;
-  description: string; // Monolingual description
-  category: string; // Monolingual category
+  description: string; // English description
+  category: string; // English category
 };
 
 // Exam Types (Common structure for Real Exam)
-export type ExamCategoryType = 'A' | 'B' | 'Mixed' | 'Traffic'; // K removed
+export type ExamCategoryType = 'A' | 'B' | 'Mixed' | 'Traffic';
 
 export type MockExamResult = {
   score: number;
@@ -60,3 +60,4 @@ export type MockExamResult = {
   answers: { questionId: string; selectedOptionIndex: number | null; isCorrect: boolean }[]; // Storing index
   category: ExamCategoryType;
 };
+```

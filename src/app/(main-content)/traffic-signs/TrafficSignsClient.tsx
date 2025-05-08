@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import type { TrafficSign } from '@/lib/types'; // Updated type
+import type { TrafficSign } from '@/lib/types'; 
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -14,7 +14,7 @@ interface TrafficSignsClientProps {
   allSigns: TrafficSign[];
 }
 
-type SignCategoryFilter = string; // Now just strings
+type SignCategoryFilter = string; 
 
 
 export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
@@ -26,16 +26,16 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
 
   const uniqueCategories = useMemo(() => {
     const categories = new Set<string>();
-    allSigns.forEach(sign => categories.add(sign.category)); // Directly use category
+    allSigns.forEach(sign => categories.add(sign.category)); 
     return ['All', ...Array.from(categories)];
   }, [allSigns]);
 
 
   const filteredSigns = useMemo(() => {
     return allSigns.filter(sign => {
-      const name = sign.name;
-      const description = sign.description;
-      const category = sign.category;
+      const name = sign.name || ''; // Ensure name is not undefined
+      const description = sign.description || ''; // Ensure description is not undefined
+      const category = sign.category || ''; // Ensure category is not undefined
 
       const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -66,15 +66,15 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
 
   return (
     <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-2 text-center">ट्राफिक संकेतहरू</h1>
-      <p className="text-muted-foreground text-center mb-8">नेपालका विभिन्न ट्राफिक संकेतहरू सिक्नुहोस् र बुझ्नुहोस्।</p>
+      <h1 className="text-3xl font-bold mb-2 text-center">Traffic Signs</h1>
+      <p className="text-muted-foreground text-center mb-8">Learn and understand the various traffic signs in Nepal.</p>
 
       <div className="mb-8 flex flex-col sm:flex-row gap-4">
         <div className="relative flex-grow">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="नाम वा विवरणद्वारा संकेतहरू खोज्नुहोस्..."
+            placeholder="Search signs by name or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 w-full"
@@ -83,14 +83,14 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
         <Select value={categoryFilter} onValueChange={(value: SignCategoryFilter) => setCategoryFilter(value)}>
           <SelectTrigger className="w-full sm:w-[280px]">
             <Tag className="mr-2 h-4 w-4" />
-            <SelectValue placeholder="श्रेणी अनुसार फिल्टर गर्नुहोस्" />
+            <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>संकेत श्रेणीहरू</SelectLabel>
+              <SelectLabel>Sign Categories</SelectLabel>
               {uniqueCategories.map(cat => (
                 <SelectItem key={cat} value={cat}>
-                  {cat === 'All' ? 'सबै श्रेणीहरू' : cat}
+                  {cat === 'All' ? 'All Categories' : cat}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -129,8 +129,8 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
       ) : (
         <div className="text-center py-12">
           <TrafficConeIconLucide className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-          <p className="text-xl font-semibold">कुनै ट्राफिक संकेतहरू फेला परेनन्</p>
-          <p className="text-muted-foreground">आफ्नो खोज वा फिल्टर मापदण्ड समायोजन गर्ने प्रयास गर्नुहोस्।</p>
+          <p className="text-xl font-semibold">No Traffic Signs Found</p>
+          <p className="text-muted-foreground">Try adjusting your search or filter criteria.</p>
         </div>
       )}
       {renderAds('bottom')}

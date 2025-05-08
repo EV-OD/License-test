@@ -204,7 +204,7 @@ export default function HomePage() {
               asChild 
               size="lg" 
               variant="outline" 
-              className="text-lg px-8 py-6 bg-transparent text-primary-foreground border-primary-foreground/50 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+              className="text-lg px-8 py-6 bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
             >
               <Link href="/faq">Visit Help Center</Link>
             </Button>
@@ -254,4 +254,3 @@ export default function HomePage() {
     </>
   );
 }
-

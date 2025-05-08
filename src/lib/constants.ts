@@ -20,83 +20,83 @@ export const NAV_LINKS: NavItem[] = [
   { href: "/contact", label: "Contact Us", icon: Mail },
 ];
 
-// Feature descriptions remain monolingual Nepali
+// Feature descriptions translated to English
 export const KEY_FEATURES: FeatureItem[] = [
   {
     icon: ListChecks,
-    title: "विस्तृत प्रश्न बैंक",
-    description: "सवारी साधन श्रेणी A (मोटरसाइकल/स्कुटर) र B (कार/जीप/भ्यान - चाँडै आउँदैछ) को लागि अभ्यास प्रश्नहरू।",
+    title: "Comprehensive Question Bank",
+    description: "Practice questions for vehicle category A (Motorcycle/Scooter) and B (Car/Jeep/Van - coming soon).",
   },
   {
     icon: TrafficCone,
-    title: "ट्राफिक संकेत निपुणता",
-    description: "अन्तरक्रियात्मक ट्राफिक संकेत ट्यूटोरियलहरू स्पष्ट दृश्य र विवरणहरू सहित।",
+    title: "Traffic Sign Mastery",
+    description: "Interactive traffic sign tutorials with clear visuals and descriptions.",
   },
   {
     icon: Timer,
-    title: "यथार्थवादी परीक्षा सिमुलेशन",
-    description: "वास्तविक परीक्षा सर्तहरूको नक्कल गर्ने समयबद्ध परीक्षाहरू।",
+    title: "Realistic Exam Simulation",
+    description: "Timed exams that simulate actual test conditions.",
   },
   {
     icon: TrendingUp,
-    title: "कार्यसम्पादन विश्लेषण",
-    description: "आफ्नो प्रगति ट्र्याक गर्नुहोस् र सुधारका लागि क्षेत्रहरू पहिचान गर्नुहोस्।",
+    title: "Performance Analysis",
+    description: "Track your progress and identify areas for improvement.",
   },
   {
     icon: WifiOff,
-    title: "अफलाइन पहुँच",
-    description: "इन्टरनेट जडान बिना पनि, जुनसुकै बेला, कहीं पनि अध्ययन गर्नुहोस् (मोबाइल एप मार्फत)।",
+    title: "Offline Access",
+    description: "Study anytime, anywhere, even without an internet connection (via mobile app).",
   },
   {
     icon: Smartphone,
-    title: "मोबाइल एप उपलब्ध",
-    description: "हाम्रो मोबाइल एप डाउनलोड गरेर अन-द-गो तयारी गर्नुहोस्।"
+    title: "Mobile App Available",
+    description: "Prepare on-the-go by downloading our mobile app."
   }
 ];
 
-// Testimonials remain as they are user-generated content (Nepali)
+// Testimonials translated to English
 export const TESTIMONIALS_DATA: Testimonial[] = [
    {
-    quote: "यो प्लेटफर्मको मद्दतले मैले पहिलो प्रयासमा नै लिखित परीक्षा पास गरें! नमुना परीक्षणहरू अविश्वसनीय रूपमा उपयोगी थिए।",
-    name: "सिता आर.",
-    location: "काठमाडौं",
-    avatarFallback: "सि",
+    quote: "With the help of this platform, I passed the written exam on my first try! The sample tests were incredibly useful.",
+    name: "Sita R.",
+    location: "Kathmandu",
+    avatarFallback: "SR",
     avatarImage: "https://picsum.photos/seed/sita/100/100",
   },
   {
-    quote: "ट्राफिक संकेत ट्यूटोरियलहरू उत्कृष्ट छन्। मैले अन्ततः सबै संकेतहरू स्पष्ट रूपमा बुझें। अत्यधिक सिफारिश गरिन्छ!",
-    name: "राम के.",
-    location: "पोखरा",
-    avatarFallback: "रा",
+    quote: "The traffic sign tutorials are excellent. I finally understood all the signs clearly. Highly recommended!",
+    name: "Ram K.",
+    location: "Pokhara",
+    avatarFallback: "RK",
     avatarImage: "https://picsum.photos/seed/ram/100/100",
   },
   {
-    quote: "नेपालीमा अभ्यास गर्न पाउनु मेरो लागि गेम चेन्जर थियो। यो लिखित तयारीको लागि उत्तम उपकरण हो।",
-    name: "अन्जली जी.",
-    location: "विराटनगर",
-    avatarFallback: "अ",
+    quote: "Being able to practice was a game-changer for me. This is the best tool for Likhit preparation.",
+    name: "Anjali G.",
+    location: "Biratnagar",
+    avatarFallback: "AG",
     avatarImage: "https://picsum.photos/seed/anjali/100/100",
   },
 ];
 
-// Additional Resources - Monolingual Nepali
+// Additional Resources translated to English
 export const ADDITIONAL_RESOURCES: ResourceLink[] = [
   {
     icon: BookOpen,
-    title: "लिखित परीक्षा पास गर्ने १० टिप्स",
-    description: "लिखित परीक्षामा उत्तीर्ण हुन मद्दत गर्ने हाम्रो विशेषज्ञ सल्लाह।",
+    title: "Top 10 Tips to Pass the Likhit Exam",
+    description: "Our expert advice to help you pass the written exam.",
     href: "/blog/top-10-tips",
   },
   {
     icon: Video,
-    title: "नेपालका ट्राफिक संकेतहरू बुझ्दै",
-    description: "विभिन्न ट्राफिक संकेतहरू व्याख्या गर्ने विस्तृत भिडियो ट्यूटोरियलहरू।",
+    title: "Understanding Nepal's Traffic Signs",
+    description: "Detailed video tutorials explaining various traffic signs.",
     href: "/tutorials/traffic-signs-explained",
   },
   {
     icon: HelpCircleIcon,
-    title: "ड्राइभिङ लाइसेन्स प्रक्रिया FAQs",
-    description: "आफ्नो लाइसेन्स प्राप्त गर्ने बारे सामान्य प्रश्नहरूको उत्तर।",
+    title: "Driving License Process FAQs",
+    description: "Answers to common questions about obtaining your license.",
     href: "/faq",
   },
 ];
@@ -113,9 +113,45 @@ export const CONTACT_DETAILS = {
 };
 
 // Real Exam Categories - Using English for UI consistency
-export const REAL_EXAM_CATEGORIES = [
-  { id: 'A', name: 'Category A (Bike/Scooter)', icon: MotorcycleIcon, description: 'Practice for motorcycle and scooter license.' },
-  { id: 'B', name: 'Category B (Car/Jeep/Van)', icon: Car, description: 'Practice for car, jeep, or van license. (Questions Coming Soon)' },
-  // { id: 'Traffic', name: 'Traffic Signs', icon: TrafficCone, description: 'Practice traffic sign questions.' }, // Removed as per previous request
-  // { id: 'Mixed', name: 'Mixed Exam', icon: Layers, description: 'Comprehensive exam with questions from all categories.' }, // Removed as per previous request
+export const REAL_EXAM_CATEGORIES_CONFIG = [
+  { 
+    type: 'A' as const, 
+    name: 'Category A (Bike/Scooter)', 
+    icon: MotorcycleIcon, 
+    description: 'Practice for your motorcycle and scooter license exam.',
+    href: '/real-exam/A'
+  },
+  { 
+    type: 'B' as const, 
+    name: 'Category B (Car/Jeep/Van)', 
+    icon: Car, 
+    description: 'Prepare for car, jeep, or van license exam. (Coming Soon)',
+    href: '/real-exam/B'
+  },
+];
+
+// Constants for practice test categories
+export const PRACTICE_CATEGORIES_CONFIG: {
+  type: 'A' | 'B';
+  name: string;
+  description: string;
+  icon: React.ElementType;
+  href: string;
+  comingSoon?: boolean;
+}[] = [
+  {
+    type: 'A',
+    name: 'Category A (Bike/Scooter)',
+    description: 'Comprehensive practice for all Category A (motorcycle, scooter) textual questions and all traffic sign questions.',
+    icon: MotorcycleIcon,
+    href: '/practice/A/1',
+  },
+  {
+    type: 'B',
+    name: 'Category B (Car/Jeep/Van)',
+    description: 'Comprehensive practice for all Category B (car, jeep, van) textual questions and all traffic sign questions. (Category B questions coming soon)',
+    icon: Car,
+    href: '/practice/B/1',
+    comingSoon: true, 
+  },
 ];

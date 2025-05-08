@@ -8,40 +8,40 @@ import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
   title: `FAQ | ${SITE_NAME}`,
-  description: `${SITE_NAME} मा नेपालको ड्राइभिङ लाइसेन्स प्रक्रिया, लिखित परीक्षा, ट्राफिक नियमहरू बारे बारम्बार सोधिने प्रश्नहरूको उत्तर पाउनुहोस्।`,
+  description: `Find answers to frequently asked questions about Nepal's driving license process, Likhit exam, traffic rules, and more on ${SITE_NAME}.`,
 };
 
-// Monolingual FAQ data (Nepali)
+// FAQ data translated to English
 const faqData = [
   {
     "id": "q1",
-    "question": "लिखित परीक्षा के हो?",
-    "answer": "लिखित परीक्षा एक कम्प्युटर-आधारित लिखित परीक्षा हो जसले तपाईंको ट्राफिक नियम, सडक संकेत, सवारी साधन मेकानिक्स, र सामान्य सडक सुरक्षा सम्बन्धी ज्ञानको मूल्याङ्कन गर्दछ। यो नेपालमा ड्राइभिङ लाइसेन्स प्राप्त गर्न अनिवार्य चरण हो।",
+    "question": "What is the Likhit exam?",
+    "answer": "The Likhit exam is a computer-based written test that assesses your knowledge of traffic rules, road signs, vehicle mechanics, and general road safety. It is a mandatory step to obtain a driving license in Nepal.",
   },
   {
     "id": "q2",
-    "question": "यो प्लेटफर्ममा कुन सवारी साधनका श्रेणीहरू समेटिएका छन्?",
-    "answer": "हामीले श्रेणी A (मोटरसाइकल), श्रेणी B (कार, जीप, भ्यान - चाँडै आउँदैछ), र श्रेणी K (स्कुटर) का लागि अभ्यास प्रश्नहरू र सामग्रीहरू प्रदान गर्दछौं।",
+    "question": "Which vehicle categories are covered on this platform?",
+    "answer": "We provide practice questions and materials for Category A (Motorcycle), Category B (Car, Jeep, Van - coming soon), and Category K (Scooter).",
   },
   {
     "id": "q3",
-    "question": "वास्तविक परीक्षाहरू कसरी काम गर्छन्?",
-    "answer": "हाम्रो वास्तविक परीक्षाहरूले आधिकारिक परीक्षा वातावरणको नक्कल गर्दछन्। यी समयबद्ध हुन्छन् (२५ मिनेट) र २५ प्रश्नहरू समावेश गर्दछन्। तपाईंले तत्काल नतिजा पाउनुहुन्छ र आफ्नो प्रगति ट्र्याक गर्न सक्नुहुन्छ।",
+    "question": "How do the real exam simulations work?",
+    "answer": "Our real exam simulations mimic the official test environment. They are timed (25 minutes) and include 25 questions. You receive instant results and can track your progress.",
   },
   {
     "id": "q4",
-    "question": "प्रश्न बैंक कति पटक अद्यावधिक गरिन्छ?",
-    "answer": "हामी हाम्रो प्रश्न बैंक र ट्राफिक संकेत जानकारी यातायात व्यवस्था विभाग (DoTM) को नवीनतम नियमहरू अनुसार सकेसम्म अद्यावधिक राख्ने प्रयास गर्दछौं।",
+    "question": "How often is the question bank updated?",
+    "answer": "We strive to keep our question bank and traffic sign information as up-to-date as possible according to the latest regulations from the Department of Transport Management (DoTM).",
   },
   {
     "id": "q5",
-    "question": "के म यो प्लेटफर्म अफलाइन पहुँच गर्न सक्छु?",
-    "answer": "अफलाइन पहुँच हाम्रो मोबाइल अनुप्रयोग मार्फत उपलब्ध छ। तपाईंले इन्टरनेट जडान नभएको बेला पनि अध्ययन गर्न अनुप्रयोग डाउनलोड गर्न सक्नुहुन्छ।",
+    "question": "Can I access this platform offline?",
+    "answer": "Offline access is available through our mobile application. You can download the app to study even when you don't have an internet connection.",
   },
    {
     "id": "q6",
-    "question": "लिखित परीक्षाको लागि उत्तीर्ण अंक कति हो?",
-    "answer": "लिखित परीक्षाको लागि उत्तीर्ण अंक फरक हुन सक्छ र यो यातायात व्यवस्था विभाग द्वारा निर्धारण गरिन्छ। सामान्यतया, उत्तीर्ण हुनका लागि तपाईंले लगभग ७०% अंक प्राप्त गर्नुपर्छ, तर नवीनतम आधिकारिक दिशानिर्देशहरू जाँच गर्नु उत्तम हुन्छ। हाम्रा परीक्षाहरू तपाईंलाई उच्च अंकको लागि लक्ष्य राख्न मद्दत गर्न डिजाइन गरिएका छन्।",
+    "question": "What is the passing score for the Likhit exam?",
+    "answer": "The passing score for the Likhit exam can vary and is determined by the Department of Transport Management. Generally, you need to score around 70% to pass, but it's best to check the latest official guidelines. Our tests are designed to help you aim for a high score.",
   },
 ];
 
@@ -51,10 +51,10 @@ export default function FAQPage() {
       <header className="mb-10 text-center">
          <HelpCircle className="mx-auto h-12 w-12 text-primary mb-4" />
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-          बारम्बार सोधिने प्रश्नहरू
+          Frequently Asked Questions
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          नेपाल ड्राइभिङ लाइसेन्स प्रक्रिया र हाम्रो प्लेटफर्म बारे सामान्य प्रश्नहरूको उत्तर खोज्नुहोस्।
+          Find answers to common questions about the Nepal driving license process and our platform.
         </p>
       </header>
 
@@ -75,12 +75,13 @@ export default function FAQPage() {
 
       <div className="mt-12 text-center">
         <p className="text-lg text-muted-foreground">
-          तपाईंले खोज्नु भएको उत्तर फेला पार्न सक्नुभएन?
+          Can't find the answer you're looking for?
         </p>
         <Button asChild className="mt-4">
-          <Link href="/contact">सम्पर्क गर्नुहोस्</Link>
+          <Link href="/contact">Contact Us</Link>
         </Button>
       </div>
     </div>
   );
 }
+```
