@@ -3,11 +3,10 @@
 
 import { useState, useMemo } from 'react';
 import type { TrafficSign } from '@/lib/types'; 
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Image from 'next/image';
-import { Search, Tag, TrafficCone as TrafficConeIconLucide } from 'lucide-react';
+import { Tag, TrafficCone as TrafficConeIconLucide } from 'lucide-react';
 import GoogleAd from '@/components/ads/GoogleAd';
 
 interface TrafficSignsClientProps {
@@ -18,7 +17,6 @@ type SignCategoryFilter = string;
 
 
 export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
-  const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<SignCategoryFilter>('All');
 
   const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
@@ -37,18 +35,11 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
 
   const filteredSigns = useMemo(() => {
     return allSigns.filter(sign => {
-      const name = sign.name || ''; 
-      const description = sign.description || ''; 
       const category = sign.category; // Can be undefined
-
-      const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            description.toLowerCase().includes(searchTerm.toLowerCase());
-      
       const matchesCategory = categoryFilter === 'All' || (category && category === categoryFilter);
-      
-      return matchesSearch && matchesCategory;
+      return matchesCategory;
     });
-  }, [allSigns, searchTerm, categoryFilter]);
+  }, [allSigns, categoryFilter]);
 
   const renderAds = (position: 'bottom') => {
     if (!adClient || !adSlotBottom) return null;
@@ -74,17 +65,7 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
       <h1 className="text-3xl font-bold mb-2 text-center">Traffic Signs</h1>
       <p className="text-muted-foreground text-center mb-8">Learn and understand the various traffic signs in Nepal.</p>
 
-      <div className="mb-8 flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-grow">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search signs by name or description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 w-full"
-          />
-        </div>
+      <div className="mb-8 flex flex-col sm:flex-row gap-4 justify-end">
         {uniqueCategories.length > 1 && ( // Only show filter if there are actual categories beyond "All"
             <Select value={categoryFilter} onValueChange={(value: SignCategoryFilter) => setCategoryFilter(value)}>
             <SelectTrigger className="w-full sm:w-[280px]">
@@ -141,10 +122,11 @@ export function TrafficSignsClient({ allSigns }: TrafficSignsClientProps) {
         <div className="text-center py-12">
           <TrafficConeIconLucide className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
           <p className="text-xl font-semibold">No Traffic Signs Found</p>
-          <p className="text-muted-foreground">Try adjusting your search or filter criteria.</p>
+          <p className="text-muted-foreground">Try adjusting your filter criteria.</p>
         </div>
       )}
       {renderAds('bottom')}
     </div>
   );
 }
+
