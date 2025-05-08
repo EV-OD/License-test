@@ -10,67 +10,68 @@ import type { ExamCategoryType } from '@/lib/types';
 const pageUrl = `${SITE_URL}/real-exam`;
 
 export const metadata: Metadata = {
-  title: `वास्तविक परीक्षा श्रेणी चयन गर्नुहोस् | ${SITE_NAME}`,
-  description: `${SITE_NAME} मा यथार्थपरक लिखित परीक्षा सिमुलेशन सुरु गर्न आफ्नो ड्राइभिङ लाइसेन्स श्रेणी (A, B, K, Traffic, वा Mixed) छान्नुहोस्।`,
-  keywords: ['नेपाल ड्राइभिङ लाइसेन्स वास्तविक परीक्षा', 'लिखित परीक्षा श्रेणी चयन', 'नेपाल ड्राइभिङ टेस्ट', 'वास्तविक परीक्षा सिमुलेशन श्रेणी', `${SITE_NAME} परीक्षा प्रकार`],
+  title: `Select Real Exam Category | ${SITE_NAME}`,
+  description: `Choose your driving license category (A, B, K, Traffic, or Mixed) to start a realistic Likhit exam simulation on ${SITE_NAME}.`,
+  keywords: ['Nepal driving license real exam', 'Likhit exam category selection', 'Nepal driving test', 'real exam simulation category', `${SITE_NAME} exam types`],
   alternates: {
     canonical: pageUrl,
   },
   openGraph: {
-    title: `वास्तविक परीक्षा श्रेणी चयन गर्नुहोस् | ${SITE_NAME}`,
-    description: `यथार्थपरक लिखित परीक्षा सिमुलेशन सुरु गर्न आफ्नो ड्राइभिङ लाइसेन्स श्रेणी छान्नुहोस्।`,
+    title: `Select Real Exam Category | ${SITE_NAME}`,
+    description: `Choose your driving license category to start a realistic Likhit exam simulation.`,
     url: pageUrl,
     siteName: SITE_NAME,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: `वास्तविक परीक्षा श्रेणी चयन गर्नुहोस् | ${SITE_NAME}`,
-    description: `वास्तविक लिखित परीक्षा अनुभवको लागि आफ्नो ड्राइभिङ लाइसेन्स श्रेणी छान्नुहोस्।`,
+    title: `Select Real Exam Category | ${SITE_NAME}`,
+    description: `Choose your driving license category for a realistic Likhit exam experience.`,
   },
 };
 
 interface ExamCategoryDetail {
   type: ExamCategoryType;
-  name: string;
-  description: string;
+  name: string; // English name
+  description: string; // English description
   icon: React.ElementType;
   href: string;
 }
 
+// Updated to English for UI consistency
 const EXAM_CATEGORIES_CONFIG: ExamCategoryDetail[] = [
   {
     type: 'A',
-    name: 'श्रेणी A (मोटरसाइकल)',
-    description: 'तपाईंको मोटरसाइकल लाइसेन्स परीक्षाको लागि अभ्यास गर्नुहोस्।',
+    name: 'Category A (Motorcycle)',
+    description: 'Practice for your motorcycle license exam.',
     icon: MotorcycleIcon,
     href: '/real-exam/A'
   },
   {
     type: 'B',
-    name: 'श्रेणी B (कार/जीप/भ्यान)',
-    description: 'कार, जीप, वा भ्यान लाइसेन्स परीक्षाको लागि तयारी गर्नुहोस्। (चाँडै आउँदैछ)',
+    name: 'Category B (Car/Jeep/Van)',
+    description: 'Prepare for car, jeep, or van license exam. (Coming Soon)',
     icon: Car,
     href: '/real-exam/B'
   },
   {
     type: 'K',
-    name: 'श्रेणी K (स्कुटर)',
-    description: 'तपाईंको स्कुटर लाइसेन्स परीक्षाको लागि तयार हुनुहोस्।',
+    name: 'Category K (Scooter)',
+    description: 'Get ready for your scooter license exam.',
     icon: ScooterIcon,
     href: '/real-exam/K'
   },
   {
-    type: 'Traffic', // Added Traffic category
-    name: 'ट्राफिक संकेत',
-    description: 'ट्राफिक संकेत सम्बन्धित प्रश्नहरूको अभ्यास गर्नुहोस्।',
+    type: 'Traffic',
+    name: 'Traffic Signs',
+    description: 'Practice questions related to traffic signs.',
     icon: TrafficCone,
     href: '/real-exam/Traffic'
   },
   {
     type: 'Mixed',
-    name: 'मिश्रित परीक्षा (सबै श्रेणीहरू)',
-    description: 'सबै सवारी साधनका श्रेणीहरू समावेश गर्ने विस्तृत परीक्षा।',
+    name: 'Mixed Exam (All Categories)',
+    description: 'A comprehensive exam covering all vehicle categories.',
     icon: Layers,
     href: '/real-exam/Mixed'
   }
@@ -83,10 +84,10 @@ export default function SelectRealExamCategoryPage() {
       <header className="mb-10 text-center">
         <ClipboardCheck className="mx-auto h-12 w-12 text-primary mb-4" />
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-          आफ्नो वास्तविक परीक्षा श्रेणी छान्नुहोस्
+          Choose Your Real Exam Category
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          तपाईंले वास्तविक परीक्षा सिमुलेशन लिन चाहनुभएको सवारी साधनको श्रेणी चयन गर्नुहोस्। प्रत्येक परीक्षामा २५ प्रश्न र २५ मिनेटको समय सीमा हुन्छ।
+          Select the vehicle category for which you want to take the real exam simulation. Each exam consists of 25 questions with a 25-minute time limit.
         </p>
       </header>
 
@@ -105,7 +106,7 @@ export default function SelectRealExamCategoryPage() {
             <CardFooter>
               <Button asChild className="w-full">
                 <Link href={category.href}>
-                  {category.type === 'Mixed' ? 'मिश्रित' : (category.type === 'Traffic' ? 'ट्राफिक संकेत' : `श्रेणी ${category.type}`)} को लागि परीक्षा सुरु गर्नुहोस्
+                  Start Exam for {category.type === 'Mixed' ? 'Mixed' : (category.type === 'Traffic' ? 'Traffic Signs' : `Category ${category.type}`)}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

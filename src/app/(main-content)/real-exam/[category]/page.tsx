@@ -15,14 +15,15 @@ interface RealExamPageProps {
   params: { category: ExamCategoryType };
 }
 
+// Returns English display names for categories
 function getCategoryDisplayName(category: ExamCategoryType): string {
   switch (category) {
-    case 'A': return 'श्रेणी A (मोटरसाइकल)';
-    case 'B': return 'श्रेणी B (कार/जीप/भ्यान)';
-    case 'K': return 'श्रेणी K (स्कुटर)';
-    case 'Traffic': return 'ट्राफिक संकेत';
-    case 'Mixed': return 'मिश्रित';
-    default: return 'परीक्षा';
+    case 'A': return 'Category A (Motorcycle)';
+    case 'B': return 'Category B (Car/Jeep/Van)';
+    case 'K': return 'Category K (Scooter)';
+    case 'Traffic': return 'Traffic Signs';
+    case 'Mixed': return 'Mixed Exam';
+    default: return 'Exam';
   }
 }
 
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: RealExamPageProps): Promise<M
 
   if (!VALID_CATEGORIES.includes(category)) {
     return {
-      title: `परीक्षा श्रेणी फेला परेन | ${SITE_NAME}`,
+      title: `Exam Category Not Found | ${SITE_NAME}`,
     }
   }
 
@@ -45,23 +46,23 @@ export async function generateMetadata({ params }: RealExamPageProps): Promise<M
   const pageUrl = `${SITE_URL}/real-exam/${category}`;
 
   return {
-    title: `वास्तविक परीक्षा सिमुलेशन - ${categoryDisplayName} | ${SITE_NAME}`,
-    description: `${SITE_NAME} मा ${categoryDisplayName} को लागि समयबद्ध वास्तविक परीक्षा सिमुलेशन लिनुहोस्। आधिकारिक नेपाल ड्राइभिङ लाइसेन्स लिखित परीक्षाको अवस्था अन्तर्गत आफ्नो ज्ञान परीक्षण गर्नुहोस्। २५ प्रश्न, २५ मिनेट।`,
-    keywords: [`नेपाल ड्राइभिङ लाइसेन्स वास्तविक परीक्षा ${category}`, `लिखित परीक्षा ${category}`, `नेपाल ड्राइभिङ टेस्ट ${category}`, `वास्तविक परीक्षा सिमुलेशन ${SITE_NAME}`, `अभ्यास परीक्षा ${category}`],
+    title: `Real Exam Simulation - ${categoryDisplayName} | ${SITE_NAME}`,
+    description: `Take a timed real exam simulation for ${categoryDisplayName} on ${SITE_NAME}. Test your knowledge under official Nepal driving license Likhit exam conditions. 25 questions, 25 minutes.`,
+    keywords: [`Nepal driving license real exam ${category}`, `Likhit exam ${category}`, `Nepal driving test ${category}`, `real exam simulation ${SITE_NAME}`, `practice test ${category}`],
     alternates: {
       canonical: pageUrl,
     },
     openGraph: {
-      title: `वास्तविक परीक्षा - ${categoryDisplayName} | ${SITE_NAME}`,
-      description: `${categoryDisplayName} को लागि आधिकारिक लिखित परीक्षाको अवस्था अनुभव गर्नुहोस्।`,
+      title: `Real Exam - ${categoryDisplayName} | ${SITE_NAME}`,
+      description: `Experience the official Likhit exam conditions for ${categoryDisplayName}.`,
       url: pageUrl,
       siteName: SITE_NAME,
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `वास्तविक परीक्षा - ${categoryDisplayName} | ${SITE_NAME}`,
-      description: `${categoryDisplayName} लिखित परीक्षाको लागि आफ्नो तयारी परीक्षण गर्नुहोस्।`,
+      title: `Real Exam - ${categoryDisplayName} | ${SITE_NAME}`,
+      description: `Test your preparation for the ${categoryDisplayName} Likhit exam.`,
     },
   };
 }
@@ -75,10 +76,9 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
 
   let rawQuestions: any[] = [];
 
-  // Populate rawQuestions based on the category
-  if (category === 'A' || category === 'K' || category === 'B') { // Category B questions will be filtered from akQuestionsData
-    const categoryQuestions = (akQuestionsData.questions || []).filter(q => q.category === category);
-    rawQuestions.push(...categoryQuestions);
+  if (category === 'A' || category === 'K' || category === 'B') { 
+    const categorySpecificQuestions = (akQuestionsData.questions || []).filter(q => q.category === category);
+    rawQuestions.push(...categorySpecificQuestions);
   } else if (category === 'Traffic') {
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   } else if (category === 'Mixed') {
@@ -106,10 +106,10 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
         <header className="mb-10 text-center">
             <ClipboardCheck className="mx-auto h-12 w-12 text-primary mb-4" />
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-                वास्तविक परीक्षा: {categoryDisplayName}
+                Real Exam: {categoryDisplayName}
             </h1>
             <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-                आधिकारिक परीक्षा शर्तहरू अन्तर्गत आफ्नो ज्ञान परीक्षण गर्नुहोस्। २५ प्रश्न, २५ मिनेट।
+                Test your knowledge under official exam conditions. 25 questions, 25 minutes.
             </p>
         </header>
         <RealExamClient

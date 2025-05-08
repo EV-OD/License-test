@@ -6,7 +6,7 @@ export const SITE_NAME = "Nepal License Prep";
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:9002';
 export const SITE_LOGO_URL = `${SITE_URL}${process.env.NEXT_PUBLIC_SITE_LOGO_URL || '/icon-512.png'}`;
-export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`; // Ensure this image exists
+export const DEFAULT_OG_IMAGE_URL = `${SITE_URL}/images/og-default.png`; 
 
 // Navigation Links in English
 export const NAV_LINKS: NavItem[] = [
@@ -112,12 +112,11 @@ export const CONTACT_DETAILS = {
   phone: "N/A"
 };
 
-// Real Exam Categories - Monolingual Nepali
+// Real Exam Categories - Updated to English for UI
 export const REAL_EXAM_CATEGORIES = [
-  { id: 'A', name: 'श्रेणी A (मोटरसाइकल)', icon: MotorcycleIcon, description: 'मोटरसाइकल लाइसेन्सको लागि अभ्यास गर्नुहोस्।' },
-  { id: 'B', name: 'श्रेणी B (कार/जीप/भ्यान)', icon: Car, description: 'कार, जीप, वा भ्यान लाइसेन्सको लागि अभ्यास गर्नुहोस्। (चाँडै आउँदैछ)' },
-  { id: 'K', name: 'श्रेणी K (स्कुटर)', icon: ScooterIcon, description: 'स्कुटर लाइसेन्सको लागि अभ्यास गर्नुहोस्।' },
-  { id: 'Traffic', name: 'ट्राफिक संकेत', icon: TrafficCone, description: 'ट्राफिक संकेत प्रश्नहरूको अभ्यास गर्नुहोस्।' },
-  { id: 'Mixed', name: 'मिश्रित परीक्षा', icon: Layers, description: 'सबै श्रेणीका प्रश्नहरू सहितको विस्तृत परीक्षा।' },
+  { id: 'A', name: 'Category A (Motorcycle)', icon: MotorcycleIcon, description: 'Practice for motorcycle license.' },
+  { id: 'B', name: 'Category B (Car/Jeep/Van)', icon: Car, description: 'Practice for car, jeep, or van license. (Coming Soon)' },
+  { id: 'K', name: 'Category K (Scooter)', icon: ScooterIcon, description: 'Practice for scooter license.' },
+  { id: 'Traffic', name: 'Traffic Signs', icon: TrafficCone, description: 'Practice traffic sign questions.' },
+  { id: 'Mixed', name: 'Mixed Exam', icon: Layers, description: 'Comprehensive exam with questions from all categories.' },
 ];
-

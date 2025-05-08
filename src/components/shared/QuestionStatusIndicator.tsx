@@ -4,12 +4,12 @@
 import type React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import type { Question } from '@/lib/types'; // Updated type
+import type { Question } from '@/lib/types'; 
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface QuestionStatusIndicatorProps {
   questions: Question[];
-  userAnswers: (number | null)[]; // Index of the selected answer
+  userAnswers: (number | null)[]; 
   currentQuestionIndex: number;
   onQuestionSelect: (index: number) => void;
   className?: string;
@@ -42,7 +42,7 @@ export const QuestionStatusIndicator: React.FC<QuestionStatusIndicatorProps> = (
   return (
     <div className={containerClasses}>
       <h3 className="text-sm font-semibold mb-2 text-center text-card-foreground">
-        प्रश्नहरू
+        Questions
       </h3>
       <ScrollArea className={cn("overflow-y-auto", scrollAreaMaxHeight)}>
         <div className={cn("grid gap-1.5 p-1", gridColsClass)}>
@@ -61,7 +61,7 @@ export const QuestionStatusIndicator: React.FC<QuestionStatusIndicatorProps> = (
                   !isCurrent && !isAnswered && "bg-muted text-muted-foreground hover:bg-muted/80 border border-border",
                 )}
                 onClick={() => onQuestionSelect(index)}
-                aria-label={`प्रश्न ${index + 1} मा जानुहोस्`}
+                aria-label={`Go to Question ${index + 1}`}
                 aria-current={isCurrent ? "step" : undefined}
               >
                 {index + 1}

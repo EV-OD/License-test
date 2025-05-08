@@ -18,7 +18,7 @@ const PASS_PERCENTAGE = 0.7; // 70% to pass
 interface RealExamClientProps {
   allQuestions: Question[];
   initialCategory: ExamCategoryType;
-  isCategoryBComingSoon: boolean; // Add this prop
+  isCategoryBComingSoon: boolean; 
 }
 
 export function RealExamClient({ allQuestions, initialCategory, isCategoryBComingSoon }: RealExamClientProps) {
@@ -27,7 +27,7 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
   const [examCategory] = useState<ExamCategoryType>(initialCategory);
   const [examQuestions, setExamQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]); // Stores selected option index
+  const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]); 
   const [timeLeft, setTimeLeft] = useState(REAL_EXAM_TIME_LIMIT_SECONDS);
   const [examStarted, setExamStarted] = useState(false);
   const [examFinished, setExamFinished] = useState(false);
@@ -37,12 +37,11 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
   const [pastResults, setPastResults] = useState<MockExamResult[]>([]);
 
   const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
-  const adSlotSide1 = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_SIDE_1;
+  const adSlotSide1 = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_SIDE_1; // This is now for QuestionStatusIndicator
   const adSlotSide2 = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_SIDE_2;
   const adSlotSide3 = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_SIDE_3;
   const adSlotBottomMobile = process.env.NEXT_PUBLIC_AD_SLOT_REAL_EXAM_BOTTOM_MOBILE;
 
-  // Filter questions based on the fixed category
   const categoryQuestions = useMemo(() => {
     if (examCategory === 'Mixed') return allQuestions;
     return allQuestions.filter(q => q.category === examCategory);
@@ -53,13 +52,20 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
     const storedResults = localStorage.getItem(`realExamResults_${examCategory}`);
     if (storedResults) {
       try {
-        setPastResults(JSON.parse(storedResults));
+        const parsedResults = JSON.parse(storedResults);
+        if (Array.isArray(parsedResults)) {
+          setPastResults(parsedResults);
+        } else {
+          setPastResults([]);
+          localStorage.removeItem(`realExamResults_${examCategory}`);
+        }
       } catch (e) {
         console.error("Failed to parse past results:", e);
-        localStorage.removeItem(`realExamResults_${examCategory}`); // Clear invalid data
+        setPastResults([]);
+        localStorage.removeItem(`realExamResults_${examCategory}`); 
       }
     } else {
-        setPastResults([]); // Ensure it's an empty array if nothing is stored
+        setPastResults([]); 
     }
   }, [examCategory]);
 
@@ -70,15 +76,15 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
     if (currentResults) {
         try {
             existingResults = JSON.parse(currentResults);
-             if (!Array.isArray(existingResults)) { // Basic validation
+             if (!Array.isArray(existingResults)) { 
                existingResults = [];
              }
         } catch (e) {
             console.error("Error parsing existing results:", e);
-            existingResults = []; // Reset if parsing fails
+            existingResults = []; 
         }
     }
-    const updatedResults = [result, ...existingResults].slice(0, 10); // Prepend new result and limit
+    const updatedResults = [result, ...existingResults].slice(0, 10); 
     setPastResults(updatedResults);
     localStorage.setItem(`realExamResults_${examCategory}`, JSON.stringify(updatedResults));
   }, [examCategory]);
@@ -139,24 +145,23 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
 
 
   const startExam = useCallback(() => {
-    // Use the pre-filtered questions for the current category
     const questionsForExam = [...categoryQuestions].sort(() => 0.5 - Math.random()).slice(0, REAL_EXAM_QUESTIONS_COUNT);
 
     if (questionsForExam.length < REAL_EXAM_QUESTIONS_COUNT && questionsForExam.length > 0) {
       toast({
-        title: "चेतावनी",
-        description: `श्रेणी ${examCategory} को लागि पूर्ण वास्तविक परीक्षा सिमुलेशनको लागि पर्याप्त प्रश्नहरू छैनन्। ${questionsForExam.length} प्रश्नहरू प्रयोग गर्दै। लक्ष्य ${REAL_EXAM_QUESTIONS_COUNT} हो।`,
+        title: "Warning",
+        description: `Not enough questions for category ${examCategory} for a full real exam simulation. Using ${questionsForExam.length} questions. Target is ${REAL_EXAM_QUESTIONS_COUNT}.`,
         variant: "default",
       });
     } else if (questionsForExam.length === 0) {
-       if (examCategory !== 'B') { // Only show error if not category B (handled by coming soon)
+       if (examCategory !== 'B' || (examCategory === 'B' && !isCategoryBComingSoon)) { 
            toast({
-             title: "त्रुटि",
-             description: `श्रेणी ${examCategory} को लागि कुनै प्रश्नहरू उपलब्ध छैनन्। परीक्षा सुरु गर्न सकिँदैन।`,
+             title: "Error",
+             description: `No questions available for category ${examCategory}. Cannot start the exam.`,
              variant: "destructive",
            });
         }
-      return; // Don't start exam if no questions or if category B is coming soon
+      return; 
     }
 
     setExamQuestions(questionsForExam);
@@ -167,7 +172,7 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
     setExamFinished(false);
     setExamResult(null);
     setShowResultsDialog(false);
-  }, [categoryQuestions, examCategory, toast]); 
+  }, [categoryQuestions, examCategory, toast, isCategoryBComingSoon]); 
 
   const handleAnswerSelect = (optionIndex: number) => {
     const newAnswers = [...userAnswers];
@@ -216,12 +221,15 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
   if (!examStarted && !examFinished) {
     return (
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start">
-        {adClient && adSlotSide1 && (
-            <aside className="hidden lg:block w-48 space-y-6 shrink-0 sticky top-20">
+        {/* Desktop Left Sidebar Slot: Ad or empty placeholder if no ad for QuestionStatusIndicator */}
+        <aside className="hidden lg:block w-48 space-y-6 shrink-0 sticky top-20">
+            {adClient && adSlotSide1 && ( // This ad slot can be for general purposes on setup screen
                 <GoogleAd adClient={adClient} adSlot={adSlotSide1} adFormat="auto" responsive={true} className="min-h-[250px] w-full"/>
-            </aside>
-        )}
-        {!(adClient && adSlotSide1) && <div className="hidden lg:block w-48 shrink-0"></div> }
+            )}
+            {/* If no ad, this space will be empty or can hold other content if needed */}
+        </aside>
+        {!adClient && <div className="hidden lg:block w-48 shrink-0"></div> } {/* Ensure layout consistency */}
+
 
         <ExamSetupScreen
           fixedCategory={examCategory}
@@ -229,7 +237,7 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
           pastResults={pastResults}
           showPastResultsDialog={showPastResultsDialog}
           setShowPastResultsDialog={setShowPastResultsDialog}
-          isCategoryBComingSoon={isCategoryBComingSoon} // Pass the prop
+          isCategoryBComingSoon={isCategoryBComingSoon} 
         />
         
         <aside className="hidden lg:block w-48 space-y-6 shrink-0 sticky top-20">
@@ -256,13 +264,13 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
     return (
       <div className="w-full">
         <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
-           <div className="lg:block w-48 shrink-0">
+          {/* Desktop Left Sidebar: QuestionStatusIndicator */}
+           <div className="hidden lg:block w-48 shrink-0">
             <QuestionStatusIndicator
               questions={examQuestions}
               userAnswers={userAnswers}
               currentQuestionIndex={currentQuestionIndex}
               onQuestionSelect={handleSelectQuestionFromIndicator}
-              // t function removed as it's monolingual now
               layout="desktop"
               className="sticky top-20" 
             />
@@ -277,9 +285,9 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
             onAnswerSelect={handleAnswerSelect}
             onNavigateQuestion={handleNavigateQuestion}
             onConfirmFinishExam={handleConfirmFinishExam}
-            // t and language props removed
           />
 
+          {/* Desktop Right Sidebar: Ads */}
           <aside className="hidden lg:block w-48 space-y-6 shrink-0">
             {adClient && adSlotSide2 && (
               <GoogleAd
@@ -296,13 +304,14 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
                 adSlot={adSlotSide3}
                 adFormat="auto"
                 responsive={true}
-                className="min-h-[250px] w-full sticky top-[calc(20px+250px+24px)]"
+                className="min-h-[250px] w-full sticky top-[calc(20px+250px+24px)]" // Adjust top position
               />
             )}
-             {!adClient && <div className="min-h-[250px] w-full sticky top-20"/>}
+             {!adClient && <div className="min-h-[250px] w-full sticky top-20"/>} {/* Placeholder if no ads */}
           </aside>
         </div>
 
+        {/* Mobile Bottom: Ad or QuestionStatusIndicator */}
         <div className="lg:hidden mt-8 w-full">
           {adClient && adSlotBottomMobile ? (
             <GoogleAd
@@ -318,7 +327,6 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
               userAnswers={userAnswers}
               currentQuestionIndex={currentQuestionIndex}
               onQuestionSelect={handleSelectQuestionFromIndicator}
-              // t removed
               layout="mobile"
             />
           )}
@@ -330,37 +338,40 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
   if (examFinished && examResult) {
      return (
       <div className="flex flex-col lg:flex-row gap-4 justify-center items-start w-full">
+        {/* Desktop Left Sidebar: QuestionStatusIndicator (optional, could be an ad too) */}
         <div className="hidden lg:block w-48 shrink-0 space-y-6">
-            {adClient && adSlotSide1 ? (
-                <GoogleAd adClient={adClient} adSlot={adSlotSide1} adFormat="auto" responsive={true} className="min-h-[250px] w-full sticky top-20"/>
-            ) : examQuestions.length > 0 ? (
+            {examQuestions.length > 0 ? (
                  <QuestionStatusIndicator
                     questions={examQuestions}
                     userAnswers={userAnswers} 
-                    currentQuestionIndex={-1} 
-                    onQuestionSelect={() => {}}
-                    // t removed
+                    currentQuestionIndex={-1} // Indicates exam is finished
+                    onQuestionSelect={() => {}} // No action on select
                     layout="desktop"
-                    className="sticky top-20 opacity-70" 
+                    className="sticky top-20 opacity-70" // Dimmed appearance
                 />
+            ) : adClient && adSlotSide1 ? ( // Fallback to ad if no questions somehow
+                <GoogleAd adClient={adClient} adSlot={adSlotSide1} adFormat="auto" responsive={true} className="min-h-[250px] w-full sticky top-20"/>
             ) : <div className="w-48 shrink-0" />}
         </div>
+
          <ExamResultsScreen
             examResult={examResult}
             examQuestions={examQuestions}
             passPercentage={PASS_PERCENTAGE}
             onClose={handleCloseResults} 
             onRestartExam={handleRestartExam} 
-            // t and language removed
             showResultsDialog={showResultsDialog}
             setShowResultsDialog={setShowResultsDialog}
         />
+
+        {/* Desktop Right Sidebar: Ads */}
         <aside className="hidden lg:block w-48 space-y-6 shrink-0">
             {adClient && adSlotSide2 && (<GoogleAd adClient={adClient} adSlot={adSlotSide2} adFormat="auto" responsive={true} className="min-h-[250px] w-full sticky top-20"/>)}
             {adClient && adSlotSide3 && (<GoogleAd adClient={adClient} adSlot={adSlotSide3} adFormat="auto" responsive={true} className="min-h-[250px] w-full sticky top-[calc(20px+250px+24px)]"/>)}
             {!adClient && <div className="w-48 shrink-0"/>}
         </aside>
 
+        {/* Mobile Bottom: Ad or QuestionStatusIndicator */}
         <div className="lg:hidden mt-8 w-full">
           {adClient && adSlotBottomMobile ? (
             <GoogleAd adClient={adClient} adSlot={adSlotBottomMobile} adFormat="auto" responsive={true} className="min-h-[100px] w-full"/>
@@ -370,7 +381,6 @@ export function RealExamClient({ allQuestions, initialCategory, isCategoryBComin
                 userAnswers={userAnswers}
                 currentQuestionIndex={-1}
                 onQuestionSelect={() => {}}
-                // t removed
                 layout="mobile"
                 className="opacity-70" 
             />

@@ -3,7 +3,7 @@
 
 import type React from 'react';
 import Image from 'next/image';
-import type { Question } from '@/lib/types'; // Updated type
+import type { Question } from '@/lib/types'; 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -18,7 +18,7 @@ interface ExamInProgressScreenProps {
   currentQuestionIndex: number;
   examQuestionsLength: number;
   timeLeftFormatted: string;
-  userAnswers: (number | null)[]; // Stores selected option index
+  userAnswers: (number | null)[]; 
   onAnswerSelect: (optionIndex: number) => void;
   onNavigateQuestion: (direction: 'next' | 'prev') => void;
   onConfirmFinishExam: () => void;
@@ -50,7 +50,6 @@ export function ExamInProgressScreen({
         />
         <Label htmlFor={optionId} className="flex-1 cursor-pointer text-base">
           <p>{optionText}</p>
-          {/* Assuming options don't have images in this format */}
         </Label>
       </div>
     );
@@ -61,7 +60,7 @@ export function ExamInProgressScreen({
       <Card className="w-full shadow-xl rounded-xl">
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle>प्रश्न {currentQuestionIndex + 1} / {examQuestionsLength}</CardTitle>
+            <CardTitle>Question {currentQuestionIndex + 1} / {examQuestionsLength}</CardTitle>
             <div className="flex items-center text-lg font-semibold text-destructive">
               <Timer className="mr-2 h-5 w-5" /> {timeLeftFormatted}
             </div>
@@ -74,7 +73,7 @@ export function ExamInProgressScreen({
             <div className="mt-4 flex justify-center">
               <Image
                 src={currentQuestion.imageUrl}
-                alt="प्रश्न सम्बन्धित छवि"
+                alt="Question related image"
                 width={300}
                 height={150}
                 className="rounded-md object-contain border"
@@ -100,27 +99,27 @@ export function ExamInProgressScreen({
             disabled={currentQuestionIndex === 0}
             className="rounded-lg"
           >
-            <ChevronLeft className="mr-2 h-4 w-4" /> अघिल्लो
+            <ChevronLeft className="mr-2 h-4 w-4" /> Previous
           </Button>
           {currentQuestionIndex < examQuestionsLength - 1 ? (
             <Button onClick={() => onNavigateQuestion('next')} className="rounded-lg">
-              अर्को <ChevronRight className="ml-2 h-4 w-4" />
+              Next <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" className="rounded-lg">परीक्षा समाप्त गर्नुहोस्</Button>
+                <Button variant="destructive" className="rounded-lg">Finish Exam</Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="rounded-xl">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>समाप्त गर्न निश्चित गर्नुहोस्</AlertDialogTitle>
+                  <AlertDialogTitle>Confirm Finish</AlertDialogTitle>
                   <AlertDialogDescription>
-                    के तपाईं परीक्षा समाप्त गर्न निश्चित हुनुहुन्छ? अनुत्तरित प्रश्नहरू गलत चिन्ह लगाइनेछन्।
+                    Are you sure you want to finish the exam? Unanswered questions will be marked incorrect.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="rounded-md">रद्द गर्नुहोस्</AlertDialogCancel>
-                  <AlertDialogAction onClick={onConfirmFinishExam} className="rounded-md">समाप्त गर्नुहोस्</AlertDialogAction>
+                  <AlertDialogCancel className="rounded-md">Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={onConfirmFinishExam} className="rounded-md">Finish</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

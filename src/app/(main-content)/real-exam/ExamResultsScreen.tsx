@@ -3,7 +3,7 @@
 
 import type React from 'react';
 import Image from 'next/image';
-import type { MockExamResult, Question, ExamCategoryType } from '@/lib/types'; // Updated types
+import type { MockExamResult, Question, ExamCategoryType } from '@/lib/types'; 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -42,14 +42,14 @@ export function ExamResultsScreen({
     onRestartExam();
   };
 
-  // Helper to get category display name (monolingual)
+  // Helper to get category display name (English)
   function getCategoryDisplayName(category: ExamCategoryType): string {
     switch (category) {
-      case 'A': return 'श्रेणी A (मोटरसाइकल)';
-      case 'B': return 'श्रेणी B (कार/जीप/भ्यान)';
-      case 'K': return 'श्रेणी K (स्कुटर)';
-      case 'Traffic': return 'ट्राफिक संकेत';
-      case 'Mixed': return 'मिश्रित (सबै श्रेणीहरू)';
+      case 'A': return 'Category A (Motorcycle)';
+      case 'B': return 'Category B (Car/Jeep/Van)';
+      case 'K': return 'Category K (Scooter)';
+      case 'Traffic': return 'Traffic Signs';
+      case 'Mixed': return 'Mixed Exam (All Categories)';
       default: return category;
     }
   }
@@ -64,20 +64,20 @@ export function ExamResultsScreen({
     }}>
       <AlertDialogContent className="max-h-[90vh] max-w-lg w-full overflow-y-auto rounded-xl">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-2xl text-center">वास्तविक परीक्षाको नतिजा</AlertDialogTitle>
+          <AlertDialogTitle className="text-2xl text-center">Real Exam Results</AlertDialogTitle>
         </AlertDialogHeader>
         <div className="my-6 space-y-4 text-center">
           <p className="text-3xl font-bold">
-            तपाईंको स्कोर: <span className={`${passed ? 'text-accent' : 'text-destructive'}`}>{examResult.score} / {examResult.totalQuestions}</span>
+            Your Score: <span className={`${passed ? 'text-accent' : 'text-destructive'}`}>{examResult.score} / {examResult.totalQuestions}</span>
           </p>
           {examResult.totalQuestions > 0 && <Progress value={(examResult.score / examResult.totalQuestions) * 100} className="w-full h-3 rounded-full" />}
           <p className={`text-xl font-semibold ${passed ? 'text-accent' : 'text-destructive'}`}>
-            {passed ? 'बधाई छ! तपाईं उत्तीर्ण हुनुभयो!' : 'दुर्भाग्यवश, तपाईं उत्तीर्ण हुनुभएन। अभ्यास जारी राख्नुहोस्!'}
+            {passed ? 'Congratulations! You passed!' : 'Unfortunately, you did not pass. Keep practicing!'}
           </p>
-          <p className="text-sm text-muted-foreground">(उत्तीर्ण अंक {passPercentage * 100}%)</p>
+          <p className="text-sm text-muted-foreground">(Pass mark {passPercentage * 100}%)</p>
 
           <details className="mt-6 text-left">
-            <summary className="cursor-pointer font-medium text-primary hover:underline text-center">उत्तर विवरण हेर्नुहोस्</summary>
+            <summary className="cursor-pointer font-medium text-primary hover:underline text-center">View Answer Details</summary>
             <div className="mt-4 space-y-3 max-h-72 overflow-y-auto border p-4 rounded-md bg-muted/30">
               {examQuestions.map((q, idx) => {
                 const ans = examResult.answers.find(a => a.questionId === q.id);
@@ -87,16 +87,15 @@ export function ExamResultsScreen({
 
                 return (
                   <Card key={idx} className={`p-3 rounded-md ${ans.isCorrect ? 'border-accent bg-accent/5' : 'border-destructive bg-destructive/5'}`}>
-                    <p className="font-semibold text-sm mb-1">{idx + 1}. {q.qn || `प्रश्न ${q.n}`}</p>
+                    <p className="font-semibold text-sm mb-1">{idx + 1}. {q.qn || `Question ${q.n}`}</p> {/* q.qn is Nepali */}
                      {q.imageUrl && (
-                      <Image src={q.imageUrl} alt={`प्रश्न ${q.n} को छवि`} width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
+                      <Image src={q.imageUrl} alt={`Image for question ${q.n}`} width={150} height={75} className="my-1 rounded-sm border" data-ai-hint="question illustration" />
                     )}
                     <p className={`text-xs ${ans.isCorrect ? 'text-accent-foreground' : 'text-destructive-foreground'}`}>
-                      <span className="font-medium">तपाईंको उत्तर:</span> {selectedOptionText !== null ? selectedOptionText : 'उत्तर दिइएको छैन'}
+                      <span className="font-medium">Your Answer:</span> {selectedOptionText !== null ? selectedOptionText : 'Not Answered'} {/* selectedOptionText is Nepali */}
                       {ans.isCorrect ? <CheckCircle className="inline ml-1 h-3 w-3 text-accent" /> : <XCircle className="inline ml-1 h-3 w-3 text-destructive" />}
                     </p>
-                    {!ans.isCorrect && selectedOptionText !== null && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">सही उत्तर:</span> {correctOptionText}</p>}
-                    {/* Explanations removed */}
+                    {!ans.isCorrect && selectedOptionText !== null && <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">Correct Answer:</span> {correctOptionText}</p>} {/* correctOptionText is Nepali */}
                   </Card>
                 );
               })}
@@ -105,14 +104,13 @@ export function ExamResultsScreen({
         </div>
         <AlertDialogFooter className="flex-col sm:flex-row gap-2 pt-4">
           <AlertDialogCancel asChild>
-             {/* Changed button to link to the main /real-exam page */}
              <Button variant="outline" className="w-full sm:w-auto rounded-md" asChild>
-                <Link href="/real-exam" onClick={handleCloseAndReset}>अर्को श्रेणी प्रयास गर्नुहोस्</Link>
+                <Link href="/real-exam" onClick={handleCloseAndReset}>Try Another Category</Link>
              </Button>
           </AlertDialogCancel>
            <Button asChild className="w-full sm:w-auto rounded-md">
             <Link href={`/real-exam/${examResult.category}`} onClick={handleRestartAndClose}>
-                <RotateCcw className="mr-2 h-4 w-4" /> यो परीक्षा फेरि दिनुहोस्
+                <RotateCcw className="mr-2 h-4 w-4" /> Retake This Exam
             </Link>
           </Button>
         </AlertDialogFooter>
