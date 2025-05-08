@@ -45,11 +45,8 @@ export function ExamSetupScreen({
   return (
     <div className="flex-grow max-w-lg w-full">
       <Card className="w-full shadow-xl rounded-xl">
-        <CardHeader>
-          <CardTitle className="text-2xl">Real Exam Setup</CardTitle>
-          <CardDescription>Prepare for an authentic Likhit exam experience for: <span className="font-semibold text-primary">{categoryDisplayName}</span>.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        
+        <CardContent className="space-y-6 pt-6">
           <div className="p-4 border rounded-md bg-muted/30">
             <div className="flex items-center mb-2">
               <Tag className="h-5 w-5 mr-2 text-primary" />
@@ -111,3 +108,4 @@ export function ExamSetupScreen({
     </div>
   );
 }
+
