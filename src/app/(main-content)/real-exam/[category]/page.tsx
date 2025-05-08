@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation';
 import akQuestionsData from '@/data/ak.json';
 import trafficQuestionsData from '@/data/trafficqn.json';
 
-const VALID_CATEGORIES: ExamCategoryType[] = ['A', 'B', 'Mixed', 'Traffic']; // K removed
+const VALID_CATEGORIES: ExamCategoryType[] = ['A', 'B', 'Mixed', 'Traffic']; 
 
 interface RealExamPageProps {
   params: { category: ExamCategoryType };
@@ -17,7 +17,7 @@ interface RealExamPageProps {
 
 function getCategoryDisplayName(category: ExamCategoryType): string {
   switch (category) {
-    case 'A': return 'Category A (Bike/Scooter)'; // Updated
+    case 'A': return 'Category A (Bike/Scooter)';
     case 'B': return 'Category B (Car/Jeep/Van)';
     case 'Traffic': return 'Traffic Signs';
     case 'Mixed': return 'Mixed Exam';
@@ -84,24 +84,36 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
 
   let rawQuestions: any[] = [];
 
-  // Category 'A' now handles both Bike and Scooter questions from ak.json
-  if (category === 'A' || category === 'B') { 
-    const categorySpecificQuestions = (akQuestionsData.questions || []).filter(q => q.category === category);
-    rawQuestions.push(...categorySpecificQuestions);
+  if (category === 'A' || category === 'B') {
+    // Load textual questions for this specific category
+    const textualCategoryQuestions = (akQuestionsData.questions || []).filter(q => q.category === category);
+    rawQuestions.push(...textualCategoryQuestions);
+    // Also load all traffic questions for potential mixing by the client
+    rawQuestions.push(...(trafficQuestionsData.questions || []));
   } else if (category === 'Traffic') {
+    // Only traffic questions
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   } else if (category === 'Mixed') {
-    // For mixed, include all questions from ak.json (which now contains A and B)
+    // All textual (A and B) and all traffic questions
     rawQuestions.push(...(akQuestionsData.questions || [])); 
     rawQuestions.push(...(trafficQuestionsData.questions || []));
   }
   
-  const allQuestions: AppQuestionType[] = rawQuestions
+  // Deduplicate questions by 'n' (id) just in case of overlap, though data sources should be distinct
+  const uniqueQuestionsMap = new Map<string, any>();
+  rawQuestions.forEach(q => {
+    if (q && q.n && !uniqueQuestionsMap.has(q.n)) {
+      uniqueQuestionsMap.set(q.n, q);
+    }
+  });
+  
+  const allQuestions: AppQuestionType[] = Array.from(uniqueQuestionsMap.values())
     .filter(q => q && q.n && q.category && Array.isArray(q.a4) && q.a4.length > 0 && typeof q.an === 'string')
     .map((q: any) => ({
       id: q.n, 
       n: q.n,
-      category: q.category as 'A' | 'B' | 'Traffic', // Cast to narrower type
+      // Ensure the category here is the *source* category of the question (A, B, or Traffic)
+      category: q.category as 'A' | 'B' | 'Traffic', 
       qn: q.qn,
       imageUrl: q.imageUrl,
       a4: q.a4 as string[], 
@@ -119,14 +131,19 @@ export default async function RealExamCategoryPage({ params }: RealExamPageProps
                 Real Exam: {categoryDisplayName}
             </h1>
             <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-                Test your knowledge under official exam conditions. 25 questions, 25 minutes.
+                Test your knowledge under official exam conditions. {REAL_EXAM_QUESTIONS_COUNT} questions, {REAL_EXAM_TIME_LIMIT_SECONDS / 60} minutes.
             </p>
         </header>
         <RealExamClient
-            allQuestions={allQuestions}
+            allQuestions={allQuestions} // This now contains the necessary superset
             initialCategory={category}
             isCategoryBComingSoon={isCategoryBComingSoon}
         />
     </div>
   );
 }
+
+// Constants for exam parameters, also used in RealExamClient
+const REAL_EXAM_QUESTIONS_COUNT = 25;
+const REAL_EXAM_TIME_LIMIT_SECONDS = 25 * 60;
+
