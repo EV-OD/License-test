@@ -200,7 +200,12 @@ export default function HomePage() {
             <Button asChild size="lg" variant="secondary" className="text-lg px-8 py-6">
               <Link href="/contact">Contact Us</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-lg px-8 py-6 border-primary-foreground/50 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <Button 
+              asChild 
+              size="lg" 
+              variant="outline" 
+              className="text-lg px-8 py-6 bg-transparent text-primary-foreground border-primary-foreground/50 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+            >
               <Link href="/faq">Visit Help Center</Link>
             </Button>
           </div>
@@ -249,3 +254,4 @@ export default function HomePage() {
     </>
   );
 }
+
