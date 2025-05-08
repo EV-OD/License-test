@@ -11,8 +11,8 @@ const pageUrl = `${SITE_URL}/real-exam`;
 
 export const metadata: Metadata = {
   title: `Select Real Exam Category | ${SITE_NAME}`,
-  description: `Choose your driving license category (A, B, Traffic, or Mixed) to start a realistic Likhit exam simulation on ${SITE_NAME}.`,
-  keywords: ['Nepal driving license real exam', 'Likhit exam category selection', 'Nepal driving test', 'real exam simulation category', `${SITE_NAME} exam types`, 'bike scooter license'],
+  description: `Choose your driving license category (A or B) to start a realistic Likhit exam simulation on ${SITE_NAME}.`,
+  keywords: ['Nepal driving license real exam', 'Likhit exam category selection', 'Nepal driving test', 'real exam simulation category', `${SITE_NAME} exam types`, 'bike scooter license', 'car license'],
   alternates: {
     canonical: pageUrl,
   },
@@ -38,7 +38,7 @@ interface ExamCategoryDetail {
   href: string;
 }
 
-const EXAM_CATEGORIES_CONFIG: ExamCategoryDetail[] = [
+const ALL_EXAM_CATEGORIES_CONFIG: ExamCategoryDetail[] = [
   {
     type: 'A',
     name: 'Category A (Bike/Scooter)',
@@ -69,6 +69,10 @@ const EXAM_CATEGORIES_CONFIG: ExamCategoryDetail[] = [
   }
 ];
 
+const DISPLAYED_EXAM_CATEGORIES_CONFIG = ALL_EXAM_CATEGORIES_CONFIG.filter(
+  category => category.type === 'A' || category.type === 'B'
+);
+
 
 export default function SelectRealExamCategoryPage() {
   return (
@@ -83,8 +87,8 @@ export default function SelectRealExamCategoryPage() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
-        {EXAM_CATEGORIES_CONFIG.map((category) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-xl mx-auto">
+        {DISPLAYED_EXAM_CATEGORIES_CONFIG.map((category) => (
           <Card key={category.type} className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader className="flex-row items-center gap-4 pb-4">
               <category.icon className="h-10 w-10 text-primary" />
@@ -109,3 +113,4 @@ export default function SelectRealExamCategoryPage() {
     </div>
   );
 }
+
