@@ -114,20 +114,20 @@ export default function ContactPage() {
                   <p className="text-muted-foreground">{CONTACT_DETAILS.address}</p>
                 </div>
               </div>
+              {/* Phone number can be added here similarly if available */}
+              {/* 
+              <div className="flex items-start gap-3">
+                <Phone className="h-6 w-6 text-primary mt-1 shrink-0" />
+                <div>
+                  <h3 className="font-semibold">Phone</h3>
+                  <p className="text-muted-foreground">{CONTACT_DETAILS.phone}</p>
+                </div>
+              </div> 
+              */}
             </CardContent>
           </Card>
           
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-2xl">Visit Our Office (Map)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
-                <p className="text-muted-foreground">Location for Google Maps</p>
-              </div>
-               <p className="text-xs text-muted-foreground mt-2">Note: This is a placeholder. A real map embed would go here.</p>
-            </CardContent>
-          </Card>
+          {/* Removed Map Card Section */}
 
         </div>
       </div>
