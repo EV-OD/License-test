@@ -9,7 +9,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { SITE_NAME, SITE_URL, DEFAULT_OG_IMAGE_URL, SITE_LOGO_URL } from '@/lib/constants';
 import MobileBackButtonHandler from '@/components/shared/MobileBackButtonHandler';
-
+import { Analytics } from "@vercel/analytics/next"
 const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
@@ -129,6 +129,7 @@ export default function RootLayout({
           </div>
           <Toaster />
           <MobileBackButtonHandler />
+          <Analytics/>
       </body>
     </html>
   );
