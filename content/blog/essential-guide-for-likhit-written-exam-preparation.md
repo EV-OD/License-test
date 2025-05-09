@@ -2,7 +2,7 @@
 title: "Mastering the Likhit Exam: Your Guide to Driving License Preparation in Nepal"
 date: 2025-05-08
 excerpt: "An essential guide to acing the written exam (Likhit) for a driving license in Nepal, covering rules, tips, and preparation strategies."
-image: https://picsum.photos/seed/driving2025/800/400
+image: /images/trial.png
 dataAiHint: driving license, Nepal, Likhit exam, preparation, rules, traffic signals, vehicle laws, driving test
 category: Driving Tips
 tags: ["Nepal", "Traffic Rules", "Road Safety", "Driving", "Regulations", "DrivingLicenseNepalOnlineForm",

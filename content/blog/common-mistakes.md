@@ -2,7 +2,7 @@
 title: "Common Mistakes to Avoid in Your Driving Test"
 date: "2024-07-20"
 excerpt: "Learn about the frequent errors candidates make during the practical driving test in Nepal and how to steer clear of them for a successful outcome."
-image: "https://picsum.photos/seed/blog2/800/400"
+image: "/images/mistake.png"
 dataAiHint: "car driving lesson"
 category: "Driving Tips"
 tags: ["Nepal", "Traffic Rules", "Road Safety", "Driving", "Regulations", "DrivingLicenseNepalOnlineForm",

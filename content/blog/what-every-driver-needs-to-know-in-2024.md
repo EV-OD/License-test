@@ -2,7 +2,7 @@
 title: "Nepal’s New Driving License Test Rules: What Every Driver Needs to Know in 2024"
 date: "2024-07-28"
 excerpt: "Get up-to-date with Nepal's new driving license test rules. Understand the scoring system, practical test changes, and essential tips to pass with confidence."
-image: "https://picsum.photos/seed/driving2024/800/400"
+image: "/images/guide_trial.png"
 dataAiHint: "exam practical road rules"
 category: "Driving License"
 tags: ["Nepal", "Traffic Rules", "Road Safety", "Driving", "Regulations", "DrivingLicenseNepalOnlineForm",

@@ -2,7 +2,7 @@
 title: "Your Road to Freedom: A Beginner’s Guide to Getting a Driving License in Nepal"
 date: 2025-05-08
 excerpt: "A complete beginner’s guide to getting your driving license in Nepal—from eligibility and application to written and practical tests."
-image: https://picsum.photos/seed/driving2024/800/400
+image: /images/guide.png
 dataAiHint: driving license, Nepal, guide, beginner, DoTM, driving test, motorcycle, car, tutorial
 category: Guides
 tags: ["Nepal", "Traffic Rules", "Road Safety", "Driving", "Regulations", "DrivingLicenseNepalOnlineForm",

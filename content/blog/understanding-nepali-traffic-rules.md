@@ -2,7 +2,7 @@
 title: "Understanding Nepali Traffic Rules: A Comprehensive Guide"
 date: "2024-07-15"
 excerpt: "A deep dive into the essential traffic laws and regulations in Nepal that every driver must know. Stay safe and legal on the roads."
-image: "https://picsum.photos/seed/blog3/800/400"
+image: "/images/traffic.png"
 dataAiHint: "traffic rules city"
 category: "Traffic Rules"
 tags: ["Nepal", "Traffic Rules", "Road Safety", "Driving", "Regulations", "DrivingLicenseNepalOnlineForm",
