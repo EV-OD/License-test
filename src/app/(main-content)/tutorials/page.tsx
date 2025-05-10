@@ -16,35 +16,36 @@ export const metadata: Metadata = {
 const tutorials = [
   {
     id: "traffic-signs-explained",
-    title: "Understanding Nepal's Traffic Signs (Part 1: Mandatory Signs)",
-    description: "A comprehensive visual guide to mandatory traffic signs in Nepal, explaining their meaning and importance for road safety.",
-    thumbnailUrl: "https://picsum.photos/seed/tutorial1/600/338", // Placeholder image, ratio 16:9
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Example YouTube embed URL
-    duration: "12:35",
+    title: "Traffic Signs in Nepal | Nepali Driving License Exam",
+    description: "This video provides a comprehensive overview of mandatory traffic signs in Nepal, essential for anyone preparing for the driving license exam.",
+    thumbnailUrl: "https://i.ytimg.com/vi/uQHYrEPLImw/hqdefault.jpg",
+    videoUrl: "https://www.youtube.com/embed/uQHYrEPLImw",
+    duration: "9:15",
     category: "Traffic Signs",
     dataAiHint: "traffic sign video",
   },
   {
     id: "likhit-exam-overview",
-    title: "Nepal Likhit Exam: What to Expect",
-    description: "An overview of the computer-based Likhit exam format, question types, and tips for navigating the test interface.",
-    thumbnailUrl: "https://picsum.photos/seed/tutorial2/600/338",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "08:52",
+    title: "Driving License Likhit Exam Questions In Nepal",
+    description: "An insightful video detailing the format, question types, and preparation tips for Nepal's computer-based Likhit exam.",
+    thumbnailUrl: "https://i.ytimg.com/vi/mPEV_u6_ebM/hqdefault.jpg",
+    videoUrl: "https://www.youtube.com/embed/mPEV_u6_ebM",
+    duration: "10:05",
     category: "Exam Preparation",
     dataAiHint: "computer test tutorial",
   },
   {
     id: "trial-common-mistakes",
-    title: "Common Mistakes in Nepal Driving Trial (Bike & Scooter)",
-    description: "Learn about common errors made during the practical driving test for two-wheelers and how to avoid them.",
-    thumbnailUrl: "https://picsum.photos/seed/tutorial3/600/338",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "15:20",
+    title: "How to Pass Bike Trial In Nepal",
+    description: "This video highlights frequent errors made during the practical driving test for two-wheelers and offers strategies to avoid them.",
+    thumbnailUrl: "https://i.ytimg.com/vi/-puDFnQgz5w/hqdefault.jpg",
+    videoUrl: "https://www.youtube.com/embed/-puDFnQgz5w",
+    duration: "7:30",
     category: "Driving Trial",
     dataAiHint: "motorcycle driving test",
   },
 ];
+
 
 export default function TutorialsPage() {
   return (
