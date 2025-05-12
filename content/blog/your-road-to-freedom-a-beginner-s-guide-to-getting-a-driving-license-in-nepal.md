@@ -27,19 +27,8 @@ tags: ["Nepal", "Traffic Rules", "Road Safety", "Driving", "Regulations", "Drivi
   "NepalDrivingLicenseExamPreparation",
   "OnlineVehicleLicenseNepal",
   "DrivingLicenseMockTestNepal",
-  "सवारीचालक",
-  "सवारीचालकअनुमतिपत्र",
-  "यातायातव्यवस्था विभाग",
-  "ड्राइभिङलाइसेन्स",
-  "प्रिन्ट",
   "NepalDrivingLicenseApp",
-  "NepalDrivingLicenseWebsite",
-  "लिखितपरीक्षाकोप्रश्नसंग्रह",
-  "लिखितपरीक्षा",
-  "DrivingLicenseTayariNepal",
-  "dotm.gov.np",
-  "बायोमेट्रिक",
-  "लिखिततथा प्रयोगात्मकपरीक्षा"]
+  "NepalDrivingLicenseWebsite"]
 authors:
     - name: Subhash Lamichhane
 ---
