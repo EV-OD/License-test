@@ -31,7 +31,6 @@ tags: ["Nepal", "Traffic Rules", "Road Safety", "Driving", "Regulations", "Drivi
   "NepalDrivingLicenseApp",
   "NepalDrivingLicenseWebsite",
   
-  "DrivingLicenseTayariNepal",
   "dotm.gov.np"]
 authors:
     - name: Subhash Lamichhane

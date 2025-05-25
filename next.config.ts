@@ -1,6 +1,7 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
+  // This site's primary language is English. Nepali content is loaded dynamically.
   output: 'export', // Added for static site generation
   typescript: {
     ignoreBuildErrors: true,
