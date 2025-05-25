@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: `Ace your Nepal driving license (Likhit) test for car & bike/scooter (Category A, B) with ${SITE_NAME}. Free online practice questions, realistic real exam simulations, traffic sign tutorials, and more. Start preparing today!`,
-  keywords: ['Nepal driving license', 'Likhit exam', 'driving test Nepal', 'practice questions', 'real exam', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A license', 'Category B license', 'bike license Nepal', 'scooter license Nepal', 'नेपाल ड्राइभिङ लाइसेन्स', 'लिखित परीक्षा'],
+  keywords: ['Nepal driving license', 'Likhit exam', 'driving test Nepal', 'practice questions', 'real exam', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A license', 'Category B license', 'bike license Nepal', 'scooter license Nepal'],
   authors: [{ name: SITE_NAME, url: siteUrl }],
   creator: SITE_NAME,
   publisher: SITE_NAME,

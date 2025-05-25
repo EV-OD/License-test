@@ -12,7 +12,7 @@ import GoogleAd from '@/components/ads/GoogleAd';
 export const metadata: Metadata = {
   title: `${SITE_NAME}: Car & Bike Driving License Practice Tests (Nepal)`,
   description: `Prepare for Nepal's car (Category B) and bike/scooter (Category A) driving license (Likhit) tests with ${SITE_NAME}. Free online practice questions, real exam simulations, traffic signs, and more.`,
-  keywords: ['Nepal driving license', 'Likhit exam', 'driving test practice Nepal', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A test', 'Category B test', 'bike license Nepal', 'scooter license Nepal', 'car license Nepal', 'लिखित परीक्षा', 'नेपाल सवारी चालक अनुमतिपत्र'],
+  keywords: ['Nepal driving license', 'Likhit exam', 'driving test practice Nepal', 'traffic signs Nepal', 'vehicle license Nepal', 'Category A test', 'Category B test', 'bike license Nepal', 'scooter license Nepal', 'car license Nepal', 'Nepal driving license permit'],
   alternates: {
     canonical: SITE_URL,
   },
